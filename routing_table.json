@@ -1,5 +1,5 @@
 {
-  "table_version": "7.22-draft",
+  "table_version": "7.24-draft",
   "status": "TEMPLATE_NOT_ACTIVE",
   "child_session_defaults": {
     "permission_mode": "auto"
@@ -96,6 +96,7 @@
     ]
   },
   "review_seats": {
+    "NORMAL": [],
     "STANDARD": [
       "GROK_REVIEW"
     ],

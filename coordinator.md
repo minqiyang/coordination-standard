@@ -1,4 +1,4 @@
-# Herdr + Pi Coordinator Operating Card v7.22-draft
+# Herdr + Pi Coordinator Operating Card v7.24-draft
 
 **Status:** LIVE_OPERATING_CARD
 This card and `routing_table.json` are the only coordinator workflow policy files. User authorization and project constraints still govern the work. Do not load `archive/`.
@@ -19,14 +19,17 @@ This card and `routing_table.json` are the only coordinator workflow policy file
 
 ## 2. Lanes and gates
 
-Every card has exactly one lane: STANDARD or CRITICAL. Structural is an overlay, not a separate lane.
+Every card has exactly one lane: NORMAL, STANDARD, or CRITICAL. Structural is an overlay, not a separate lane.
 
 | Lane | When | Gate |
 |---|---|---|
-| STANDARD | Default for ordinary work, including mechanical changes | QA PASS + 1 fresh independent formal reviewer |
+| NORMAL | Default for ordinary, localized, readily reversible work under established requirements, including routine implementation, fixes, and mechanical changes, when neither higher lane applies | QA PASS + coordinator verification; no mandatory formal reviewer |
+| STANDARD | Important functional, behavioral, or correctness changes whose impact warrants independent judgment, without CRITICAL risk | QA PASS + 1 fresh independent formal reviewer |
 | CRITICAL | An error could invalidate project results, corrupt canonical state, cross a trust boundary, create irreversible effects, invalidate a release or migration, or cause expensive downstream rework | QA PASS + 2 fresh independent formal reviewers |
 
-Mechanical work has no QA-only exemption. Use CRITICAL whenever its risk criteria apply; otherwise use STANDARD.
+Choose the highest applicable lane and record a brief risk reason. Use CRITICAL whenever its risk criteria apply; otherwise use STANDARD for important changes and NORMAL for ordinary work. If NORMAL eligibility is uncertain, use at least STANDARD while clarifying the risk. Mechanical work is not automatically low risk; classify its actual effects.
+
+NORMAL removes the mandatory formal review seat, not verification: the coordinator checks actual outputs against the objective and acceptance criteria, reads the local report, verifies required QA evidence against the candidate, and records acceptance or the next step. This is coordinator verification, not a formal review authored by the coordinator. Existing findings and user/project requirements remain binding.
 
 ### Structural overlay
 
@@ -54,18 +57,18 @@ No catch-all structural reason. Structural work requires an accepted binding pla
 
 - After each major design or implementation candidate is ready, and before final acceptance, dispatch ABLATION with the table's prompt. Major means a formal architecture/interface or binding-plan deliverable, or completion of a feature, subsystem, or substantial implementation milestone; it does not mean each small edit or repair. Record applicability in the task card so the pass is not silently skipped.
 - This is a simplification task, not a formal review seat or failure-triggered escalation; it needs no failed-attempt threshold. Preserve the baseline and run removals in a separate candidate under single-writer rules. For designs without executable code, use concrete scenarios, prototypes, or contract checks and state what remains unverified. Keep necessary controls; do not infer redundancy from lack of current test coverage.
-- Save experiment evidence and justified removals or a no-change conclusion. Key changes to an accepted binding plan need renewed plan acceptance before implementation. The resulting candidate must pass the existing QA and independent review gates; the ablation executor is a producer, not its reviewer. Revalidation of this pass alone does not recursively trigger another ablation pass.
+- Save experiment evidence and justified removals or a no-change conclusion. Key changes to an accepted binding plan need renewed plan acceptance before implementation. The resulting candidate must pass its lane's QA and acceptance gate, including independent review where required; the ablation executor is a producer, not its reviewer. Revalidation of this pass alone does not recursively trigger another ablation pass.
 
 ### 1. Prepare QA and independent review
 
 - Deterministic QA owns every machine-verifiable fact the card can produce. Distinguish baseline failures from candidate-introduced failures with evidence. Formal review does not start until required QA passes.
 - Freeze the candidate and identify its exact bytes as `candidate_digest`: use a Git commit/tree covering the complete candidate, or a frozen file manifest with content hashes covering files outside Git. A branch name or mutable directory alone is not an exact identity. QA, all reviewers, and acceptance refer to this same candidate and its evidence.
 - Formal reviewers are visible, fresh, read-only, outside producer lineage, and mutually blind during initial review. Fresh means no producer context or hidden continuation. Review runs in a clean root, never the producer worktree. Record each reviewer session and the concrete model resolved at dispatch; session identity and model identity are distinct.
-- Use the lane's reviewer count. Session and context/lineage independence from the producer are mandatory even for STANDARD's single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
+- Use the lane's required reviewer count. NORMAL needs no formal reviewer unless user/project requirements add one; coordinator verification is not a review seat. Any formal reviewer must have session and context/lineage independence from the producer, including STANDARD's single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
 
 ### 2. Record findings
 
-Review records completed coverage and zero or more findings; it does not cast a vote. Each finding records `finding_id`, reviewer session, exact `candidate_digest`, `MATERIAL|ADVISORY`, a falsifiable claim, affected scope, evidence or reproduction, required resolution condition, and tracked status.
+Review records completed coverage and zero or more findings; it does not cast a vote. Each finding records `finding_id`, reviewer or reporting session, exact `candidate_digest`, `MATERIAL|ADVISORY`, a falsifiable claim, affected scope, evidence or reproduction, required resolution condition, and tracked status. Findings discovered during NORMAL verification follow the same resolution rules; no empty review report is required.
 
 `MATERIAL` blocks acceptance while `OPEN` or `CONFIRMED`. `ADVISORY` is recorded but does not block. Another reviewer's lack of findings does not dismiss an open finding.
 
@@ -73,9 +76,9 @@ Review records completed coverage and zero or more findings; it does not cast a 
 
 | Situation | Required action |
 |---|---|
-| Confirmed issue; fix preserves existing policy, authority, and intended semantics | New repair card/attempt on FIXER, or EXPERT under the post-expert rule below, referencing the failed candidate and finding → new candidate → QA → fresh review of the new candidate. |
+| Confirmed issue; fix preserves existing policy, authority, and intended semantics | New repair card/attempt on FIXER, or EXPERT under the post-expert rule below, referencing the failed candidate and finding → new candidate → QA → coordinator verification and fresh review where its lane requires it. Repairing a higher-lane candidate does not turn its revalidation into NORMAL work. |
 | Confirmed issue; resolution requires a policy, authority, or semantic choice | Owner gate: obtain the owner's decision before proceeding with the changed scope or meaning. |
-| Machine evidence can refute the finding | Freeze the refutation evidence; the original reviewer may withdraw or update the finding once. |
+| Machine evidence can refute the finding | Freeze the refutation evidence; the original reviewer or reporting session may withdraw or update the finding once. |
 | Technical disagreement remains | A fresh, independent, read-only adjudicator decides whether the finding is supported by evidence under existing contracts and authority. The adjudicator cannot invent semantics or modify candidate bytes. |
 | Owner accepts the risk | Record an explicit owner decision with the finding and candidate identity, accepted scope, expiry, and revisit condition. |
 
@@ -85,7 +88,7 @@ Record the resolution and supporting evidence against the finding. Evidence-reso
 
 - Confirm the failure against the candidate: record deterministic QA evidence; resolve reviewer/expert disagreement through independent read-only adjudication, not by trusting either role. Environment, permission, or quota failures are operational blockers, not evidence that the expert's solution is wrong.
 - Save a failure handoff describing the changes, tested assumptions, remaining findings, evidence, and how the proposed next approach differs. The coordinator records the next step: a clearly isolated local defect uses FIXER with its configured latest-model effort; the original core problem still unresolved, or evidenced repair-induced regressions/worsening, stays with or returns to EXPERT for actual repair rather than another ordinary-fixer cycle. If both apply, the core/worsening branch takes priority.
-- Expert continuation applies only to that previously escalated problem and does not require repeating the initial attempt threshold. Prefer the existing expert's context when available, subject to current quota/harness rules; create a new attempt, preserve old candidates and reports, and confirm writer ownership before continuing or handing off. Each retry needs new evidence or a materially different approach. No viable next approach, unclear requirements, or required policy/authority changes mean pause and ask the owner; accepting confirmed MATERIAL risk remains the owner's decision. Key design changes still require an updated accepted binding plan. Every changed candidate returns to the QA and independent-review requirements below.
+- Expert continuation applies only to that previously escalated problem and does not require repeating the initial attempt threshold. Prefer the existing expert's context when available, subject to current quota/harness rules; create a new attempt, preserve old candidates and reports, and confirm writer ownership before continuing or handing off. Each retry needs new evidence or a materially different approach. No viable next approach, unclear requirements, or required policy/authority changes mean pause and ask the owner; accepting confirmed MATERIAL risk remains the owner's decision. Key design changes still require an updated accepted binding plan. Every changed candidate returns to its lane's QA and acceptance requirements below.
 
 ### 4. Revalidate after changes
 
@@ -93,11 +96,11 @@ Record the resolution and supporting evidence against the finding. Evidence-reso
 - Whole-candidate/commit QA becomes stale when that candidate/commit changes. Component-scoped QA may be reused only when none of its declared inputs or dependencies changed.
 - Changes to schema, fixtures, generated output, toolchain, or external evidence invalidate dependent QA. Missing, ambiguous, or disputed dependency coverage requires rerunning the full required QA set.
 - Reusable QA evidence records candidate/base identity, command and environment, inputs/dependencies, coverage, result, produced hashes, timestamp, and any freshness/expiry condition. The fixer supplies impact analysis; the coordinator verifies it against the changed files and evidence dependencies.
-- Complete the required QA and fresh review before accepting the repaired candidate. Review approval cannot be reused across candidate-byte changes even when some QA evidence can be reused.
+- Complete the required QA, coordinator verification, and fresh review where required by the lane before accepting the repaired candidate. Review approval cannot be reused across candidate-byte changes even when some QA evidence can be reused.
 
 ### Acceptance
 
-The coordinator accepts only the exact candidate bound by valid required QA and completed review coverage, with eligible reviewers and all MATERIAL findings resolved or explicitly owner-accepted. Both lanes must satisfy model diversity, the recorded non-structural degradation, or the explicit owner decision required above. An owner decision accepting diversity degradation does not dispose of any other finding.
+The coordinator accepts only the exact candidate bound by valid required QA, verified outputs, and all MATERIAL findings resolved or explicitly owner-accepted. Where formal review is required, coverage must be complete and reviewers eligible; multiple seats must satisfy model diversity, the recorded non-structural degradation, or the explicit owner decision required above. NORMAL follows the coordinator verification gate in section 2 without manufacturing a review record. An owner decision accepting diversity degradation does not dispose of any other finding.
 
 ---
 
@@ -114,7 +117,7 @@ Bindings, aliases, harness mappings, effort profiles, permission defaults, and t
 ### Selection and quota
 
 - One card names one route. Check its capability flags and hard constraints, and apply referenced prompts verbatim; do not switch a running writer or expand its scope when changing bindings.
-- Match triggers within the task's `capability_class`: use a matching non-default route, otherwise the eligible default. Enforce mandatory route conditions. Missing or conflicting requirements block dispatch. For `selection_rules`, exactly one rule must match all its `when` fields; review cards use the candidate's lane and structural classification. Formal seats come from `review_seats`.
+- Match triggers within the task's `capability_class`: use a matching non-default route, otherwise the eligible default. Enforce mandatory route conditions. Missing or conflicting requirements block dispatch. For `selection_rules`, exactly one rule must match all its `when` fields; review cards use the candidate's lane and structural classification. Formal seats come from `review_seats`; an explicit empty list means no mandatory formal review, not a missing binding or a request to select a default reviewer.
 - Routes with `quota_binding_order_ref` check the listed bindings from the beginning on every dispatch. Select the first with sufficient quota; skip only with fresh evidence of exhausted or insufficient quota. Try the harness rule above for harness faults; unresolved authentication, permissions, capability, or availability pause the task, not skip a quota entry. All quotas unavailable means stop and record the unblock condition. Missing/duplicate entries are invalid; binding lists are not recursive routes.
 - Other routes check their original binding each dispatch, trying Pi for a harness fault before model replacement. If it still cannot run, try `general_execution_model` once under the same rules, then stop. No previous quota result is permanent. All replacements preserve route capabilities, including plan authorship, and required gates; they never bypass a permission denial.
 - Implementation, debugging, and integration default to GENERAL_EXEC; repairing identified defects, failed QA, or confirmed review findings uses FIXER unless the post-expert rule in section 3.3 calls for EXPERT continuation. Hidden coupling, cross-lane integration, provenance/accounting, difficulty, and high risk alone do not trigger a more expensive model. Required visual/prose deliverables retain their dedicated routes; independent integrator and structural gates still apply.
@@ -138,8 +141,8 @@ task/attempt ID and objective
 acceptance criteria
 starting references or baseline identity
 working root, required outputs, and this attempt's report location
-lane, structural reasons when applicable, and one route
-required QA and review coverage
+lane and brief risk reason, structural reasons when applicable, and one route
+required QA; formal review coverage where required (otherwise mark review not required)
 applicable user/project authorization, constraints, and stop conditions
 ```
 
@@ -161,7 +164,7 @@ applicable user/project authorization, constraints, and stop conditions
 - A `DONE`, `PASS`, or process-exit message is a report, not proof of completion. The coordinator checks the actual files and applicable command results, review evidence, and Git/remote state before recording success.
 - A pause records its reason, supporting evidence, and exact unblock condition. When resuming, inspect files, evidence, and live processes against the task record before arranging further work; do not redispatch solely from a transcript or stale status.
 - Coordinator loop: confirm the task and current state → clean up obsolete panes under section 1 → dispatch → wait and reconcile results → verify outputs → apply required ablation and the lane's QA/review → record the result → continue the next authorized step. Dispatch acknowledgment is a progress update, not completion of the coordinator's turn.
-- While delegated work is outstanding, keep the coordinator active using supported event waits or bounded polling. If completion notifications have not been verified to resume this coordinator session, continue polling; a child message or a saved report alone is not a wake-up mechanism. Each blocking wait is at most 60 seconds; avoid busy polling and unnecessary transcript reads. On each wake/check, reconcile all outstanding task/attempt sessions with their report locations and process state, act on completed or blocked work without waiting for unrelated workers, and wait again when work is still running. Report meaningful changes, not repeated unchanged status.
+- While delegated work is outstanding, flexibly use the installed Herdr skill to inspect agent/pane state and wait for changes. Choose supported state queries, lifecycle/event waits, or adaptive polling according to the task. Set check intervals and wait timeouts based on expected duration, recent progress, risk, and intervention needs, not a fixed cadence; follow current skill/CLI semantics and runtime wait limits. Prefer lightweight status checks over repeated transcript reads; inspect detailed output when state changes or diagnosis is needed. Unless notifications are verified to resume this coordinator session, keep an active wait or adaptive polling; a child message or saved report alone is not a wake-up mechanism. On each wake/check, reconcile outstanding task/attempt sessions with report locations and process state, handle completed or blocked work without waiting for unrelated workers, and continue waiting for the rest. Report meaningful changes, not repeated unchanged status.
 - Completion notifications are hints: read and verify the local report under this section before accepting results or dispatching successors. Detect completion even when notification is missing; an idle/exited pane without a valid report requires investigation or a report request, not silent acceptance or duplicate dispatch. Silence alone does not justify restarting a worker.
 - End the turn only when the requested scope is complete, the user requests a pause, an agreed checkpoint requires a decision, or a genuine authority/runtime/resource blocker prevents continuation. Normal worker execution is not such a blocker. Before a necessary stop with outstanding work, save its session/report locators, last verified state, reason, and resume condition, and tell the user whether automatic resumption is actually available. Never claim to be continuing to watch after ending the turn without a verified active resume mechanism. Persistence does not expand task authority or waive owner gates.
 
@@ -172,7 +175,7 @@ applicable user/project authorization, constraints, and stop conditions
 - A binding plan is authored by a fresh session on a route with `may_author_plan = true`. Review the plan as a CRITICAL candidate under section 3, then record its author, acceptor, accepted candidate identity, and execution scope before implementation. Preparing that plan does not require an earlier plan solely because it is plan-authoring work.
 - Execute the accepted plan version. Changes to its key direction, interfaces, scope, or assumptions require an updated plan and acceptance before affected implementation continues. Implementation details within the accepted bounds do not by themselves require a plan revision.
 - Combining multiple accepted candidates requires a fresh integrator, separate from their producers, working in a new mutable root. It consumes only the accepted input versions and records those inputs. Unaccepted or failed input returns to its repair workflow; integration must not silently repair it and treat it as accepted.
-- The integration result is a new candidate with its own QA/review. Apply the structural reasons in section 2 to semantic integration; local acceptance of each input does not establish correctness of the combined result.
+- The integration result is a new candidate with its own lane-specific QA and acceptance gate. Apply the structural reasons in section 2 to semantic integration; local acceptance of each input does not establish correctness of the combined result.
 
 ---
 
