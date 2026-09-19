@@ -1,6 +1,6 @@
 # Herdr + Pi coordinator
 
-Declared version: **7.24-draft**. Identity is filename + declared version.
+Declared version: **7.26-draft**. Identity is filename + declared version.
 
 These two files are the only coordinator workflow policy. User authorization and project constraints still apply. Do not load historical drafts.
 
@@ -9,7 +9,7 @@ These two files are the only coordinator workflow policy. User authorization and
 | `coordinator.md` | tasks, writers, lanes, QA/review, routing rules, handoff, plans, integration, publication boundaries |
 | `routing_table.json` | routes, aliases, bindings, harness mappings, effort profiles, child-session permission defaults, triggers |
 
-Version 7.24 updates [progress monitoring](coordinator.md#6-evidence-progress-and-handoff) to use the installed Herdr skill flexibly, with task-appropriate status checks and adaptive waits instead of a fixed cadence. Continued follow-through and file-first verification remain in force. NORMAL remains the default for ordinary work; see the [lane gates](coordinator.md#2-lanes-and-gates) and `routing_table.json` for acceptance requirements. The reverted PR-review-loop policy remains absent. The operating card is self-contained; historical drafts are not policy dependencies. It does not provide event replay, epoch fencing, or automatic crash recovery.
+Version 7.26 makes child-session Always-Approve readiness verifiable, checks local reports before waiting again, and continues authorized delivery through explicit squash merge into the next stage. Every PR merge requires at least STANDARD independent review; GitHub Auto-Merge is prohibited. See [child permissions](coordinator.md#child-permissions), [progress monitoring](coordinator.md#6-evidence-progress-and-handoff), and [publication gates](coordinator.md#8-publication-and-irreversible-work). The existing lane classifications, model/effort bindings, and adaptive waiting remain unchanged. The reverted PR-review-loop policy remains absent. The operating card is self-contained; historical drafts are not policy dependencies. It does not provide event replay, epoch fencing, or automatic crash recovery.
 
 ## How to use
 
@@ -20,7 +20,7 @@ Version 7.24 updates [progress monitoring](coordinator.md#6-evidence-progress-an
 ```text
 Read coordinator.md and routing_table.json as the coordinator workflow policy,
 within the user's authorization and project constraints.
-Declared version: 7.24-draft. Do not load archive/. Follow the card.
+Declared version: 7.26-draft. Do not load archive/. Follow the card.
 ```
 
 ## Optional local components

@@ -1,8 +1,8 @@
 {
-  "table_version": "7.24-draft",
+  "table_version": "7.26-draft",
   "status": "TEMPLATE_NOT_ACTIVE",
   "child_session_defaults": {
-    "permission_mode": "auto"
+    "permission_mode": "always_approve"
   },
   "access_plans": {
     "gemini_ai_pro": {
@@ -65,9 +65,9 @@
   },
   "effort_profiles": {
     "GPT_STANDARD": {
-      "default_effort": "high",
+      "default_effort": "medium",
       "allowed_effort_band": [
-        "high"
+        "medium"
       ]
     }
   },
