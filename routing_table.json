@@ -1,5 +1,5 @@
 {
-  "table_version": "7.26-draft",
+  "table_version": "7.27-draft",
   "status": "TEMPLATE_NOT_ACTIVE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -65,9 +65,9 @@
   },
   "effort_profiles": {
     "GPT_STANDARD": {
-      "default_effort": "medium",
+      "default_effort": "high",
       "allowed_effort_band": [
-        "medium"
+        "high"
       ]
     }
   },
@@ -104,6 +104,9 @@
       "GROK_REVIEW",
       "AUDIT"
     ]
+  },
+  "pr_merge_minimum_gate": {
+    "minimum_lane": "STANDARD"
   },
   "routes": {
     "COORD": {
