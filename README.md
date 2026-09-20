@@ -1,6 +1,6 @@
 # Herdr + Pi coordinator
 
-Declared version: **7.28-draft**. Identity is filename + declared version.
+Declared version: **7.29-draft**. Identity is filename + declared version.
 
 These two files are the only coordinator workflow policy. User authorization and project constraints still apply. Do not load historical drafts.
 
@@ -9,7 +9,7 @@ These two files are the only coordinator workflow policy. User authorization and
 | `coordinator.md` | tasks, writers, lanes, QA/review, routing rules, handoff, plans, integration, publication boundaries |
 | `routing_table.json` | routes, aliases, bindings, harness mappings, effort profiles, child-session permission defaults, triggers |
 
-Version 7.28 makes ordinary delegated work follow the installed Herdr skill's default wait semantics, requires finite task-appropriate timeouts, and reconciles current attempt reports and execution state after each return or timeout. Check intervals remain adaptive; model bindings, lane gates, and publication requirements are unchanged. See [progress monitoring](coordinator.md#6-evidence-progress-and-handoff). The operating card is self-contained; historical drafts are not policy dependencies. It does not provide event replay, epoch fencing, or automatic crash recovery.
+Version 7.29 permits longer adaptive wait intervals for long-running work without actionable changes, instead of repeated short wake-ups. Example durations are not fixed cadences or limits; verified wake-up timers respect blocking-tool limits, and time-sensitive intervention can shorten checks. Report verification, model bindings, lane gates, and publication requirements are unchanged. See [progress monitoring](coordinator.md#6-evidence-progress-and-handoff). The operating card is self-contained; historical drafts are not policy dependencies. It does not provide event replay, epoch fencing, or automatic crash recovery.
 
 ## How to use
 
@@ -20,7 +20,7 @@ Version 7.28 makes ordinary delegated work follow the installed Herdr skill's de
 ```text
 Read coordinator.md and routing_table.json as the coordinator workflow policy,
 within the user's authorization and project constraints.
-Declared version: 7.28-draft. Do not load archive/. Follow the card.
+Declared version: 7.29-draft. Do not load archive/. Follow the card.
 ```
 
 ## Optional local components
