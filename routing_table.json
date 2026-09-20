@@ -1,5 +1,5 @@
 {
-  "table_version": "7.29-draft",
+  "table_version": "7.30-draft",
   "status": "TEMPLATE_NOT_ACTIVE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -74,9 +74,9 @@
   "general_execution_model": {
     "model_ref": "GROK_LATEST",
     "harness": "Grok Build",
-    "default_effort": "HIGH",
+    "default_effort": "XHIGH",
     "allowed_effort_band": [
-      "HIGH"
+      "XHIGH"
     ]
   },
   "highest_capability_model": {
@@ -322,7 +322,9 @@
         }
       ],
       "quota_binding_order_ref": "problem_solving_quota_order",
-      "effort_override": "HIGH",
+      "effort_overrides_by_model_ref": {
+        "GPT_LATEST": "high"
+      },
       "prompt_constraints": [
         "scope_clamp",
         "ablation_prompt"

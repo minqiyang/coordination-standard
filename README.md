@@ -1,6 +1,6 @@
 # Herdr + Pi Coordination Standard
 
-> **Version:** `7.29-draft` &nbsp;|&nbsp; **Core Policy:** `coordinator.md` + `routing_table.json` &nbsp;|&nbsp; **Runtime:** Herdr (Orchestration) + Pi (Coordinator)
+> **Version:** `7.30-draft` &nbsp;|&nbsp; **Core Policy:** `coordinator.md` + `routing_table.json` &nbsp;|&nbsp; **Runtime:** Herdr (Orchestration) + Pi (Coordinator)
 
 An operating standard for multi-agent software engineering. It pairs **Herdr** as the tab-based orchestration plane with **Pi** as the coordinator agent, providing deterministic verification gates, single-writer isolation, and structured handoffs across delegated AI coding tasks.
 
@@ -50,6 +50,10 @@ The standard is defined by two foundational files:
 |---|---|---|
 | [`coordinator.md`](coordinator.md) | **Operating Card** | Governs topology, single-writer roots, task lanes, [QA/review](coordinator.md#3-qa-and-review) gates, post-delivery ablation, and publication boundaries. |
 | [`routing_table.json`](routing_table.json) | **Routing & Bindings** | Defines model bindings, aliases, effort profiles, child-session permissions, and [routing](coordinator.md#4-routing) triggers. |
+
+### Highlights in v7.30
+
+- **Consistent Grok XHigh**: All configured Grok latest-model paths use XHigh, including ordinary execution, replacements, and ablation. Ablation keeps High for GPT and Fable; other model efforts, quota order, and lane gates remain unchanged.
 
 ### Highlights in v7.29
 - **Adaptive Long-Wait Intervals**: For long-running, stable tasks, the coordinator dynamically scales check intervals (e.g., 5, 10, 15, or 30 minutes) using verified wake-up timers, significantly reducing redundant polling cycles while ensuring prompt intervention when milestones arrive. See [progress monitoring](coordinator.md#6-evidence-progress-and-handoff).
@@ -106,7 +110,7 @@ Place `coordinator.md` and `routing_table.json` in your working directory, open 
 ```text
 Read coordinator.md and routing_table.json as the coordinator workflow policy,
 within the user's authorization and project constraints.
-Declared version: 7.29-draft. Do not load archive/. Follow the card.
+Declared version: 7.30-draft. Do not load archive/. Follow the card.
 ```
 
 ### 2. Operational Rules
