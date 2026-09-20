@@ -8,6 +8,11 @@ An operating standard for multi-agent software engineering. It pairs **Herdr** a
 
 ## System Architecture
 
+![System Architecture](assets/system_architecture.jpg)
+
+<details>
+<summary>Diagram Source (Mermaid)</summary>
+
 ```mermaid
 flowchart TD
     subgraph Orchestration["Herdr Orchestration Plane"]
@@ -33,6 +38,8 @@ flowchart TD
     Verification -->|"Reconcile & Accept"| Coord
 ```
 
+</details>
+
 ---
 
 ## Core Policy Files
@@ -54,6 +61,11 @@ The standard is defined by two foundational files:
 
 ### Workflow Lifecycle
 
+![Workflow Lifecycle](assets/workflow_lifecycle.jpg)
+
+<details>
+<summary>Diagram Source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     A["1. Dispatch Task\n(Single-Writer Root)"] --> B["2. Adaptive Wait\n(v7.29 Scaled Intervals)"]
@@ -69,6 +81,8 @@ flowchart LR
     H --> J
     I --> J
 ```
+
+</details>
 
 ### Lane Classification
 
@@ -107,6 +121,11 @@ Declared version: 7.29-draft. Do not load archive/. Follow the card.
 
 The repository provides two optional tools to assist with pre-implementation alignment and runtime consistency:
 
+![Auxiliary Components](assets/auxiliary_components.jpg)
+
+<details>
+<summary>Diagram Source (Mermaid)</summary>
+
 ```mermaid
 flowchart LR
     subgraph ContractFirst["Skill: Contract First"]
@@ -121,6 +140,8 @@ flowchart LR
 
     ContractFirst -.->|"Pre-implementation Guidance"| ArtifactGuard
 ```
+
+</details>
 
 ### 1. Contract First (Pi Skill)
 - **Path:** [`skills/contract-first/SKILL.md`](skills/contract-first/SKILL.md)
