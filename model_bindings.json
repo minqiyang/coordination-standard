@@ -78,9 +78,9 @@
     "REVIEW": {
       "model_ref": "GPT_ASTRA_LATEST",
       "harness": "Codex",
-      "default_effort": "high",
+      "default_effort": "medium",
       "allowed_effort_band": [
-        "high"
+        "medium"
       ]
     },
     "AUDIT": {
