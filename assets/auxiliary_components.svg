@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 240" width="960" height="240" role="img" aria-labelledby="t d">
+<title id="t">Optional tools</title>
+<desc id="d">Contract First agrees on owner, delivery, authority, and verification before a change. Artifact Guard records a contract, blocks writes outside its roots, and runs the declared QA at finalization; its PASS is not project acceptance.</desc>
+<style>
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#0969da;--paper:#ffffff}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#4493f8;--paper:#0d1117}}
+  text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
+  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
+  .t{font-size:14px;font-weight:700}
+  .s{font-size:12px;fill:var(--mute)}
+  .m{font-size:13px;font-weight:700}
+  .w{fill:var(--paper);font-size:13px;font-weight:700}
+  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.5}
+  .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
+  .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)} .fp{fill:var(--paper)}
+</style>
+<defs>
+  <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+  <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
+  <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
+</defs>
+<text x="40" y="40" class="k">CONTRACT FIRST</text>
+<rect x="40" y="60" width="300" height="128" rx="4" class="box"/>
+<path d="M190,60 V188 M40,124 H340" class="ln"/>
+<text x="56" y="88" class="t">Owner</text><text x="56" y="106" class="s">who defines it</text>
+<text x="206" y="88" class="t">Delivery</text><text x="206" y="106" class="s">what stays true</text>
+<text x="56" y="152" class="t">Authority</text><text x="56" y="170" class="s">what is allowed</text>
+<text x="206" y="152" class="t">Verification</text><text x="206" y="170" class="s">what proves it</text>
+<text x="40" y="214" class="s">Settle these before changing anything.</text>
+<path d="M348,124 H424" class="dash" marker-end="url(#am)"/>
+
+<text x="430" y="40" class="k">ARTIFACT GUARD</text>
+<path d="M440,124 H920" class="ink" marker-end="url(#ai)"/>
+<circle cx="440" cy="124" r="7" class="box" style="stroke-width:2"/>
+<rect x="616" y="108" width="8" height="32" rx="1" class="fa"/>
+<circle cx="780" cy="124" r="7" class="box" style="stroke-width:2"/>
+<text x="430" y="100" class="m">contract_check</text><text x="430" y="152" class="s">roots, QA</text>
+<text x="620" y="100" text-anchor="middle" class="t">write gate</text><text x="620" y="152" text-anchor="middle" class="s">blocks stray writes</text>
+<text x="770" y="100" class="m">artifact_finalize</text><text x="770" y="152" class="s">run QA, verify</text>
+<text x="430" y="214" class="s">Enforce: no edits before a contract. PASS ≠ acceptance.</text>
+</svg>

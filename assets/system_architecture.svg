@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350" width="900" height="350" role="img" aria-labelledby="t d">
+<title id="t">System overview</title>
+<desc id="d">Portable rules and replaceable model bindings feed the Pi coordinator. It dispatches task cards to Herdr tabs, reads and verifies the report files they write, and only then accepts the exact candidate.</desc>
+<style>
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#0969da;--paper:#ffffff}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#4493f8;--paper:#0d1117}}
+  text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
+  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
+  .t{font-size:14px;font-weight:700}
+  .s{font-size:12px;fill:var(--mute)}
+  .m{font-size:13px;font-weight:700}
+  .w{fill:var(--paper);font-size:13px;font-weight:700}
+  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.5}
+  .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
+  .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)} .fp{fill:var(--paper)}
+</style>
+<defs>
+  <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+  <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
+  <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
+</defs>
+<text x="40" y="62" class="k">POLICY</text>
+<rect x="40" y="80" width="160" height="60" rx="4" class="box"/>
+<text x="58" y="106" class="t">Rules</text><text x="58" y="126" class="s">shareable</text>
+<rect x="40" y="160" width="160" height="60" rx="4" class="box" style="stroke-dasharray:4 3"/>
+<text x="58" y="186" class="t">Models</text><text x="58" y="206" class="s">swap anytime</text>
+<path d="M200,110 C270,110 280,156 340,156" class="ln"/>
+<path d="M200,190 C270,190 280,164 340,164" class="ln"/>
+
+<rect x="330" y="20" width="140" height="28" rx="14" class="fa"/>
+<text x="400" y="39" text-anchor="middle" class="w">Accepted</text>
+<path d="M400,102 V54" class="acc" marker-end="url(#aa)"/>
+<circle cx="400" cy="160" r="58" class="box" style="stroke-width:1.5"/>
+<text x="400" y="158" text-anchor="middle" class="t">Coordinator</text>
+<text x="400" y="178" text-anchor="middle" class="s">never writes</text>
+
+<text x="505" y="92" text-anchor="middle" class="s">dispatch</text>
+<path d="M458,160 C530,160 530,100 594,100" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,150 594,150" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,200 594,200" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,250 594,250" class="acc" marker-end="url(#aa)"/>
+
+<text x="600" y="62" class="k">HERDR TABS</text>
+<g>
+<rect x="600" y="80" width="280" height="40" rx="4" class="box"/><circle cx="616" cy="100" r="3.5" class="fa"/><text x="630" y="105" class="t">Build · Fix</text><text x="866" y="104" text-anchor="end" class="s">one writer</text>
+<rect x="600" y="130" width="280" height="40" rx="4" class="box"/><circle cx="616" cy="150" r="3.5" class="fa"/><text x="630" y="155" class="t">Specialists</text><text x="866" y="154" text-anchor="end" class="s">design · expert</text>
+<rect x="600" y="180" width="280" height="40" rx="4" class="box"/><circle cx="616" cy="200" r="3.5" class="fa"/><text x="630" y="205" class="t">Shell QA</text><text x="866" y="204" text-anchor="end" class="s">deterministic</text>
+<rect x="600" y="230" width="280" height="40" rx="4" class="box"/><circle cx="616" cy="250" r="3.5" class="fa"/><text x="630" y="255" class="t">Reviewers</text><text x="866" y="254" text-anchor="end" class="s">fresh · read-only</text>
+</g>
+
+<path d="M740,270 V286" class="ink" marker-end="url(#ai)"/>
+<rect x="718" y="294" width="44" height="46" rx="3" class="box" transform="translate(6,-6)" style="stroke:var(--line)"/>
+<rect x="718" y="294" width="44" height="46" rx="3" class="box"/>
+<path d="M727,308 H753 M727,317 H753 M727,326 H744" class="ln"/>
+<text x="778" y="322" class="t">Reports</text>
+<path d="M718,317 H400 V224" class="dash" marker-end="url(#am)"/>
+<text x="560" y="308" text-anchor="middle" class="s">read · verify</text>
+</svg>

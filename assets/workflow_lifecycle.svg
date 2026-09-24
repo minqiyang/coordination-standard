@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" width="1000" height="280" role="img" aria-labelledby="t d">
+<title id="t">Task lifecycle</title>
+<desc id="d">A task moves from dispatch through a finite wait, report verification, optional ablation for major deliveries, and deterministic QA. The lane then decides review: coordinator check for Normal, one fresh reviewer for Standard, two for Critical. The exact candidate is accepted and merged manually. QA failures and open findings loop back as a fix with a new candidate.</desc>
+<style>
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#0969da;--paper:#ffffff}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#4493f8;--paper:#0d1117}}
+  text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
+  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
+  .t{font-size:14px;font-weight:700}
+  .s{font-size:12px;fill:var(--mute)}
+  .m{font-size:13px;font-weight:700}
+  .w{fill:var(--paper);font-size:13px;font-weight:700}
+  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.5}
+  .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
+  .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)} .fp{fill:var(--paper)}
+</style>
+<defs>
+  <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+  <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
+  <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
+</defs>
+<g style="fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round">
+<path d="M50,100 H540"/>
+<path d="M540,100 C565,100 565,60 590,60 H750 C775,60 775,100 800,100"/>
+<path d="M540,100 H800"/>
+<path d="M540,100 C565,100 565,140 590,140 H750 C775,140 775,100 800,100"/>
+<path d="M800,100 H930"/>
+</g>
+<path d="M154,92 C136,62 184,62 166,92" class="ink" marker-end="url(#ai)" style="stroke-width:1.25"/>
+<g class="box" style="stroke-width:2.5">
+<circle cx="50" cy="100" r="7"/><circle cx="160" cy="100" r="7"/><circle cx="270" cy="100" r="7"/>
+<circle cx="380" cy="100" r="7" style="stroke-dasharray:2.5 2.5"/><circle cx="490" cy="100" r="7"/>
+<circle cx="830" cy="100" r="8"/>
+</g>
+<circle cx="930" cy="100" r="9" class="fi"/>
+<g text-anchor="middle">
+<text x="50" y="128" class="t">Dispatch</text><text x="50" y="146" class="s">one writer</text>
+<text x="160" y="128" class="t">Wait</text><text x="160" y="146" class="s">finite</text>
+<text x="270" y="128" class="t">Report</text><text x="270" y="146" class="s">read · verify</text>
+<text x="380" y="128" class="t">Ablation</text><text x="380" y="146" class="s">major only</text>
+<text x="490" y="128" class="t">QA</text><text x="490" y="146" class="s">deterministic</text>
+<text x="830" y="128" class="t">Accept</text><text x="830" y="146" class="s">exact candidate</text>
+<text x="930" y="128" class="t">Merge</text><text x="930" y="146" class="s">manual</text>
+</g>
+<text x="600" y="50" class="k">NORMAL</text><text x="600" y="90" class="k">STANDARD</text><text x="600" y="130" class="k">CRITICAL</text>
+<circle cx="705" cy="60" r="5.5" class="fp" style="stroke:var(--accent);stroke-width:2"/>
+<circle cx="705" cy="100" r="5.5" class="fa"/>
+<circle cx="693" cy="140" r="5.5" class="fa"/><circle cx="717" cy="140" r="5.5" class="fa"/>
+<path d="M490,156 V210 M765,152 V210" class="dash"/>
+<path d="M765,210 H50 V158" class="dash" marker-end="url(#am)"/>
+<text x="270" y="200" text-anchor="middle" class="s">QA fails or finding open → fix → new candidate</text>
+<circle cx="706" cy="252" r="5" class="fp" style="stroke:var(--accent);stroke-width:2"/><text x="718" y="256" class="s">coordinator check</text>
+<circle cx="876" cy="252" r="5" class="fa"/><text x="888" y="256" class="s">reviewer</text>
+</svg>
