@@ -1,6 +1,6 @@
 # Coordination Standard
 
-**Version `8.1`**
+**Version `8.2`**
 
 A working standard for running several AI coding agents on one project. **Herdr** hosts every session in its own terminal Tab, and one agent session acts as the coordinator: it hands out tasks, reads the workers' reports, and decides what gets accepted. The coordinator does not write the code itself, and any capable agent can play that role.
 
@@ -44,7 +44,7 @@ Open a Herdr Tab for your coordinator agent and point it at the three policy fil
 Read <standard-dir>/coordinator.md, <standard-dir>/routing_table.json, and
 <standard-dir>/model_bindings.json as the coordinator workflow policy, within
 the user's authorization and project constraints.
-Declared version: 8.1. Do not load archive/. Follow the card.
+Declared version: 8.2. Do not load archive/. Follow the card.
 ```
 
 ## Optional tools

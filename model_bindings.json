@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.1",
+  "bindings_version": "8.2",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
@@ -116,9 +116,9 @@
     {
       "model_ref": "FABLE_LATEST",
       "harness": "Claude Code",
-      "default_effort": "max",
+      "default_effort": "xhigh",
       "allowed_effort_band": [
-        "max"
+        "xhigh"
       ]
     },
     {
