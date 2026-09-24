@@ -1,107 +1,16 @@
 {
-  "table_version": "7.30-draft",
-  "status": "TEMPLATE_NOT_ACTIVE",
+  "table_version": "8.0",
+  "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
-  },
-  "access_plans": {
-    "gemini_ai_pro": {
-      "display_name": "Google Gemini AI Pro",
-      "subscribed": true
-    },
-    "chatgpt_plus": {
-      "display_name": "ChatGPT Plus",
-      "subscribed": true
-    },
-    "supergrok_heavy": {
-      "display_name": "SuperGrok Heavy",
-      "subscribed": true
-    },
-    "cursor_ultra": {
-      "display_name": "Cursor Ultra",
-      "subscribed": true
-    },
-    "claude_direct": {
-      "display_name": "Claude direct subscription",
-      "subscribed": false
-    }
-  },
-  "model_aliases": {
-    "GEMINI_FLASH_LATEST": {
-      "family": "Gemini Flash",
-      "selector": "latest",
-      "access_plan_ref": "gemini_ai_pro"
-    },
-    "GPT_LATEST": {
-      "family": "GPT",
-      "selector": "latest",
-      "access_plan_ref": "chatgpt_plus"
-    },
-    "GROK_LATEST": {
-      "family": "Grok",
-      "selector": "latest",
-      "access_plan_ref": "supergrok_heavy"
-    },
-    "FABLE_LATEST": {
-      "family": "Fable",
-      "selector": "latest",
-      "access_plan_ref": "cursor_ultra"
-    },
-    "OPUS_LATEST": {
-      "family": "Opus",
-      "selector": "latest",
-      "access_plan_ref": "cursor_ultra"
-    },
-    "GEMINI_LATEST": {
-      "family": "Gemini",
-      "selector": "latest",
-      "access_plan_ref": "gemini_ai_pro"
-    },
-    "GPT_ASTRA_LATEST": {
-      "family": "GPT Astra",
-      "selector": "latest",
-      "access_plan_ref": "chatgpt_plus"
-    }
-  },
-  "effort_profiles": {
-    "GPT_STANDARD": {
-      "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ]
-    }
-  },
-  "general_execution_model": {
-    "model_ref": "GROK_LATEST",
-    "harness": "Grok Build",
-    "default_effort": "XHIGH",
-    "allowed_effort_band": [
-      "XHIGH"
-    ]
-  },
-  "highest_capability_model": {
-    "model_ref": "GPT_LATEST",
-    "harness": "Codex",
-    "default_effort": "xhigh",
-    "allowed_effort_band": [
-      "xhigh"
-    ]
-  },
-  "highest_capability_quota_alternative": {
-    "model_ref": "FABLE_LATEST",
-    "harness": "Cursor",
-    "default_effort": "HIGH",
-    "allowed_effort_band": [
-      "HIGH"
-    ]
   },
   "review_seats": {
     "NORMAL": [],
     "STANDARD": [
-      "GROK_REVIEW"
+      "REVIEW"
     ],
     "CRITICAL": [
-      "GROK_REVIEW",
+      "REVIEW",
       "AUDIT"
     ]
   },
@@ -114,11 +23,7 @@
       "capability_class": "coordination",
       "default": true,
       "may_author_plan": false,
-      "may_formally_review": false,
-      "primary": {
-        "model": "live_pi_session",
-        "harness": "Pi"
-      }
+      "may_formally_review": false
     },
     "GENERAL_EXEC": {
       "capability": "ordinary implementation, debugging, integration, and interaction logic; repair work uses FIXER",
@@ -126,7 +31,6 @@
       "default": true,
       "may_author_plan": false,
       "may_formally_review": false,
-      "binding_ref": "general_execution_model",
       "prompt_constraints": [
         "scope_clamp"
       ]
@@ -136,15 +40,7 @@
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
-      "may_formally_review": true,
-      "primary": {
-        "model_ref": "GEMINI_LATEST",
-        "harness": "Antigravity",
-        "default_effort": "MAX_SUPPORTED",
-        "allowed_effort_band": [
-          "MAX_SUPPORTED"
-        ]
-      }
+      "may_formally_review": true
     },
     "DESIGN": {
       "capability": "required architecture or interface decisions and binding-plan authorship; excludes ordinary implementation planning, local code adjustments, and bug-cause analysis",
@@ -164,8 +60,7 @@
       ],
       "prompt_constraints": [
         "scope_clamp"
-      ],
-      "quota_binding_order_ref": "problem_solving_quota_order"
+      ]
     },
     "EXPERT": {
       "capability": "final problem-solving escalation for unresolved design, architecture, planning, analysis, or implementation",
@@ -190,8 +85,7 @@
       ],
       "prompt_constraints": [
         "scope_clamp"
-      ],
-      "quota_binding_order_ref": "problem_solving_quota_order"
+      ]
     },
     "FRONTEND": {
       "capability": "aesthetic, visual, and art-direction design only",
@@ -213,14 +107,6 @@
           "when": "card_output_is_art_direction_or_aesthetic_authority"
         }
       ],
-      "primary": {
-        "model_ref": "OPUS_LATEST",
-        "harness": "Cursor",
-        "default_effort": "XHIGH",
-        "allowed_effort_band": [
-          "XHIGH"
-        ]
-      },
       "prompt_constraints": [
         "scope_clamp"
       ],
@@ -235,27 +121,7 @@
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
-      "may_formally_review": true,
-      "primary": {
-        "model_ref": "GPT_ASTRA_LATEST",
-        "harness": "Codex",
-        "effort_profile_ref": "GPT_STANDARD"
-      }
-    },
-    "GROK_REVIEW": {
-      "capability": "independent formal review seat for STANDARD and CRITICAL candidates, including structural work and binding plans",
-      "capability_class": "review",
-      "default": true,
-      "may_author_plan": false,
-      "may_formally_review": true,
-      "primary": {
-        "model_ref": "GROK_LATEST",
-        "harness": "Grok Build",
-        "default_effort": "XHIGH",
-        "allowed_effort_band": [
-          "XHIGH"
-        ]
-      }
+      "may_formally_review": true
     },
     "PROSE": {
       "capability": "prose delivery: articles, documentation, explanations, and presentation of established conclusions; excludes binding-plan authorship and formal review judgment",
@@ -275,15 +141,7 @@
           "when": "card_mixes_nonprose_work_with_required_prose_delivery",
           "action": "split_the_prose_into_a_separate_PROSE_card"
         }
-      ],
-      "primary": {
-        "model_ref": "GEMINI_FLASH_LATEST",
-        "harness": "Antigravity",
-        "default_effort": "HIGH",
-        "allowed_effort_band": [
-          "HIGH"
-        ]
-      }
+      ]
     },
     "FIXER": {
       "capability": "repair of identified defects, failed QA, or confirmed review findings under existing requirements",
@@ -297,14 +155,6 @@
           "when": "task_objective_is_to_repair_an_identified_defect_failed_QA_or_confirmed_review_finding_under_existing_requirements"
         }
       ],
-      "primary": {
-        "model_ref": "GROK_LATEST",
-        "harness": "Grok Build",
-        "default_effort": "XHIGH",
-        "allowed_effort_band": [
-          "XHIGH"
-        ]
-      },
       "prompt_constraints": [
         "scope_clamp"
       ]
@@ -321,10 +171,6 @@
           "when": "major_design_or_implementation_candidate_ready_before_final_acceptance"
         }
       ],
-      "quota_binding_order_ref": "problem_solving_quota_order",
-      "effort_overrides_by_model_ref": {
-        "GPT_LATEST": "high"
-      },
       "prompt_constraints": [
         "scope_clamp",
         "ablation_prompt"
@@ -332,27 +178,5 @@
     }
   },
   "scope_clamp": "Stay strictly within this card's objective, authority, read scope, and write scope. If additional work is required, state the missing scope in one line and stop. Do not perform that additional work.",
-  "problem_solving_quota_order": [
-    "highest_capability_model",
-    "highest_capability_quota_alternative",
-    "general_execution_model"
-  ],
-  "harnesses": {
-    "Pi": {
-      "herdr_kind": "pi"
-    },
-    "Antigravity": {
-      "herdr_kind": "agy"
-    },
-    "Grok Build": {
-      "herdr_kind": "grok"
-    },
-    "Codex": {
-      "herdr_kind": "codex"
-    },
-    "Cursor": {
-      "herdr_kind": "cursor"
-    }
-  },
   "ablation_prompt": "Perform ablation experiments on this completed design or implementation: identify potentially unnecessary abstractions, design elements, and code; remove or simplify them one at a time in a separate candidate and compare against the baseline using relevant acceptance tests and evidence. Keep only demonstrated simplifications that preserve required behavior, contracts, safety, and recovery. Restore changes that regress behavior; do not remove tests or weaken acceptance criteria to claim success. Record each experiment, result, retained/reverted change, and untested uncertainty in the local report. A supported no-change conclusion is valid."
 }

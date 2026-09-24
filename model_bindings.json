@@ -1,0 +1,146 @@
+{
+  "bindings_version": "8.0",
+  "status": "LIVE_MODEL_BINDINGS",
+  "access_plans": {
+    "gemini_ai_pro": {
+      "display_name": "Google Gemini AI Pro",
+      "subscribed": true
+    },
+    "chatgpt_plus": {
+      "display_name": "ChatGPT Plus",
+      "subscribed": true
+    },
+    "claude_subscription": {
+      "display_name": "Claude subscription",
+      "subscribed": true
+    }
+  },
+  "model_aliases": {
+    "GEMINI_FLASH_LATEST": {
+      "family": "Gemini Flash",
+      "selector": "latest",
+      "access_plan_ref": "gemini_ai_pro"
+    },
+    "GEMINI_LATEST": {
+      "family": "Gemini",
+      "selector": "latest",
+      "access_plan_ref": "gemini_ai_pro"
+    },
+    "GPT_LATEST": {
+      "family": "GPT",
+      "selector": "latest",
+      "access_plan_ref": "chatgpt_plus"
+    },
+    "GPT_ASTRA_LATEST": {
+      "family": "GPT Astra",
+      "selector": "latest",
+      "access_plan_ref": "chatgpt_plus"
+    },
+    "OPUS_LATEST": {
+      "family": "Opus",
+      "selector": "latest",
+      "access_plan_ref": "claude_subscription"
+    },
+    "FABLE_LATEST": {
+      "family": "Fable",
+      "selector": "latest",
+      "access_plan_ref": "claude_subscription"
+    }
+  },
+  "harnesses": {
+    "Pi": {
+      "herdr_kind": "pi"
+    },
+    "Claude Code": {
+      "herdr_kind": "claude"
+    },
+    "Codex": {
+      "herdr_kind": "codex"
+    },
+    "Antigravity": {
+      "herdr_kind": "agy"
+    }
+  },
+  "route_bindings": {
+    "COORD": {
+      "model": "live_pi_session",
+      "harness": "Pi"
+    },
+    "GENERAL_EXEC": {
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "high",
+      "allowed_effort_band": [
+        "high"
+      ]
+    },
+    "FIXER": {
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "high",
+      "allowed_effort_band": [
+        "high"
+      ]
+    },
+    "REVIEW": {
+      "model_ref": "GPT_ASTRA_LATEST",
+      "harness": "Codex",
+      "default_effort": "high",
+      "allowed_effort_band": [
+        "high"
+      ]
+    },
+    "AUDIT": {
+      "model_ref": "GEMINI_LATEST",
+      "harness": "Antigravity",
+      "default_effort": "HIGH",
+      "allowed_effort_band": [
+        "HIGH"
+      ]
+    },
+    "DESIGN": {
+      "quota_binding_order_ref": "problem_solving_quota_order"
+    },
+    "EXPERT": {
+      "quota_binding_order_ref": "problem_solving_quota_order"
+    },
+    "ABLATION": {
+      "quota_binding_order_ref": "problem_solving_quota_order"
+    },
+    "FRONTEND": {
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "xhigh",
+      "allowed_effort_band": [
+        "xhigh"
+      ]
+    },
+    "PROSE": {
+      "model_ref": "GEMINI_FLASH_LATEST",
+      "harness": "Antigravity",
+      "default_effort": "HIGH",
+      "allowed_effort_band": [
+        "HIGH"
+      ]
+    }
+  },
+  "problem_solving_quota_order": [
+    {
+      "model_ref": "FABLE_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "max",
+      "allowed_effort_band": [
+        "max"
+      ]
+    },
+    {
+      "model_ref": "GPT_LATEST",
+      "harness": "Codex",
+      "default_effort": "xhigh",
+      "allowed_effort_band": [
+        "xhigh"
+      ]
+    }
+  ],
+  "replacement_binding": null
+}
