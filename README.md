@@ -1,6 +1,6 @@
 # Coordination Standard
 
-**Version `8.0`**
+**Version `8.1`**
 
 A working standard for running several AI coding agents on one project. **Herdr** hosts every session in its own terminal Tab, and one agent session acts as the coordinator: it hands out tasks, reads the workers' reports, and decides what gets accepted. The coordinator does not write the code itself, and any capable agent can play that role.
 
@@ -30,8 +30,8 @@ Every card gets one lane, based on what a mistake would cost:
 
 | Lane | Typical work | What it takes to accept |
 |---|---|---|
-| NORMAL | Routine, local, easily reversed changes | QA passes and the coordinator checks the output |
-| STANDARD | Important behavior or correctness changes | QA passes plus one fresh, independent reviewer |
+| ROUTINE | Routine, local, easily reversed changes | QA passes and the coordinator checks the output |
+| ELEVATED | Important behavior or correctness changes | QA passes plus one fresh, independent reviewer |
 | CRITICAL | Mistakes that could corrupt state, cross a trust boundary, or can't be undone | QA passes plus two fresh, independent reviewers |
 
 Some work is also marked **structural**, such as project-defining architecture, security boundaries, or shared contracts. Structural work needs an accepted binding plan first and then the CRITICAL gate. The exact criteria are in [section 2 of the card](coordinator.md#2-lanes-and-gates).
@@ -44,7 +44,7 @@ Open a Herdr Tab for your coordinator agent and point it at the three policy fil
 Read <standard-dir>/coordinator.md, <standard-dir>/routing_table.json, and
 <standard-dir>/model_bindings.json as the coordinator workflow policy, within
 the user's authorization and project constraints.
-Declared version: 8.0. Do not load archive/. Follow the card.
+Declared version: 8.1. Do not load archive/. Follow the card.
 ```
 
 ## Optional tools

@@ -1,12 +1,12 @@
 {
-  "table_version": "8.0",
+  "table_version": "8.1",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
   },
   "review_seats": {
-    "NORMAL": [],
-    "STANDARD": [
+    "ROUTINE": [],
+    "ELEVATED": [
       "REVIEW"
     ],
     "CRITICAL": [
@@ -15,7 +15,7 @@
     ]
   },
   "pr_merge_minimum_gate": {
-    "minimum_lane": "STANDARD"
+    "minimum_lane": "ELEVATED"
   },
   "routes": {
     "COORD": {

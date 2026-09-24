@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.0",
+  "bindings_version": "8.1",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
@@ -18,11 +18,6 @@
   "model_aliases": {
     "GEMINI_FLASH_LATEST": {
       "family": "Gemini Flash",
-      "selector": "latest",
-      "access_plan_ref": "gemini_ai_pro"
-    },
-    "GEMINI_LATEST": {
-      "family": "Gemini",
       "selector": "latest",
       "access_plan_ref": "gemini_ai_pro"
     },
@@ -84,11 +79,11 @@
       ]
     },
     "AUDIT": {
-      "model_ref": "GEMINI_LATEST",
-      "harness": "Antigravity",
-      "default_effort": "HIGH",
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "medium",
       "allowed_effort_band": [
-        "HIGH"
+        "medium"
       ]
     },
     "DESIGN": {

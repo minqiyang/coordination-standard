@@ -1,4 +1,4 @@
-# Herdr Coordinator Operating Card v8.0
+# Herdr Coordinator Operating Card v8.1
 
 **Status:** LIVE_OPERATING_CARD
 This card, `routing_table.json`, and `model_bindings.json` are the only coordinator workflow policy files. The card and routing table are the portable rules; `model_bindings.json` holds the replaceable model choices. User authorization and project constraints still govern the work. Do not load `archive/`.
@@ -20,17 +20,17 @@ This card, `routing_table.json`, and `model_bindings.json` are the only coordina
 
 ## 2. Lanes and gates
 
-Every card has exactly one lane: NORMAL, STANDARD, or CRITICAL. Structural is an overlay, not a separate lane.
+Every card has exactly one lane: ROUTINE, ELEVATED, or CRITICAL. Structural is an overlay, not a separate lane.
 
 | Lane | When | Gate |
 |---|---|---|
-| NORMAL | Default for ordinary, localized, readily reversible work under established requirements, including routine implementation, fixes, and mechanical changes, when neither higher lane applies | QA PASS + coordinator verification; no mandatory formal reviewer |
-| STANDARD | Important functional, behavioral, or correctness changes whose impact warrants independent judgment, without CRITICAL risk | QA PASS + 1 fresh independent formal reviewer |
+| ROUTINE | Default for ordinary, localized, readily reversible work under established requirements, including routine implementation, fixes, and mechanical changes, when neither higher lane applies | QA PASS + coordinator verification; no mandatory formal reviewer |
+| ELEVATED | Important functional, behavioral, or correctness changes whose impact warrants independent judgment, without CRITICAL risk | QA PASS + 1 fresh independent formal reviewer |
 | CRITICAL | An error could invalidate project results, corrupt canonical state, cross a trust boundary, create irreversible effects, invalidate a release or migration, or cause expensive downstream rework | QA PASS + 2 fresh independent formal reviewers |
 
-Choose the highest applicable lane and record a brief risk reason. Use CRITICAL whenever its risk criteria apply; otherwise use STANDARD for important changes and NORMAL for ordinary work. If NORMAL eligibility is uncertain, use at least STANDARD while clarifying the risk. Mechanical work is not automatically low risk; classify its actual effects.
+Choose the highest applicable lane and record a brief risk reason. Use CRITICAL whenever its risk criteria apply; otherwise use ELEVATED for important changes and ROUTINE for ordinary work. If ROUTINE eligibility is uncertain, use at least ELEVATED while clarifying the risk. Mechanical work is not automatically low risk; classify its actual effects.
 
-NORMAL removes the mandatory formal review seat, not verification: the coordinator checks actual outputs against the objective and acceptance criteria, reads the local report, verifies required QA evidence against the candidate, and records acceptance or the next step. This is coordinator verification, not a formal review authored by the coordinator. Existing findings and user/project requirements remain binding; PR merges also require the independent-review minimum in section 8.
+ROUTINE removes the mandatory formal review seat, not verification: the coordinator checks actual outputs against the objective and acceptance criteria, reads the local report, verifies required QA evidence against the candidate, and records acceptance or the next step. This is coordinator verification, not a formal review authored by the coordinator. Existing findings and user/project requirements remain binding; PR merges also require the independent-review minimum in section 8.
 
 ### Structural overlay
 
@@ -65,11 +65,11 @@ No catch-all structural reason. Structural work requires an accepted binding pla
 - Deterministic QA owns every machine-verifiable fact the card can produce. Distinguish baseline failures from candidate-introduced failures with evidence. Formal review does not start until required QA passes.
 - Freeze the candidate and identify its exact bytes as `candidate_digest`: use a Git commit/tree covering the complete candidate, or a frozen file manifest with content hashes covering files outside Git. A branch name or mutable directory alone is not an exact identity. QA, all reviewers, and acceptance refer to this same candidate and its evidence.
 - Formal reviewers are visible, fresh, read-only, outside producer lineage, and mutually blind during initial review. Fresh means no producer context or hidden continuation. Review runs in a clean root, never the producer worktree. Session identity and model identity are distinct.
-- Use the lane's required reviewer count. Any formal reviewer must have session and context/lineage independence from the producer, including STANDARD's single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
+- Use the lane's required reviewer count. Any formal reviewer must have session and context/lineage independence from the producer, including ELEVATED's single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
 
 ### 2. Record findings
 
-Review records completed coverage and zero or more findings; it does not cast a vote. Each finding records `finding_id`, reviewer or reporting session, exact `candidate_digest`, `MATERIAL|ADVISORY`, a falsifiable claim, affected scope, evidence or reproduction, required resolution condition, and tracked status. Findings discovered during NORMAL verification follow the same resolution rules; no empty review report is required.
+Review records completed coverage and zero or more findings; it does not cast a vote. Each finding records `finding_id`, reviewer or reporting session, exact `candidate_digest`, `MATERIAL|ADVISORY`, a falsifiable claim, affected scope, evidence or reproduction, required resolution condition, and tracked status. Findings discovered during ROUTINE verification follow the same resolution rules; no empty review report is required.
 
 `MATERIAL` blocks acceptance while `OPEN` or `CONFIRMED`. `ADVISORY` is recorded but does not block. Another reviewer's lack of findings does not dismiss an open finding.
 
@@ -77,7 +77,7 @@ Review records completed coverage and zero or more findings; it does not cast a 
 
 | Situation | Required action |
 |---|---|
-| Confirmed issue; fix preserves existing policy, authority, and intended semantics | New repair card/attempt on FIXER, or EXPERT under the post-expert rule below, referencing the failed candidate and finding → new candidate → QA → coordinator verification and fresh review where its lane requires it. Repairing a higher-lane candidate does not turn its revalidation into NORMAL work. |
+| Confirmed issue; fix preserves existing policy, authority, and intended semantics | New repair card/attempt on FIXER, or EXPERT under the post-expert rule below, referencing the failed candidate and finding → new candidate → QA → coordinator verification and fresh review where its lane requires it. Repairing a higher-lane candidate does not turn its revalidation into ROUTINE work. |
 | Confirmed issue; resolution requires a policy, authority, or semantic choice | Owner gate: obtain the owner's decision before proceeding with the changed scope or meaning. |
 | Machine evidence can refute the finding | Freeze the refutation evidence; the original reviewer or reporting session may withdraw or update the finding once. |
 | Technical disagreement remains | A fresh, independent, read-only adjudicator decides whether the finding is supported by evidence under existing contracts and authority. The adjudicator cannot invent semantics or modify candidate bytes. |
@@ -101,7 +101,7 @@ Record the resolution and supporting evidence against the finding. Evidence-reso
 
 ### Acceptance
 
-The coordinator accepts only the exact candidate bound by valid required QA, verified outputs, and all MATERIAL findings resolved or explicitly owner-accepted. Where formal review is required, coverage must be complete and reviewers eligible; multiple seats must satisfy model diversity, the recorded non-structural degradation, or the explicit owner decision required above. Each seat requires a saved report and retained execution evidence linking its session, candidate, actual model, and reasoning effort to the binding validly resolved and recorded at dispatch under section 4, including permitted replacements. Missing or mismatched evidence means the seat does not count; the session need not remain live. NORMAL follows the coordinator verification gate in section 2 without manufacturing a review record. An owner decision accepting diversity degradation does not dispose of any other finding.
+The coordinator accepts only the exact candidate bound by valid required QA, verified outputs, and all MATERIAL findings resolved or explicitly owner-accepted. Where formal review is required, coverage must be complete and reviewers eligible; multiple seats must satisfy model diversity, the recorded non-structural degradation, or the explicit owner decision required above. Each seat requires a saved report and retained execution evidence linking its session, candidate, actual model, and reasoning effort to the binding validly resolved and recorded at dispatch under section 4, including permitted replacements. Missing or mismatched evidence means the seat does not count; the session need not remain live. ROUTINE follows the coordinator verification gate in section 2 without manufacturing a review record. An owner decision accepting diversity degradation does not dispose of any other finding.
 
 ---
 
