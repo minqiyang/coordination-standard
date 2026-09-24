@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 350" width="900" height="350" role="img" aria-labelledby="t d">
 <title id="t">System overview</title>
-<desc id="d">Portable rules and replaceable model bindings feed the Pi coordinator. It dispatches task cards to Herdr tabs, reads and verifies the report files they write, and only then accepts the exact candidate.</desc>
+<desc id="d">Portable rules and replaceable model bindings feed the coordinator. It dispatches task cards to Herdr tabs, reads and verifies the report files they write, and only then accepts the exact candidate.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#0969da;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#4493f8;--paper:#0d1117}}

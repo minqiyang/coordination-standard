@@ -1,8 +1,8 @@
-# Herdr + Pi Coordination Standard
+# Coordination Standard
 
 **Version `8.0`**
 
-A working standard for running several AI coding agents on one project. **Herdr** hosts every session in its own terminal Tab, and **Pi** acts as the coordinator: it hands out tasks, reads the workers' reports, and decides what gets accepted. The coordinator does not write the code itself.
+A working standard for running several AI coding agents on one project. **Herdr** hosts every session in its own terminal Tab, and one agent session acts as the coordinator: it hands out tasks, reads the workers' reports, and decides what gets accepted. The coordinator does not write the code itself, and any capable agent can play that role.
 
 The policy lives in three files, and only these three:
 
@@ -38,7 +38,7 @@ Some work is also marked **structural**, such as project-defining architecture, 
 
 ## Getting started
 
-Open a Herdr Tab for Pi and point it at the three policy files where they are. Don't copy them, so there is only ever one live version:
+Open a Herdr Tab for your coordinator agent and point it at the three policy files where they are. Don't copy them, so there is only ever one live version:
 
 ```text
 Read <standard-dir>/coordinator.md, <standard-dir>/routing_table.json, and

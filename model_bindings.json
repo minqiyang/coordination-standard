@@ -48,9 +48,6 @@
     }
   },
   "harnesses": {
-    "Pi": {
-      "herdr_kind": "pi"
-    },
     "Claude Code": {
       "herdr_kind": "claude"
     },
@@ -62,10 +59,6 @@
     }
   },
   "route_bindings": {
-    "COORD": {
-      "model": "live_pi_session",
-      "harness": "Pi"
-    },
     "GENERAL_EXEC": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
