@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.3",
+  "bindings_version": "8.4",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
@@ -45,14 +45,6 @@
   },
   "route_bindings": {
     "GENERAL_EXEC": {
-      "model_ref": "OPUS_LATEST",
-      "harness": "Claude Code",
-      "default_effort": "medium",
-      "allowed_effort_band": [
-        "medium"
-      ]
-    },
-    "FIXER": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
       "default_effort": "medium",

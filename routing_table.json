@@ -1,5 +1,5 @@
 {
-  "table_version": "8.3",
+  "table_version": "8.4",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -27,7 +27,7 @@
       "may_formally_review": false
     },
     "GENERAL_EXEC": {
-      "capability": "ordinary implementation, debugging, integration, and interaction logic; repair work uses FIXER",
+      "capability": "ordinary implementation, debugging, integration, interaction logic, and repair of identified defects, failed QA, or confirmed review findings",
       "capability_class": "implementation",
       "default": true,
       "may_author_plan": false,
@@ -156,22 +156,6 @@
           "when": "card_mixes_nonprose_work_with_required_prose_delivery",
           "action": "split_the_prose_into_a_separate_PROSE_card"
         }
-      ]
-    },
-    "FIXER": {
-      "capability": "repair of identified defects, failed QA, or confirmed review findings under existing requirements",
-      "capability_class": "implementation",
-      "default": false,
-      "may_author_plan": false,
-      "may_formally_review": false,
-      "dispatch_triggers": [
-        {
-          "trigger_id": "REPAIR_IDENTIFIED_DEFECT",
-          "when": "task_objective_is_to_repair_an_identified_defect_failed_QA_or_confirmed_review_finding_under_existing_requirements"
-        }
-      ],
-      "prompt_constraints": [
-        "scope_clamp"
       ]
     },
     "ABLATION": {
