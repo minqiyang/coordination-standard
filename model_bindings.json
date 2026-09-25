@@ -21,11 +21,6 @@
       "selector": "latest",
       "access_plan_ref": "gemini_ai_pro"
     },
-    "GPT_LATEST": {
-      "family": "GPT",
-      "selector": "latest",
-      "access_plan_ref": "chatgpt_plus"
-    },
     "GPT_ASTRA_LATEST": {
       "family": "GPT Astra",
       "selector": "latest",
@@ -98,13 +93,28 @@
       ]
     },
     "DESIGN": {
-      "quota_binding_order_ref": "problem_solving_quota_order"
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "xhigh",
+      "allowed_effort_band": [
+        "xhigh"
+      ]
     },
     "EXPERT": {
-      "quota_binding_order_ref": "problem_solving_quota_order"
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "xhigh",
+      "allowed_effort_band": [
+        "xhigh"
+      ]
     },
     "ABLATION": {
-      "quota_binding_order_ref": "problem_solving_quota_order"
+      "model_ref": "OPUS_LATEST",
+      "harness": "Claude Code",
+      "default_effort": "xhigh",
+      "allowed_effort_band": [
+        "xhigh"
+      ]
     },
     "FRONTEND": {
       "model_ref": "OPUS_LATEST",
@@ -123,23 +133,5 @@
       ]
     }
   },
-  "problem_solving_quota_order": [
-    {
-      "model_ref": "OPUS_LATEST",
-      "harness": "Claude Code",
-      "default_effort": "xhigh",
-      "allowed_effort_band": [
-        "xhigh"
-      ]
-    },
-    {
-      "model_ref": "GPT_LATEST",
-      "harness": "Codex",
-      "default_effort": "xhigh",
-      "allowed_effort_band": [
-        "xhigh"
-      ]
-    }
-  ],
   "replacement_binding": null
 }
