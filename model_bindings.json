@@ -35,11 +35,6 @@
       "family": "Opus",
       "selector": "latest",
       "access_plan_ref": "claude_subscription"
-    },
-    "FABLE_LATEST": {
-      "family": "Fable",
-      "selector": "latest",
-      "access_plan_ref": "claude_subscription"
     }
   },
   "harnesses": {
@@ -79,11 +74,11 @@
       ]
     },
     "AUDIT": {
-      "model_ref": "OPUS_LATEST",
-      "harness": "Claude Code",
-      "default_effort": "medium",
+      "model_ref": "GPT_ASTRA_LATEST",
+      "harness": "Codex",
+      "default_effort": "high",
       "allowed_effort_band": [
-        "medium"
+        "high"
       ]
     },
     "DESIGN": {
@@ -114,7 +109,7 @@
   },
   "problem_solving_quota_order": [
     {
-      "model_ref": "FABLE_LATEST",
+      "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
       "default_effort": "xhigh",
       "allowed_effort_band": [

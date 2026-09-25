@@ -25,8 +25,8 @@ Every card has exactly one lane: ROUTINE, ELEVATED, or CRITICAL. Structural is a
 | Lane | When | Gate |
 |---|---|---|
 | ROUTINE | Default for ordinary, localized, readily reversible work under established requirements, including routine implementation, fixes, and mechanical changes, when neither higher lane applies | QA PASS + coordinator verification; no mandatory formal reviewer |
-| ELEVATED | Important functional, behavioral, or correctness changes whose impact warrants independent judgment, without CRITICAL risk | QA PASS + 1 fresh independent formal reviewer |
-| CRITICAL | An error could invalidate project results, corrupt canonical state, cross a trust boundary, create irreversible effects, invalidate a release or migration, or cause expensive downstream rework | QA PASS + 2 fresh independent formal reviewers |
+| ELEVATED | Important functional, behavioral, or correctness changes whose impact warrants independent judgment, without CRITICAL risk | QA PASS + the lane's `review_seats` |
+| CRITICAL | An error could invalidate project results, corrupt canonical state, cross a trust boundary, create irreversible effects, invalidate a release or migration, or cause expensive downstream rework | QA PASS + the lane's `review_seats` |
 
 Choose the highest applicable lane and record a brief risk reason. Use CRITICAL whenever its risk criteria apply; otherwise use ELEVATED for important changes and ROUTINE for ordinary work. If ROUTINE eligibility is uncertain, use at least ELEVATED while clarifying the risk. Mechanical work is not automatically low risk; classify its actual effects.
 
@@ -65,7 +65,7 @@ No catch-all structural reason. Structural work requires an accepted binding pla
 - Deterministic QA owns every machine-verifiable fact the card can produce. Distinguish baseline failures from candidate-introduced failures with evidence. Formal review does not start until required QA passes.
 - Freeze the candidate and identify its exact bytes as `candidate_digest`: use a Git commit/tree covering the complete candidate, or a frozen file manifest with content hashes covering files outside Git. A branch name or mutable directory alone is not an exact identity. QA, all reviewers, and acceptance refer to this same candidate and its evidence.
 - Formal reviewers are visible, fresh, read-only, outside producer lineage, and mutually blind during initial review. Fresh means no producer context or hidden continuation. Review runs in a clean root, never the producer worktree. Session identity and model identity are distinct.
-- Use the lane's required reviewer count. Any formal reviewer must have session and context/lineage independence from the producer, including ELEVATED's single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
+- Use the lane's required reviewer count. Any formal reviewer must have session and context/lineage independence from the producer, including a single seat. Pairwise underlying-model diversity applies when multiple review seats are required. When any two or more seats resolve to the same model, by design or replacement, a non-structural candidate may continue with `diversity_degraded` recorded; structural work and binding plans require an explicit owner decision on that degradation. Model-diversity approval never waives the required reviewer count or session or lineage independence.
 
 ### 2. Record findings
 

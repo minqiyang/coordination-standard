@@ -10,7 +10,6 @@
       "REVIEW"
     ],
     "CRITICAL": [
-      "REVIEW",
       "AUDIT"
     ]
   },
@@ -36,7 +35,7 @@
       ]
     },
     "REVIEW": {
-      "capability": "first formal review seat",
+      "capability": "formal review seat for ELEVATED candidates",
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
@@ -117,7 +116,7 @@
       ]
     },
     "AUDIT": {
-      "capability": "second formal review seat and deep failure audit",
+      "capability": "formal review seat for CRITICAL candidates, including structural work and binding plans, with deep failure audit",
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
