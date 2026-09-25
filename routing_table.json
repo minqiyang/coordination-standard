@@ -1,5 +1,5 @@
 {
-  "table_version": "8.2",
+  "table_version": "8.3",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -7,10 +7,12 @@
   "review_seats": {
     "ROUTINE": [],
     "ELEVATED": [
-      "REVIEW"
+      "REVIEW",
+      "REVIEW_2"
     ],
     "CRITICAL": [
-      "AUDIT"
+      "AUDIT",
+      "AUDIT_2"
     ]
   },
   "pr_merge_minimum_gate": {
@@ -35,7 +37,14 @@
       ]
     },
     "REVIEW": {
-      "capability": "formal review seat for ELEVATED candidates",
+      "capability": "first formal review seat for ELEVATED candidates",
+      "capability_class": "review",
+      "default": true,
+      "may_author_plan": false,
+      "may_formally_review": true
+    },
+    "REVIEW_2": {
+      "capability": "second formal review seat for ELEVATED candidates",
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
@@ -116,7 +125,14 @@
       ]
     },
     "AUDIT": {
-      "capability": "formal review seat for CRITICAL candidates, including structural work and binding plans, with deep failure audit",
+      "capability": "first formal review seat for CRITICAL candidates, including structural work and binding plans, with deep failure audit",
+      "capability_class": "review",
+      "default": true,
+      "may_author_plan": false,
+      "may_formally_review": true
+    },
+    "AUDIT_2": {
+      "capability": "second formal review seat for CRITICAL candidates, including structural work and binding plans",
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
