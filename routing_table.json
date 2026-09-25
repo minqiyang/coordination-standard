@@ -1,5 +1,5 @@
 {
-  "table_version": "8.4",
+  "table_version": "8.5",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -89,6 +89,10 @@
         {
           "trigger_id": "EXPERT_REPAIR_CONTINUATION",
           "when": "same_previously_escalated_core_problem_remains_or_evidence_shows_repairs_are_worsening_it_and_coordinator_records_expert_continuation"
+        },
+        {
+          "trigger_id": "REVIEW_ITERATION_LIMIT",
+          "when": "elevated_or_critical_candidate_still_has_material_findings_after_three_review_and_repair_iterations"
         }
       ],
       "prompt_constraints": [

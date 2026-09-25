@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.4",
+  "bindings_version": "8.5",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
