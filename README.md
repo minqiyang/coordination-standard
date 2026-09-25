@@ -31,7 +31,7 @@ Every card gets one lane, based on what a mistake would cost:
 | Lane | Typical work | What it takes to accept |
 |---|---|---|
 | ROUTINE | Routine, local, easily reversed changes | QA passes and the coordinator checks the output |
-| ELEVATED | Important behavior or correctness changes | QA passes plus two fresh, independent reviewers on different models |
+| ELEVATED | Important behavior or correctness changes | QA passes plus one fresh, independent reviewer |
 | CRITICAL | Mistakes that could corrupt state, cross a trust boundary, or can't be undone | QA passes plus two fresh, independent reviewers on different models, at higher reasoning effort |
 
 Some work is also marked **structural**, such as project-defining architecture, security boundaries, or shared contracts. Structural work needs an accepted binding plan first and then the CRITICAL gate. The exact criteria are in [section 2 of the card](coordinator.md#2-lanes-and-gates).

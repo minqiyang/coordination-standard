@@ -60,14 +60,6 @@
         "high"
       ]
     },
-    "REVIEW_2": {
-      "model_ref": "OPUS_LATEST",
-      "harness": "Claude Code",
-      "default_effort": "medium",
-      "allowed_effort_band": [
-        "medium"
-      ]
-    },
     "AUDIT": {
       "model_ref": "GPT_ASTRA_LATEST",
       "harness": "Codex",

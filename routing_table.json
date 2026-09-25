@@ -7,8 +7,7 @@
   "review_seats": {
     "ROUTINE": [],
     "ELEVATED": [
-      "REVIEW",
-      "REVIEW_2"
+      "REVIEW"
     ],
     "CRITICAL": [
       "AUDIT",
@@ -37,14 +36,7 @@
       ]
     },
     "REVIEW": {
-      "capability": "first formal review seat for ELEVATED candidates",
-      "capability_class": "review",
-      "default": true,
-      "may_author_plan": false,
-      "may_formally_review": true
-    },
-    "REVIEW_2": {
-      "capability": "second formal review seat for ELEVATED candidates",
+      "capability": "formal review seat for ELEVATED candidates",
       "capability_class": "review",
       "default": true,
       "may_author_plan": false,
@@ -92,7 +84,7 @@
         },
         {
           "trigger_id": "REVIEW_ITERATION_LIMIT",
-          "when": "elevated_or_critical_candidate_still_has_material_findings_after_three_review_and_repair_iterations"
+          "when": "elevated_or_critical_candidate_still_has_material_findings_in_its_third_review_round"
         }
       ],
       "prompt_constraints": [

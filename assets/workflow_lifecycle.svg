@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" width="1000" height="280" role="img" aria-labelledby="t d">
 <title id="t">Task lifecycle</title>
-<desc id="d">A task moves from dispatch through a finite wait, report verification, optional ablation for major deliveries, and deterministic QA. The lane then decides review: coordinator check for Routine, two fresh reviewers on different models for Elevated and, at higher effort, for Critical. The exact candidate is accepted and merged manually. QA failures and open findings loop back as a fix with a new candidate.</desc>
+<desc id="d">A task moves from dispatch through a finite wait, report verification, optional ablation for major deliveries, and deterministic QA. The lane then decides review: coordinator check for Routine, one fresh reviewer for Elevated, two on different models for Critical. The exact candidate is accepted and merged manually. QA failures and open findings loop back as a fix with a new candidate.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#0969da;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#4493f8;--paper:#0d1117}}
@@ -47,7 +47,7 @@
 </g>
 <text x="600" y="50" class="k">ROUTINE</text><text x="600" y="90" class="k">ELEVATED</text><text x="600" y="130" class="k">CRITICAL</text>
 <circle cx="705" cy="60" r="5.5" class="fp" style="stroke:var(--accent);stroke-width:2"/>
-<circle cx="693" cy="100" r="5.5" class="fa"/><circle cx="717" cy="100" r="5.5" class="fa"/>
+<circle cx="705" cy="100" r="5.5" class="fa"/>
 <circle cx="693" cy="140" r="5.5" class="fa"/><circle cx="717" cy="140" r="5.5" class="fa"/>
 <path d="M490,156 V210 M765,152 V210" class="dash"/>
 <path d="M765,210 H50 V158" class="dash" marker-end="url(#am)"/>
