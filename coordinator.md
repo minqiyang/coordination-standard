@@ -1,4 +1,4 @@
-# Herdr Coordinator Operating Card v8.6
+# Herdr Coordinator Operating Card v8.7
 
 **Status:** LIVE_OPERATING_CARD
 This card, `routing_table.json`, and `model_bindings.json` are the only coordinator workflow policy files. The card and routing table are the portable rules; `model_bindings.json` holds the replaceable model choices. User authorization and project constraints still govern the work. Do not load `archive/`.

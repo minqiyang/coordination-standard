@@ -1,5 +1,5 @@
 {
-  "table_version": "8.6",
+  "table_version": "8.7",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"

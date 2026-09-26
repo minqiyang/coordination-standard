@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.6",
+  "bindings_version": "8.7",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
@@ -55,9 +55,9 @@
     "GENERAL_EXEC": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "medium",
+      "default_effort": "high",
       "allowed_effort_band": [
-        "medium"
+        "high"
       ]
     },
     "REVIEW": {
