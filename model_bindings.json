@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.5",
+  "bindings_version": "8.6",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "gemini_ai_pro": {
@@ -58,7 +58,15 @@
       "default_effort": "high",
       "allowed_effort_band": [
         "high"
-      ]
+      ],
+      "replacement": {
+        "model_ref": "OPUS_LATEST",
+        "harness": "Claude Code",
+        "default_effort": "medium",
+        "allowed_effort_band": [
+          "medium"
+        ]
+      }
     },
     "AUDIT": {
       "model_ref": "GPT_ASTRA_LATEST",
@@ -66,7 +74,15 @@
       "default_effort": "high",
       "allowed_effort_band": [
         "high"
-      ]
+      ],
+      "replacement": {
+        "model_ref": "OPUS_LATEST",
+        "harness": "Claude Code",
+        "default_effort": "medium",
+        "allowed_effort_band": [
+          "medium"
+        ]
+      }
     },
     "AUDIT_2": {
       "model_ref": "OPUS_LATEST",
@@ -116,6 +132,5 @@
         "HIGH"
       ]
     }
-  },
-  "replacement_binding": null
+  }
 }
