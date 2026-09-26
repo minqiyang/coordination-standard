@@ -132,5 +132,9 @@
         "HIGH"
       ]
     }
+  },
+  "session_reuse": {
+    "max_context_tokens": 200000,
+    "max_idle_minutes": 55
   }
 }

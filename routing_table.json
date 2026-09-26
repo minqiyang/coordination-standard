@@ -26,7 +26,7 @@
       "may_formally_review": false
     },
     "GENERAL_EXEC": {
-      "capability": "ordinary implementation, debugging, integration, interaction logic, and repair of identified defects, failed QA, or confirmed review findings",
+      "capability": "ordinary implementation, debugging, integration, interaction logic, and repair of its own candidates",
       "capability_class": "implementation",
       "default": true,
       "may_author_plan": false,
