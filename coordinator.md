@@ -1,4 +1,4 @@
-# Herdr Coordinator Operating Card v8.7
+# Herdr Coordinator Operating Card v8.8
 
 **Status:** LIVE_OPERATING_CARD
 This card, `routing_table.json`, and `model_bindings.json` are the only coordinator workflow policy files. The card and routing table are the portable rules; `model_bindings.json` holds the replaceable model choices. User authorization and project constraints still govern the work. Do not load `archive/`.
@@ -169,7 +169,8 @@ applicable user/project authorization, constraints, and stop conditions
 
 ## 6. Evidence, progress, and handoff
 
-- From the first dispatch, state the objective, useful starting references, and an attempt-specific report path. Full findings, results, checked/unchecked items, evidence locations, and blockers go in that report; long task briefs and handoffs may likewise be files. Herdr carries short instructions, questions, and status/path notifications, not the sole copy of substantive results. The report may use a suitable format; no extra schema or fixed file bundle is required.
+- From the first dispatch, state the objective, useful starting references, and an attempt-specific report path. Give the whole task in that one dispatch, including its checkable finish line (acceptance criteria sourced under section 5, stated as observable results such as "the tests pass") and when to stop and ask. Then let it run: do not send further instructions mid-run unless the worker asks, reports a blocker, or the owner changes the requirements.
+- For work expected to run long, have the worker keep a done/remaining task list in its attempt report and update it as it goes. Check progress by reading that list, not the scrollback. Full findings, results, checked/unchecked items, evidence locations, and blockers go in that report; long task briefs and handoffs may likewise be files. Herdr carries short instructions, questions, and status/path notifications, not the sole copy of substantive results. The report may use a suitable format; no extra schema or fixed file bundle is required.
 - Give each attempt/reviewer its own report location; preserve earlier handoffs rather than overwriting them. Reports live outside frozen candidates. Reviewers may write their own reports while candidates remain read-only, and must not read other reviewers' initial reports or producer-private context.
 - Finish writing before notifying the recipient; prefer a temporary file followed by atomic rename where supported. Return task/attempt, completion or blocked status, and the report's absolute path (or a recipient-accessible locator). If report writing fails, send the error and blocker directly through the terminal; reporting must not become a deadlock.
 - The coordinator reads the report directly, checks the agreed location, task/attempt and candidate identity, completeness, and referenced evidence before deciding next steps. A later recipient receives the relevant report location, not a paraphrase alone. Ensure shared filesystem access or an authorized transfer for remote/container sessions; retain durable handoff evidence in project-accessible storage, not only transient terminal history.
