@@ -144,7 +144,9 @@ Routes, triggers, review seats, gates, permission defaults, and prompts live in 
 Every task card records:
 
 ```text
-task/attempt ID and objective
+task/attempt ID and target state (the owner's final or stage goal)
+current state: observed facts and evidence
+owner's considerations and hypotheses, if any, quoted and marked as hypotheses
 acceptance criteria and premises, each quoted from its source or marked worker-proposed
 starting references or baseline identity
 working root, required outputs, and this attempt's report location
@@ -153,10 +155,10 @@ required QA; formal review coverage where required (otherwise mark review not re
 applicable user/project authorization, constraints, and stop conditions
 ```
 
-- A card states the goal, not the procedure: give the objective, acceptance criteria, constraints, and where to find the relevant context and materials, and leave the method to the executor. Initial references are starting points, not a file allowlist. Executors may independently discover, read, and make task-relevant changes within existing user/project authorization; dispatch need not enumerate readable or editable files. This does not expand authority or waive single-writer isolation, candidate read-only review, or initial-review blindness.
+- A card states the goal, not the procedure: give the owner's considerations, the current state, the target state, acceptance criteria, constraints, and where to find the relevant context and materials, and leave the method to the executor: locating causes, forming hypotheses, designing, implementing, and verifying. Initial references are starting points, not a file allowlist. Executors may independently discover, read, and make task-relevant changes within existing user/project authorization; dispatch need not enumerate readable or editable files. This does not expand authority or waive single-writer isolation, candidate read-only review, or initial-review blindness.
 - Workers may be more capable than the coordinator. The coordinator dispatches, receives, and enforces gates; it does not think the task through for the worker. The coordinator must not:
   - prescribe the method, except where a step is itself a requirement, such as a required QA command, a referenced prompt, or an approach the owner specified;
-  - put its own diagnosis, guessed cause, or proposed solution into a card; it passes on observed facts, evidence, and pointers instead, so the worker is not steered toward the wrong problem;
+  - put its own diagnosis, guessed cause, or proposed solution into a card; it passes on observed facts, evidence, and pointers instead, so the worker is not steered toward the wrong problem. An owner's hypothesis is relayed verbatim as a hypothesis, which the worker may test, confirm, or reject with evidence, not as a premise or instruction;
   - write acceptance criteria or premises itself; it quotes them from the owner, project requirements, or an accepted plan. If none exist, the worker states the criteria and premises it adopted in its report; ELEVATED and CRITICAL reviewers review them with the candidate, and semantic or authority questions go to the owner;
   - make technical or substantive judgments, such as whether a cause, solution, or design is right. It still applies lanes, routes, evidence checks, and gates by the rules; a technical concern becomes a finding resolved under section 3 by independent review or adjudication.
 - A worker that finds its card's objective, criteria, or premises flawed reports why, with evidence, instead of working around them. The coordinator takes the challenge to whoever owns that part (the owner for requirements or semantics, the plan's acceptance process for an accepted plan) and does not decide it or insist on the original framing.
