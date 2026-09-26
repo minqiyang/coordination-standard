@@ -34,10 +34,18 @@
   },
   "harnesses": {
     "Claude Code": {
-      "herdr_kind": "claude"
+      "herdr_kind": "claude",
+      "effort_arg": [
+        "--effort",
+        "{effort}"
+      ]
     },
     "Codex": {
-      "herdr_kind": "codex"
+      "herdr_kind": "codex",
+      "effort_arg": [
+        "-c",
+        "model_reasoning_effort=\"{effort}\""
+      ]
     },
     "Antigravity": {
       "herdr_kind": "agy"
