@@ -1,11 +1,7 @@
 {
-  "bindings_version": "8.8",
+  "bindings_version": "8.9",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
-    "gemini_ai_pro": {
-      "display_name": "Google Gemini AI Pro",
-      "subscribed": true
-    },
     "chatgpt_plus": {
       "display_name": "ChatGPT Plus",
       "subscribed": true
@@ -16,11 +12,6 @@
     }
   },
   "model_aliases": {
-    "GEMINI_FLASH_LATEST": {
-      "family": "Gemini Flash",
-      "selector": "latest",
-      "access_plan_ref": "gemini_ai_pro"
-    },
     "GPT_ASTRA_LATEST": {
       "family": "GPT Astra",
       "selector": "latest",
@@ -46,9 +37,6 @@
         "-c",
         "model_reasoning_effort=\"{effort}\""
       ]
-    },
-    "Antigravity": {
-      "herdr_kind": "agy"
     }
   },
   "route_bindings": {
@@ -130,14 +118,6 @@
       "default_effort": "high",
       "allowed_effort_band": [
         "high"
-      ]
-    },
-    "PROSE": {
-      "model_ref": "GEMINI_FLASH_LATEST",
-      "harness": "Antigravity",
-      "default_effort": "HIGH",
-      "allowed_effort_band": [
-        "HIGH"
       ]
     }
   },

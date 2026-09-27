@@ -1,5 +1,5 @@
 {
-  "table_version": "8.8",
+  "table_version": "8.9",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -133,26 +133,6 @@
       "default": true,
       "may_author_plan": false,
       "may_formally_review": true
-    },
-    "PROSE": {
-      "capability": "prose delivery: articles, documentation, explanations, and presentation of established conclusions; excludes binding-plan authorship and formal review judgment",
-      "capability_class": "prose",
-      "default": true,
-      "may_author_plan": false,
-      "may_formally_review": false,
-      "mandatory_route_conditions": [
-        {
-          "condition_id": "PROSE_FOUR_OR_MORE_SENTENCES",
-          "when": "work_is_prose_delivery_and_output_is_article_documentation_or_explanation_or_expected_to_contain_four_or_more_sentences"
-        }
-      ],
-      "dispatch_triggers": [
-        {
-          "trigger_id": "PROSE_SPLIT_MIXED_CARD",
-          "when": "card_mixes_nonprose_work_with_required_prose_delivery",
-          "action": "split_the_prose_into_a_separate_PROSE_card"
-        }
-      ]
     },
     "ABLATION": {
       "capability": "post-delivery ablation experiments and evidence-backed simplification of major designs or implementations",
