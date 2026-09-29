@@ -1,5 +1,5 @@
 {
-  "bindings_version": "8.9",
+  "bindings_version": "9.0",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "chatgpt_plus": {
@@ -29,7 +29,15 @@
       "effort_arg": [
         "--effort",
         "{effort}"
-      ]
+      ],
+      "effort_overrides": {
+        "ultracode": [
+          "--effort",
+          "xhigh",
+          "--settings",
+          "{\"ultracode\":true}"
+        ]
+      }
     },
     "Codex": {
       "herdr_kind": "codex",
@@ -99,17 +107,17 @@
     "EXPERT": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "xhigh",
+      "default_effort": "ultracode",
       "allowed_effort_band": [
-        "xhigh"
+        "ultracode"
       ]
     },
     "ABLATION": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "high",
+      "default_effort": "ultracode",
       "allowed_effort_band": [
-        "high"
+        "ultracode"
       ]
     },
     "FRONTEND": {
