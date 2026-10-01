@@ -1,4 +1,4 @@
-# Herdr Coordinator Operating Card v9.0
+# Herdr Coordinator Operating Card v0.10.0
 
 **Status:** LIVE_OPERATING_CARD
 This card, `routing_table.json`, and `model_bindings.json` are the only coordinator workflow policy files. The card and routing table are the portable rules; `model_bindings.json` holds the replaceable model choices. User authorization and project constraints still govern the work. Do not load `archive/`.
@@ -55,11 +55,11 @@ No catch-all structural reason. Structural work requires an accepted binding pla
 
 ## 3. QA and review
 
-### Post-delivery ablation
+### Ablation on trigger
 
-- After each major design or implementation candidate is ready, and before final acceptance, dispatch ABLATION with the routing table's `ablation_prompt`. Major means a formal architecture/interface or binding-plan deliverable, or completion of a feature, subsystem, or substantial implementation milestone; it does not mean each small edit or repair. Record applicability in the task card so the pass is not silently skipped.
-- This is a simplification task, not a formal review seat or failure-triggered escalation; it needs no failed-attempt threshold. Preserve the baseline and run removals in a separate candidate under single-writer rules. For designs without executable code, use concrete scenarios, prototypes, or contract checks and state what remains unverified. Keep necessary controls; do not infer redundancy from lack of current test coverage.
-- Save experiment evidence and justified removals or a no-change conclusion. Key changes to an accepted binding plan need renewed plan acceptance before implementation. The resulting candidate must pass its lane's QA and acceptance gate, including independent review where required; the ablation executor is a producer, not its reviewer. Revalidation of this pass alone does not recursively trigger another ablation pass.
+- Dispatch ABLATION only on a trigger, never on a schedule or after every milestone: (1) a milestone retired a whole feature or data source; (2) a scan found a module nothing uses; (3) production code has grown substantially since the last pass, stated with the measured growth; (4) the owner asks. At the end of each milestone, check the triggers and record the result in the task record so the decision is not silently skipped.
+- A pass is its own card, dispatched with the routing table's `ablation_prompt`, from the current base in a separate candidate under single-writer rules. The card sets a hard token budget for the whole pass, subagents included (default 20M tokens); the session stops and reports when it reaches it. This is a simplification task, not a formal review seat or failure-triggered escalation; it needs no failed-attempt threshold.
+- Save the screening evidence and justified removals or a no-change conclusion. Key changes to an accepted binding plan need renewed plan acceptance before implementation. The resulting candidate must pass its lane's QA and acceptance gate, including independent review where required; the ablation executor is a producer, not its reviewer. Revalidation of this pass alone does not recursively trigger another ablation pass.
 
 ### 1. Prepare QA and independent review
 
@@ -149,7 +149,7 @@ owner's considerations and hypotheses, if any, quoted and marked as hypotheses
 acceptance criteria and premises, each quoted from its source or marked worker-proposed
 starting references or baseline identity
 working root, required outputs, and this attempt's report location
-lane and brief risk reason, `structural: true|false` with reasons when true, ablation applicability, and one route
+lane and brief risk reason, `structural: true|false` with reasons when true, and one route
 required QA; formal review coverage where required (otherwise mark review not required)
 applicable user/project authorization, constraints, and stop conditions
 ```
@@ -178,7 +178,7 @@ applicable user/project authorization, constraints, and stop conditions
 - Keep a persistent task record in an existing project task list or a simple Markdown file: task/owner Tab, write scope, outputs and QA/review evidence locations, progress, unresolved findings or blockers, and next step or unblock condition. Record substantive handoff facts on disk before ending a work session.
 - A `DONE`, `PASS`, or process-exit message is a report, not proof of completion. The coordinator checks the actual files and applicable command results, review evidence, and Git/remote state before recording success.
 - A pause records its reason, supporting evidence, and exact unblock condition. When resuming, inspect files, evidence, and live processes against the task record before arranging further work; do not redispatch solely from a transcript or stale status.
-- Coordinator loop: confirm the task and current state → clean up obsolete panes under section 1 → dispatch → wait and reconcile results → verify outputs → apply required ablation and QA/review gates → perform any authorized publication under section 8 → record the result → continue the next authorized stage. Dispatch acknowledgment, repairing a display problem, or reporting progress is not completion of the coordinator's turn.
+- Coordinator loop: confirm the task and current state → clean up obsolete panes under section 1 → dispatch → wait and reconcile results → verify outputs → apply required QA/review gates → perform any authorized publication under section 8 → record the result → continue the next authorized stage. Dispatch acknowledgment, repairing a display problem, or reporting progress is not completion of the coordinator's turn.
 - While delegated work is outstanding, follow the installed Herdr skill's default wait semantics for ordinary tasks; narrow the target state only when the task requires it. Do not poll at high frequency; give background work ample time. Use a finite timeout for each wait, set to the task's estimated remaining duration plus at least 5 minutes of margin (for example, wait 10 minutes for a 5-minute task and 15 minutes for a 10-minute task), and never below 3 minutes; there is no maximum. A wait may still return early when the worker's state changes, and launch or startup verification is not a progress check. If work is still running when a wait ends, re-estimate and wait again with the same margin rather than switching to short checks. Use a verified wake-up timer when an interval exceeds a blocking tool's runtime limit. Prefer lightweight status checks over repeated transcript reads; inspect detailed output when state changes or diagnosis is needed. Unless notifications are verified to resume this coordinator session, keep waiting under this rule; a child message or saved report alone is not a wake-up mechanism. Handle completed or blocked work without waiting for unrelated workers, and continue waiting for the rest. Report meaningful changes, not repeated unchanged status.
 - After each wait returns or times out, and before advancing, handling a blocker, waiting again, or sending a "waiting" update, check the current attempts' report locations for new or changed completion evidence and reconcile it with live execution state. A final report must match the task/attempt and candidate, cover the requested work, and reference valid evidence; a file's existence or a `PASS` label alone is insufficient. Once completion is verified, act on it without waiting for a cosmetic UI status change, another notification, or user prompting. A stale status indicator must not override verified completion; a genuinely active writer must still finish and release responsibility before handoff.
 - Completion notifications are hints. Detect completion even when notification is missing; an idle/exited pane without a valid report requires investigation or a report request, not silent acceptance or duplicate dispatch. Silence alone does not justify restarting a worker.

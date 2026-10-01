@@ -1,5 +1,5 @@
 {
-  "table_version": "9.0",
+  "table_version": "0.10.0",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -135,15 +135,15 @@
       "may_formally_review": true
     },
     "ABLATION": {
-      "capability": "post-delivery ablation experiments and evidence-backed simplification of major designs or implementations",
+      "capability": "trigger-based, budget-capped removal of whole unused modules, stages, or committed evidence files",
       "capability_class": "simplification",
       "default": false,
       "may_author_plan": true,
       "may_formally_review": false,
       "mandatory_route_conditions": [
         {
-          "condition_id": "MAJOR_DELIVERY_ABLATION",
-          "when": "major_design_or_implementation_candidate_ready_before_final_acceptance"
+          "condition_id": "TRIGGERED_ABLATION",
+          "when": "feature_or_data_source_retired_or_unused_module_found_or_substantial_code_growth_or_owner_request"
         }
       ],
       "prompt_constraints": [
@@ -153,5 +153,5 @@
     }
   },
   "scope_clamp": "Stay strictly within this card's objective, authority, read scope, and write scope. If additional work is required, state the missing scope in one line and stop. Do not perform that additional work.",
-  "ablation_prompt": "Perform ablation experiments on this completed design or implementation: identify potentially unnecessary abstractions, design elements, and code; remove or simplify them one at a time in a separate candidate and compare against the baseline using relevant acceptance tests and evidence. Keep only demonstrated simplifications that preserve required behavior, contracts, safety, and recovery. Restore changes that regress behavior; do not remove tests or weaken acceptance criteria to claim success. Record each experiment, result, retained/reverted change, and untested uncertainty in the local report. A supported no-change conclusion is valid."
+  "ablation_prompt": "Run a capped ablation pass. Screen cheaply first with static tools: dependency graph, unused code, unused parameters. Target only whole units: entire modules, stages, or committed evidence files that nothing uses; leave scattered small redundancy to ordinary review. Stay within the card's token budget, with at most 2 subagents and no workflows; at the budget, stop and report. Remove the confirmed-unused units in one candidate. If any removal could change results, recompute once on the whole candidate at the end and compare against the baseline; do not recompute per removal. Keep only removals that preserve required behavior, contracts, safety, and recovery, and restore any that regress. Missing test coverage is not evidence that something is unused; do not remove tests or weaken acceptance criteria. Record what was screened, removed, restored, and left unverified in the local report. A supported no-change conclusion is valid."
 }

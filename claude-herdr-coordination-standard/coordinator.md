@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.1
+# Claude-herdr Coordinator Card 0.2.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -38,8 +38,8 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 
 | Route | Use |
 |---|---|
-| GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration |
-| EXPERT | Only for (1) the same blocker after 2 qualifying attempts, (2) an owner request, (3) continuation of an escalated problem (section 5), (4) MATERIAL findings still open after review round 3. Also runs post-delivery ablation |
+| GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration, ablation passes |
+| EXPERT | Only for (1) the same blocker after 2 qualifying attempts, (2) an owner request, (3) continuation of an escalated problem (section 5), (4) MATERIAL findings still open after review round 3 |
 | REVIEW | ELEVATED seat; default adjudicator |
 | AUDIT | First CRITICAL seat, with deep failure audit |
 | AUDIT_2 | Second CRITICAL seat |
@@ -67,7 +67,7 @@ hypotheses: the owner's (quoted) and yours, each labeled as a hypothesis
 acceptance criteria and premises: quoted with source, or marked coordinator-/worker-proposed
 starting references and baseline identity
 root and branch, required outputs, report path
-lane + risk reason; structural: none | <reasons>; ablation: due | not due; route
+lane + risk reason; structural: none | <reasons>; route
 required QA; seats (and merge-gate seats); applicable authorization, constraints, stop conditions
 ```
 
@@ -121,10 +121,10 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 
 **Ablation**
 
-- After each major candidate and before its final acceptance, a fresh EXPERT session runs the prompt below in its own worktree on a new branch from that candidate's frozen identity, once that candidate passes QA and before its first review round; the seats then review the ablation result, or the original on a supported no-change conclusion. Major means an architecture or interface decision, a binding plan, or a finished feature, subsystem, or substantial milestone, not each edit.
-- Keep necessary controls; missing test coverage is not evidence of redundancy. For designs without code, use scenarios, prototypes, or contract checks and state what remains unverified. The result is a new candidate under its lane gate; revalidating it triggers no further ablation.
+- Run an ablation pass only on a trigger, never on a schedule or after every candidate: (1) a milestone retired a whole feature or data source; (2) a scan found a module nothing uses; (3) production code has grown substantially since the last pass, stated with the measured growth; (4) the owner asks. At the end of each milestone, check the triggers and record the result in `tasks.md`.
+- A pass is its own GENERAL_EXEC card, run by one fresh session in its own worktree on a new branch from the current base, with the prompt below. The card sets a hard token budget for the whole pass, subagents included (default 20M tokens); the session stops and reports when it reaches it. The result is a new candidate under its own lane gate; revalidating it triggers no further ablation.
 
-> Perform ablation experiments on this completed design or implementation: identify potentially unnecessary abstractions, design elements, and code; remove or simplify them one at a time in a separate candidate and compare against the baseline using relevant acceptance tests and evidence. Keep only demonstrated simplifications that preserve required behavior, contracts, safety, and recovery. Restore changes that regress behavior; do not remove tests or weaken acceptance criteria to claim success. Record each experiment, result, retained/reverted change, and untested uncertainty in the local report. A supported no-change conclusion is valid.
+> Run a capped ablation pass. Screen cheaply first with static tools: dependency graph, unused code, unused parameters. Target only whole units: entire modules, stages, or committed evidence files that nothing uses; leave scattered small redundancy to ordinary review. Stay within the card's token budget, with at most 2 subagents and no workflows; at the budget, stop and report. Remove the confirmed-unused units in one candidate. If any removal could change results, recompute once on the whole candidate at the end and compare against the baseline; do not recompute per removal. Keep only removals that preserve required behavior, contracts, safety, and recovery, and restore any that regress. Missing test coverage is not evidence that something is unused; do not remove tests or weaken acceptance criteria. Record what was screened, removed, restored, and left unverified in the local report. A supported no-change conclusion is valid.
 
 ---
 
