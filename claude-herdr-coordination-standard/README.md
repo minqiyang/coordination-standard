@@ -1,0 +1,39 @@
+# Claude-herdr Coordination Standard
+
+**Version `0.1`** (derived from Coordination Standard 9.0)
+
+A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, reviewers, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use the original standard in the sibling folder [`../coordination-standard/`](../coordination-standard/).
+
+| File | What it holds | Share it? |
+|---|---|---|
+| [`coordinator.md`](coordinator.md) | Every rule: roles, the three review lanes, routes, cards, waiting, QA and review, merge and publication. Names no worker model | Yes, portable |
+| [`model_bindings.json`](model_bindings.json) | Which model, harness flags, and reasoning effort each route uses right now | Personal; write your own |
+
+This README only explains. If it disagrees with the card, the card wins.
+
+## Lifecycle
+
+card → new Tab + worktree → background `herdr agent prompt --wait` → report → QA → lane gate ([card §2](coordinator.md#2-lanes-and-gates)) → accept → authorized merge
+
+## Getting started
+
+Open a Herdr Tab, start Claude Code there, and point it at the files where they are (don't copy them):
+
+```text
+Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
+within the owner's authorization and project rules. Declared version: 0.1.
+Do not load coordination-standard/ or archive/. Follow the card.
+```
+
+## Swapping a model
+
+Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. Check flags with `claude --help` and `codex --help` after CLI updates. Nothing else changes, with one caveat: under `-s workspace-write`, a Codex session cannot commit in a linked worktree (its git metadata lives in the main repository), so keep producer routes on the claude harness.
+
+## Differences from 9.0
+
+- The coordinator is Claude Code and judges technically, but never writes candidates and never dismisses a MATERIAL finding.
+- The routing table is merged into the card; the bindings file is flat and builds every launch line.
+- Five routes: DESIGN and FRONTEND fold into GENERAL_EXEC, and ablation runs on EXPERT.
+- A background `herdr agent prompt --wait` wakes the coordinator, replacing the polling and wait rules.
+- Writers and seats work in git worktrees; seats are checked for read-only behavior after review.
+- No Artifact Guard, Contract First skill, or diagrams.
