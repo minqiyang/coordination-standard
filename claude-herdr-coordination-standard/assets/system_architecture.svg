@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="940" height="360" role="img" aria-labelledby="t d">
+<title id="t">System overview</title>
+<desc id="d">Portable rules and replaceable model bindings feed a Claude Code coordinator running in its own Herdr Tab. It dispatches cards to producers and review seats, each in a new Herdr Tab with its own git worktree; seats are fresh and read-only on a detached worktree at the frozen commit. Workers write reports into the coord directory outside the repository, which the coordinator reads and verifies before accepting the exact candidate. Read-only subagents only help the coordinator.</desc>
+<style>
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
+  text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
+  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
+  .t{font-size:14px;font-weight:700}
+  .s{font-size:12px;fill:var(--mute)}
+  .m{font-size:13px;font-weight:700}
+  .w{fill:var(--paper);font-size:13px;font-weight:700}
+  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.5}
+  .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
+  .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)} .fp{fill:var(--paper)}
+</style>
+<defs>
+  <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+  <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
+  <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
+</defs>
+<text x="40" y="62" class="k">POLICY</text>
+<rect x="40" y="80" width="180" height="60" rx="4" class="box"/>
+<text x="58" y="106" class="t">Rules</text><text x="58" y="126" class="s">coordinator.md</text>
+<rect x="40" y="160" width="180" height="60" rx="4" class="box" style="stroke-dasharray:4 3"/>
+<text x="58" y="186" class="t">Models</text><text x="58" y="206" class="s">model_bindings.json</text>
+<path d="M220,110 C280,110 290,156 340,156" class="ln"/>
+<path d="M220,190 C280,190 290,164 340,164" class="ln"/>
+
+<rect x="330" y="20" width="140" height="28" rx="14" class="fa"/>
+<text x="400" y="39" text-anchor="middle" class="w">Accepted</text>
+<path d="M400,102 V54" class="acc" marker-end="url(#aa)"/>
+<circle cx="400" cy="160" r="58" class="box" style="stroke-width:1.5"/>
+<text x="400" y="158" text-anchor="middle" class="t">Coordinator</text>
+<text x="400" y="178" text-anchor="middle" class="s">Claude Code</text>
+
+<text x="505" y="92" text-anchor="middle" class="s">dispatch</text>
+<path d="M458,160 C530,160 530,100 594,100" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,150 594,150" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,200 594,200" class="acc" marker-end="url(#aa)"/>
+
+<text x="600" y="62" class="k">HERDR TABS · EACH WITH A WORKTREE</text>
+<g>
+<rect x="600" y="80" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="100" r="3.5" class="fa"/><text x="630" y="105" class="t">Producers</text><text x="886" y="104" text-anchor="end" class="s">GENERAL_EXEC · EXPERT</text>
+<rect x="600" y="130" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="150" r="3.5" class="fa"/><text x="630" y="155" class="t">Elevated seat</text><text x="886" y="154" text-anchor="end" class="s">REVIEW</text>
+<rect x="600" y="180" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="200" r="3.5" class="fa"/><text x="630" y="205" class="t">Critical seats</text><text x="886" y="204" text-anchor="end" class="s">AUDIT · AUDIT_2</text>
+</g>
+
+<path d="M642,220 V246" class="ink" marker-end="url(#ai)"/>
+<rect x="620" y="254" width="44" height="46" rx="3" class="box" transform="translate(6,-6)" style="stroke:var(--line)"/>
+<rect x="620" y="254" width="44" height="46" rx="3" class="box"/>
+<path d="M629,268 H655 M629,277 H655 M629,286 H646" class="ln"/>
+<text x="684" y="274" class="t">&lt;coord&gt;/</text>
+<text x="684" y="292" class="s">tasks.md · cards · reports · QA</text>
+<path d="M620,277 H400 V224" class="dash" marker-end="url(#am)"/>
+<text x="510" y="268" text-anchor="middle" class="s">read · verify</text>
+
+<rect x="40" y="256" width="210" height="44" rx="4" class="box" style="stroke-dasharray:4 3"/>
+<text x="58" y="276" class="t">Subagents</text><text x="58" y="294" class="s">read-only helpers</text>
+<path d="M250,278 C312,278 332,230 358,204" class="dash" marker-end="url(#am)"/>
+
+<text x="40" y="340" class="s">Producers write on task branches. Seats are fresh and read-only, detached at the frozen SHA.</text>
+</svg>

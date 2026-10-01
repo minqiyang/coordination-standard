@@ -2,7 +2,7 @@
 
 **Version `0.1`** (derived from Coordination Standard 9.0)
 
-A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, reviewers, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use the original standard in the sibling folder [`../coordination-standard/`](../coordination-standard/).
+A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 9.0](../coordination-standard/README.md).
 
 | File | What it holds | Share it? |
 |---|---|---|
@@ -11,9 +11,17 @@ A working standard for running several AI coding agents on one project when the 
 
 This README only explains. If it disagrees with the card, the card wins.
 
+## How it fits together
+
+![System architecture](assets/system_architecture.svg)
+
+The coordinator never writes candidates. Each producer or seat is launched from `model_bindings.json` in a new Tab on its own worktree; seats review a detached worktree at the frozen commit. Cards, reports, and QA logs live in `<coord>`, outside the repository.
+
 ## Lifecycle
 
-card → new Tab + worktree → background `herdr agent prompt --wait` → report → QA → lane gate ([card §2](coordinator.md#2-lanes-and-gates)) → accept → authorized merge
+![Workflow lifecycle](assets/workflow_lifecycle.svg)
+
+Lanes ([card §2](coordinator.md#2-lanes-and-gates)): ROUTINE is QA plus a coordinator check, ELEVATED adds a REVIEW seat, CRITICAL adds AUDIT and AUDIT_2.
 
 ## Getting started
 
@@ -36,4 +44,4 @@ Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `m
 - Five routes: DESIGN and FRONTEND fold into GENERAL_EXEC, and ablation runs on EXPERT.
 - A background `herdr agent prompt --wait` wakes the coordinator, replacing the polling and wait rules.
 - Writers and seats work in git worktrees; seats are checked for read-only behavior after review.
-- No Artifact Guard, Contract First skill, or diagrams.
+- No Artifact Guard or Contract First skill.
