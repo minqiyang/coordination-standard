@@ -1,5 +1,5 @@
 {
-  "bindings_version": "0.11.0",
+  "bindings_version": "0.12.0",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "chatgpt_plus": {

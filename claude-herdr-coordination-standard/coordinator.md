@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.3.0
+# Claude-herdr Coordinator Card 0.4.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -9,7 +9,7 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 ## 1. Roles, Tabs, writers
 
 - You plan, investigate, dispatch, verify, gate, record, and, when authorized, merge. You never write candidate bytes, binding plans, formal reviews, or integrations, including merge-conflict fixes, unless the owner tells you to for that specific change; then work in your own `<coord>/wt/` worktree on a task branch, freeze it like any candidate, and gate it at least ELEVATED.
-- Every producer, seat, adjudicator, and integrator is a Herdr agent in its own new Tab, created after its worktree: `herdr tab create --no-focus --cwd <worktree> --label "<role>-<task> [<model> <effort>]"`. Never split your own Tab for worker work.
+- Every producer, seat, adjudicator, and integrator is a Herdr agent in its own new Tab, created after its worktree in your own workspace: `herdr tab create --workspace "$HERDR_WORKSPACE_ID" --no-focus --cwd <worktree> --label "<role>-<task> [<model> <effort>]"`. Never omit `--workspace`: without it the Tab opens in whichever workspace the owner is viewing. Never split your own Tab for worker work.
 - Agent-tool subagents and Workflows are your read-only helpers (scouting, reading reports and diffs, checking claims). They never fill a role named above or produce QA evidence of record. A worker's own subagents belong to that worker, which stays the single writer of its root.
 - "Fresh" means a newly launched session; a reused session never counts as fresh. Seats (re-reviews included), adjudicators, integrators, and authors of a new plan are fresh.
 - Repairs and plan revisions return to the producer's session as new attempts; keep it open until its candidate is accepted or abandoned. Check `session_reuse` only between attempts: at or near a threshold, or if the session was closed, a new session continues from its reports. A new lineage or stage gets a new session.

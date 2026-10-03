@@ -1,8 +1,8 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.3.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.4.0`** (derived from Coordination Standard 0.9.0)
 
-A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.11.0](../coordination-standard/README.md).
+A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.12.0](../coordination-standard/README.md).
 
 | File | What it holds | Share it? |
 |---|---|---|
@@ -29,7 +29,7 @@ Open a Herdr Tab, start Claude Code there, and point it at the files where they 
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.3.0.
+within the owner's authorization and project rules. Declared version: 0.4.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
