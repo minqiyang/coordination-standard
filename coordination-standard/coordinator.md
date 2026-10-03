@@ -1,4 +1,4 @@
-# Herdr Coordinator Operating Card v0.10.0
+# Herdr Coordinator Operating Card v0.11.0
 
 **Status:** LIVE_OPERATING_CARD
 This card, `routing_table.json`, and `model_bindings.json` are the only coordinator workflow policy files. The card and routing table are the portable rules; `model_bindings.json` holds the replaceable model choices. User authorization and project constraints still govern the work. Do not load `archive/`.
@@ -54,12 +54,6 @@ No catch-all structural reason. Structural work requires an accepted binding pla
 ---
 
 ## 3. QA and review
-
-### Ablation on trigger
-
-- Dispatch ABLATION only on a trigger, never on a schedule or after every milestone: (1) a milestone retired a whole feature or data source; (2) a scan found a module nothing uses; (3) production code has grown substantially since the last pass, stated with the measured growth; (4) the owner asks. At the end of each milestone, check the triggers and record the result in the task record so the decision is not silently skipped.
-- A pass is its own card, dispatched with the routing table's `ablation_prompt`, from the current base in a separate candidate under single-writer rules. The card sets a hard token budget for the whole pass, subagents included (default 20M tokens); the session stops and reports when it reaches it. This is a simplification task, not a formal review seat or failure-triggered escalation; it needs no failed-attempt threshold.
-- Save the screening evidence and justified removals or a no-change conclusion. Key changes to an accepted binding plan need renewed plan acceptance before implementation. The resulting candidate must pass its lane's QA and acceptance gate, including independent review where required; the ablation executor is a producer, not its reviewer. Revalidation of this pass alone does not recursively trigger another ablation pass.
 
 ### 1. Prepare QA and independent review
 
@@ -189,7 +183,7 @@ applicable user/project authorization, constraints, and stop conditions
 ## 7. Binding plans and integration
 
 - A binding plan is authored by a fresh session on a route with `may_author_plan = true`. Review the plan as a CRITICAL candidate under section 3, then record its author, acceptor, accepted candidate identity, and execution scope before implementation. Preparing that plan does not require an earlier plan solely because it is plan-authoring work.
-- The plan body states only the currently effective design. Revision history, prior review responses, and ablation records go in a sibling history file that reviewers need not read in full.
+- The plan body states only the currently effective design. Revision history and prior review responses go in a sibling history file that reviewers need not read in full.
 - Execute the accepted plan version. Changes to its key direction, interfaces, scope, or assumptions require an updated plan and acceptance before affected implementation continues. Implementation details within the accepted bounds do not by themselves require a plan revision.
 - Combining multiple accepted candidates requires a fresh integrator, separate from their producers, working in a new mutable root. It consumes only the accepted input versions and records those inputs. Unaccepted or failed input returns to its repair workflow; integration must not silently repair it and treat it as accepted.
 - The integration result is a new candidate with its own lane-specific QA and acceptance gate. Apply the structural reasons in section 2 to semantic integration; local acceptance of each input does not establish correctness of the combined result.

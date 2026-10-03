@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.2.0
+# Claude-herdr Coordinator Card 0.3.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -38,7 +38,7 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 
 | Route | Use |
 |---|---|
-| GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration, ablation passes |
+| GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration |
 | EXPERT | Only for (1) the same blocker after 2 qualifying attempts, (2) an owner request, (3) continuation of an escalated problem (section 5), (4) MATERIAL findings still open after review round 3 |
 | REVIEW | ELEVATED seat; default adjudicator |
 | AUDIT | First CRITICAL seat, with deep failure audit |
@@ -88,7 +88,7 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 
 ---
 
-## 5. QA, review, acceptance, ablation
+## 5. QA, review, acceptance
 
 **QA and seats**
 
@@ -119,19 +119,12 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 - Any byte change voids review, except as the review limit states. QA is reusable only if none of its declared inputs (code, schema, fixtures, generated output, toolchain, external evidence) changed; when unsure, rerun all of it. The repairing session states the impact of its change; check it against the diff.
 - Accept only the exact identity, with required QA passed, outputs verified, every required seat counted (under the review limit, the last round plus EXPERT's QA), and every MATERIAL finding resolved or owner-accepted.
 
-**Ablation**
-
-- Run an ablation pass only on a trigger, never on a schedule or after every candidate: (1) a milestone retired a whole feature or data source; (2) a scan found a module nothing uses; (3) production code has grown substantially since the last pass, stated with the measured growth; (4) the owner asks. At the end of each milestone, check the triggers and record the result in `tasks.md`.
-- A pass is its own GENERAL_EXEC card, run by one fresh session in its own worktree on a new branch from the current base, with the prompt below. The card sets a hard token budget for the whole pass, subagents included (default 20M tokens); the session stops and reports when it reaches it. The result is a new candidate under its own lane gate; revalidating it triggers no further ablation.
-
-> Run a capped ablation pass. Screen cheaply first with static tools: dependency graph, unused code, unused parameters. Target only whole units: entire modules, stages, or committed evidence files that nothing uses; leave scattered small redundancy to ordinary review. Stay within the card's token budget, with at most 2 subagents and no workflows; at the budget, stop and report. Remove the confirmed-unused units in one candidate. If any removal could change results, recompute once on the whole candidate at the end and compare against the baseline; do not recompute per removal. Keep only removals that preserve required behavior, contracts, safety, and recovery, and restore any that regress. Missing test coverage is not evidence that something is unused; do not remove tests or weaken acceptance criteria. Record what was screened, removed, restored, and left unverified in the local report. A supported no-change conclusion is valid.
-
 ---
 
 ## 6. Plans and integration
 
 - A binding plan is written by a fresh GENERAL_EXEC session (or an escalated EXPERT session) and reviewed as CRITICAL. Before implementation, log its author, acceptor, accepted identity, and scope.
-- The plan body holds only the current design; history, review responses, and ablation records go in a sibling file.
+- The plan body holds only the current design; history and review responses go in a sibling file.
 - Execute the accepted version. Changing its key direction, interfaces, scope, or assumptions needs an updated, re-accepted plan first; details within its bounds do not.
 - Combining accepted candidates takes a fresh GENERAL_EXEC integrator in a new worktree, using only accepted inputs, which are recorded. Unaccepted input returns to its repair workflow and is never silently fixed. The result is a new candidate under its own gate; each input's acceptance does not establish the combined result.
 

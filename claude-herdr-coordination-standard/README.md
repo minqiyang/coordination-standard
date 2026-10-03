@@ -1,8 +1,8 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.2.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.3.0`** (derived from Coordination Standard 0.9.0)
 
-A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.10.0](../coordination-standard/README.md).
+A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.11.0](../coordination-standard/README.md).
 
 | File | What it holds | Share it? |
 |---|---|---|
@@ -29,7 +29,7 @@ Open a Herdr Tab, start Claude Code there, and point it at the files where they 
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.2.0.
+within the owner's authorization and project rules. Declared version: 0.3.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
@@ -41,7 +41,7 @@ Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `m
 
 - The coordinator is Claude Code and judges technically, but never writes candidates and never dismisses a MATERIAL finding.
 - The routing table is merged into the card; the bindings file is flat and builds every launch line.
-- Five routes: DESIGN and FRONTEND fold into GENERAL_EXEC, and ablation runs only on a trigger, as a budget-capped GENERAL_EXEC pass.
+- Five routes: DESIGN and FRONTEND fold into GENERAL_EXEC.
 - A background `herdr agent prompt --wait` wakes the coordinator, replacing the polling and wait rules.
 - Writers and seats work in git worktrees; seats are checked for read-only behavior after review.
 - No Artifact Guard or Contract First skill.
