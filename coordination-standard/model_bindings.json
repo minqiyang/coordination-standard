@@ -1,5 +1,5 @@
 {
-  "bindings_version": "0.12.0",
+  "bindings_version": "0.13.0",
   "status": "LIVE_MODEL_BINDINGS",
   "access_plans": {
     "chatgpt_plus": {
@@ -51,74 +51,47 @@
     "GENERAL_EXEC": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ]
+      "default_effort": "high"
     },
     "REVIEW": {
       "model_ref": "GPT_ASTRA_LATEST",
       "harness": "Codex",
       "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ],
       "replacement": {
         "model_ref": "OPUS_LATEST",
         "harness": "Claude Code",
-        "default_effort": "medium",
-        "allowed_effort_band": [
-          "medium"
-        ]
+        "default_effort": "medium"
       }
     },
     "AUDIT": {
       "model_ref": "GPT_ASTRA_LATEST",
       "harness": "Codex",
       "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ],
       "replacement": {
         "model_ref": "OPUS_LATEST",
         "harness": "Claude Code",
-        "default_effort": "medium",
-        "allowed_effort_band": [
-          "medium"
-        ]
+        "default_effort": "medium"
       }
     },
     "AUDIT_2": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ]
+      "default_effort": "high"
     },
     "DESIGN": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ]
+      "default_effort": "high"
     },
     "EXPERT": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "ultracode",
-      "allowed_effort_band": [
-        "ultracode"
-      ]
+      "default_effort": "ultracode"
     },
     "FRONTEND": {
       "model_ref": "OPUS_LATEST",
       "harness": "Claude Code",
-      "default_effort": "high",
-      "allowed_effort_band": [
-        "high"
-      ]
+      "default_effort": "high"
     }
   },
   "session_reuse": {

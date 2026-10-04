@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.4.0
+# Claude-herdr Coordinator Card 0.5.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -9,7 +9,7 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 ## 1. Roles, Tabs, writers
 
 - You plan, investigate, dispatch, verify, gate, record, and, when authorized, merge. You never write candidate bytes, binding plans, formal reviews, or integrations, including merge-conflict fixes, unless the owner tells you to for that specific change; then work in your own `<coord>/wt/` worktree on a task branch, freeze it like any candidate, and gate it at least ELEVATED.
-- Every producer, seat, adjudicator, and integrator is a Herdr agent in its own new Tab, created after its worktree in your own workspace: `herdr tab create --workspace "$HERDR_WORKSPACE_ID" --no-focus --cwd <worktree> --label "<role>-<task> [<model> <effort>]"`. Never omit `--workspace`: without it the Tab opens in whichever workspace the owner is viewing. Never split your own Tab for worker work.
+- Every producer, seat, adjudicator, and integrator is a Herdr agent in its own new Tab, created after its worktree in your own workspace: `herdr tab create --workspace "$HERDR_WORKSPACE_ID" --no-focus --cwd <worktree> --label "<role>-<task>"`, with no model or effort in the label. Never omit `--workspace`: without it the Tab opens in whichever workspace the owner is viewing. Never split your own Tab for worker work.
 - Agent-tool subagents and Workflows are your read-only helpers (scouting, reading reports and diffs, checking claims). They never fill a role named above or produce QA evidence of record. A worker's own subagents belong to that worker, which stays the single writer of its root.
 - "Fresh" means a newly launched session; a reused session never counts as fresh. Seats (re-reviews included), adjudicators, integrators, and authors of a new plan are fresh.
 - Repairs and plan revisions return to the producer's session as new attempts; keep it open until its candidate is accepted or abandoned. Check `session_reuse` only between attempts: at or near a threshold, or if the session was closed, a new session continues from its reports. A new lineage or stage gets a new session.
@@ -39,12 +39,12 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 | Route | Use |
 |---|---|
 | GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration |
-| EXPERT | Only for (1) the same blocker after 2 qualifying attempts, (2) an owner request, (3) continuation of an escalated problem (section 5), (4) MATERIAL findings still open after review round 3 |
+| EXPERT | Only for (1) a card's third failed attempt (section 5), (2) an owner request, (3) continuation of an escalated problem (section 5) |
 | REVIEW | ELEVATED seat; default adjudicator |
 | AUDIT | First CRITICAL seat, with deep failure audit |
 | AUDIT_2 | Second CRITICAL seat |
 
-- A qualifying attempt tackles the same blocker with a materially different method and records execution evidence and an unmet criterion. Repeats, prompt tweaks, and environment, permission, or quota failures do not count; rule those and unclear requirements out first. Stay on GENERAL_EXEC while a clear next step remains. Never pool unrelated failures or manufacture retries. An EXPERT card states the blocker, evidence, and why the ordinary route cannot resolve it, or quotes the owner's request.
+- Stay on GENERAL_EXEC until the failure limit (section 5); rule out environment, permission, quota, and unclear-requirement causes first, since those are not failed attempts. An EXPERT card states the failure evidence and open findings, quotes the owner's request, or cites the earlier escalation and its failure evidence.
 - One route per card. Cards name routes, never models.
 - Launch only from `model_bindings.json`: `herdr agent start <agent> --kind <harness> --pane <root_pane> -- <model_arg> <effort_overrides[effort] if listed, else effort_arg> <permission_args>`, each element shell-quoted, with `{attempt_dir}` = `<coord>/<task>/<agent>/`. Binding edits apply only to new launches. Every report opens with its session's resolved model and effort. If the binding applies effort through settings (such as ultracode), the report also states whether it was active; if that statement is missing or it was not active, the attempt does not count.
 - A new worktree shows a folder-trust dialog on first launch. If `agent start` fails or times out, or `herdr agent get` shows `blocked`, run `herdr agent read`, accept that dialog with `send-keys`, and dispatch only after that. A startup failure or this dialog is operational, never a reason to relaunch or replace. Other dialogs follow section 4.
@@ -109,15 +109,15 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
   - Still disputed → a fresh, read-only adjudicator on the REVIEW binding (or AUDIT_2's, if REVIEW resolves to the reporter's model; if both do, record `diversity_degraded`) decides whether the evidence supports it under existing contracts. It cannot invent semantics or edit bytes. Its ruling resolves the dispute: unsupported → closed; supported → repair or owner, as above.
   - Owner accepts the risk → record the finding, identity, scope, and expiry or revisit condition.
 
-**Review limit and EXPERT**
+**Failure limit and EXPERT**
 
-- An ELEVATED or CRITICAL card, and any card's PR merge gate, gets at most 3 review rounds (review, repair, review, repair, review); a round is all of the lane's seats on one frozen identity, and adjudication is not a round. If MATERIAL findings remain after round 3 and adjudication, send them to EXPERT; no qualifying attempts are needed. Once EXPERT's candidate passes QA, it proceeds without another review. Each MATERIAL finding still open is logged as owner-accepted under this standing rule and revisited when that area next changes.
-- If an EXPERT candidate fails, confirm with QA evidence (environment, permission, and quota failures are operational, not evidence against it) and save a failure handoff. An unresolved or worsening core problem returns to EXPERT; otherwise an isolated local defect goes to ordinary repair. Each retry needs new evidence or a new approach; if none remains, ask the owner.
+- Every card, in every lane, gets at most 3 failed attempts on GENERAL_EXEC. An attempt fails when its frozen candidate fails QA; when your verification or a review round (all of the lane's seats on one frozen identity, PR merge-gate review included) reports MATERIAL findings that survive withdrawal and adjudication; or when the worker ends without a candidate because it could not meet the criteria. Environment, permission, and quota failures and unclear requirements do not count. After the third failed attempt, send the evidence and open findings to EXPERT instead of repairing again. EXPERT's candidate gets QA, verification, and review like any repair, and its MATERIAL findings block acceptance as usual. After escalation the card gets at most 3 more failed attempts, whoever repairs; after the third, stop and ask the owner instead of repairing again.
+- If an EXPERT attempt fails, confirm with QA evidence or the findings (environment, permission, and quota failures are operational, not evidence against it) and save a failure handoff. An unresolved or worsening core problem returns to EXPERT; otherwise an isolated local defect goes to ordinary repair. Each retry needs new evidence or a new approach; if none remains, ask the owner.
 
 **Revalidation and acceptance**
 
-- Any byte change voids review, except as the review limit states. QA is reusable only if none of its declared inputs (code, schema, fixtures, generated output, toolchain, external evidence) changed; when unsure, rerun all of it. The repairing session states the impact of its change; check it against the diff.
-- Accept only the exact identity, with required QA passed, outputs verified, every required seat counted (under the review limit, the last round plus EXPERT's QA), and every MATERIAL finding resolved or owner-accepted.
+- Any byte change voids review. QA is reusable only if none of its declared inputs (code, schema, fixtures, generated output, toolchain, external evidence) changed; when unsure, rerun all of it. The repairing session states the impact of its change; check it against the diff.
+- Accept only the exact identity, with required QA passed, outputs verified, every required seat counted, and every MATERIAL finding resolved or owner-accepted.
 
 ---
 
@@ -134,7 +134,7 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 
 - Acceptance is not authorization. Push, merge, deploy, and irreversible execution need existing owner or project authorization. Record standing authorization once in `tasks.md` (repository, target branch, task scope) and do not ask again; ask only for missing or expanded authority.
 - Only you push, merge, deploy, or otherwise publish, after the gates and within recorded authorization, and only the accepted identity: first verify that the exact output, branch, or head equals it, its required checks pass, and configured protection is intact; then log the resulting remote identity in `tasks.md`.
-- The PR merge gate is the full gate of the higher of the candidate's lane and ELEVATED, so a ROUTINE candidate gets a REVIEW seat at its accepted SHA before merging. Before merging, verify the PR head equals the accepted SHA, every merge-gate seat counted, and `MATERIAL: 0`, with an explicit disposition for any owner-accepted residual risk. Under the review limit, the last review round plus EXPERT's QA stand in for review of the final head.
+- The PR merge gate is the full gate of the higher of the candidate's lane and ELEVATED, so a ROUTINE candidate gets a REVIEW seat at its accepted SHA before merging. Before merging, verify the PR head equals the accepted SHA, every merge-gate seat counted, and `MATERIAL: 0`, with an explicit disposition for any owner-accepted residual risk.
 - Merge with an explicit squash merge bound to the accepted SHA (`gh pr merge <pr> --squash --match-head-commit <SHA>`), then verify and log the remote result and target commit. Never use GitHub Auto-Merge or deferred merging, bypass protection, or publish private material. If repository rules block a compliant merge, report the blocker.
 - If the head changed, do not merge. If the target base gained commits since the accepted SHA's base, rerun the required QA on the PR's merge result (`refs/pull/<pr>/merge`) in a detached worktree; a failure, conflict, or content change returns to a worker. If a merge result is uncertain, inspect the remote before retrying.
 - If something merged without its required review, log an incident and arrange a retrospective review of the exact merged commit with its merge gate's seats; it does not retroactively pass the gate. While a MATERIAL finding from it is open, pause work that builds on that commit.

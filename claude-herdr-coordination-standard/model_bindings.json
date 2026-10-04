@@ -1,5 +1,5 @@
 {
-  "bindings_version": "0.4.0",
+  "bindings_version": "0.5.0",
   "updated": "2026-09-30",
   "note": "Only file to edit when models change; rules live in coordinator.md. Placeholders: {id} {effort} {attempt_dir} (absolute <coord>/<task>/<agent>/, the launched session's own folder; all its attempts write inside it). Recheck flags with `claude --help` / `codex --help` after CLI updates.",
   "harnesses": {

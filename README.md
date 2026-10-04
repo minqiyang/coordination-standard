@@ -4,7 +4,7 @@ Two peer coordination standards for running several AI coding agents on one proj
 
 `archive/` (historical drafts, no authority) and `project-notes/` (project handoffs) are local only and not in git.
 
-## 1. Coordination Standard 0.12.0
+## 1. Coordination Standard 0.13.0
 
 For any coordinator agent. One coordinator hands out task cards, reads the workers' reports, and decides what gets accepted, with review depth set by a lane for each card.
 
@@ -17,7 +17,7 @@ For any coordinator agent. One coordinator hands out task cards, reads the worke
 
 ![Auxiliary components](coordination-standard/assets/auxiliary_components.svg)
 
-## 2. Claude-herdr Coordination Standard 0.4.0
+## 2. Claude-herdr Coordination Standard 0.5.0
 
 For a Claude Code coordinator running in a Herdr Tab. Derived from 0.9.0: every producer and review seat gets its own Tab and git worktree, and a background `herdr agent prompt --wait` wakes the coordinator when a report lands.
 

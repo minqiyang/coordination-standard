@@ -1,5 +1,5 @@
 {
-  "table_version": "0.12.0",
+  "table_version": "0.13.0",
   "status": "LIVE_ROUTING_TABLE",
   "child_session_defaults": {
     "permission_mode": "always_approve"
@@ -70,21 +70,16 @@
       "may_formally_review": false,
       "dispatch_triggers": [
         {
-          "trigger_id": "EVIDENCED_BLOCKER_PERSISTS",
-          "when": "same_blocker_remains_after_required_qualifying_attempts_with_no_clear_general_fix_next_step_and_environment_permission_quota_and_requirement_ambiguity_causes_ruled_out",
-          "minimum_qualifying_attempts": 2
-        },
-        {
           "trigger_id": "USER_REQUESTED_EXPERT",
           "when": "user_explicitly_requests_expert_escalation_for_this_task"
         },
         {
           "trigger_id": "EXPERT_REPAIR_CONTINUATION",
-          "when": "same_previously_escalated_core_problem_remains_or_evidence_shows_repairs_are_worsening_it_and_coordinator_records_expert_continuation"
+          "when": "expert_attempt_fails_within_three_post_escalation_failed_attempts_and_same_previously_escalated_core_problem_remains_or_evidence_shows_repairs_are_worsening_it_and_coordinator_records_expert_continuation"
         },
         {
-          "trigger_id": "REVIEW_ITERATION_LIMIT",
-          "when": "elevated_or_critical_candidate_still_has_material_findings_in_its_third_review_round"
+          "trigger_id": "FAILURE_LIMIT",
+          "when": "card_has_three_failed_ordinary_attempts_from_qa_failure_material_verification_or_review_findings_or_no_candidate_excluding_operational_failures_and_unclear_requirements"
         }
       ],
       "prompt_constraints": [
