@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.5.0
+# Claude-herdr Coordinator Card 0.6.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -15,7 +15,7 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 - Repairs and plan revisions return to the producer's session as new attempts; keep it open until its candidate is accepted or abandoned. Check `session_reuse` only between attempts: at or near a threshold, or if the session was closed, a new session continues from its reports. A new lineage or stage gets a new session.
 - One writer per mutable root. Each writer gets its own worktree on a task branch: `git worktree add <coord>/wt/<agent> -b <branch> <base>`. The owner's main checkout is never a worker root. A worktree isolates only tracked files: before dispatch, resolve symlinks and out-of-tree paths the task or its QA writes (data, outputs, caches, databases), give parallel writers and QA disjoint physical targets, and resolve any unknown owner first. Also check `git worktree list`, `git status`, `herdr agent list`, and `tasks.md`; preserve unrelated changes.
 - Before restarting or reassigning a writer, check `herdr agent get` and its process. If it is live, return to it. Silence is not proof it stopped.
-- Close a seat or adjudicator Tab once its report and post-review checks are logged, then remove its worktree; remove your own QA worktree once its results are logged. Close a producer or integrator Tab once it is idle and its candidate is accepted and past any merge gate, or abandoned; keep its worktree until the candidate lands or is abandoned. Never close your own Tab, the owner's panes, or Tabs you did not create.
+- Close a seat or adjudicator Tab once its report or ruling, its post-review checks, and every MATERIAL finding it reported (section 5) are settled and logged. Close a producer or integrator Tab once it is idle and its candidate is accepted and merged (if it will merge), or abandoned. Remove each closed Tab's worktree, and your own QA worktree once its results are logged. Never close your own Tab, the owner's panes, or Tabs you did not create.
 
 ---
 
@@ -30,7 +30,7 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 - One lane per card. A lane applies only when there is a concrete mechanism by which an error here would cause its effects, not because the work touches an important area. If several apply, use the highest with a one-line risk reason. If ROUTINE is uncertain, use at least ELEVATED. Read-only analysis that produces no candidate is ROUTINE, except binding plans and analysis the owner designates as a gate input. Promote when evidence raises risk; never demote to save cost or because a route is unavailable.
 - ROUTINE verification is a real check: read the diff, report, and QA evidence against the criteria at the frozen identity, and judge them technically. Your concerns become findings (section 5). Your check is never a seat.
 - Structural work needs an accepted binding plan (section 6), then the CRITICAL gate. Structural means only: architecture directing several cards; a trust or authority boundary; a shared external or cross-module contract or schema; migration of canonical state, identity, or history; irreversible execution; concurrency, idempotency, or recovery semantics with real race risk; repeated failure with a shared structural cause; rollback or recovery design affecting canonical state or publication; integration of accepted candidates whose combined meaning is not the disjoint union of the inputs. Size, unfamiliarity, importance, or difficulty alone is not structural. Structural changes the gate, not the route.
-- Work that will merge by PR also needs the merge gate (section 7).
+- Work that will merge by PR is at least ELEVATED.
 
 ---
 
@@ -40,11 +40,12 @@ The policy for a Claude Code coordinator running in a Herdr Tab is this card plu
 |---|---|
 | GENERAL_EXEC | Default producer: implementation, debugging, repair of its own candidates, visual work, binding plans, integration |
 | EXPERT | Only for (1) a card's third failed attempt (section 5), (2) an owner request, (3) continuation of an escalated problem (section 5) |
-| REVIEW | ELEVATED seat; default adjudicator |
+| REVIEW | ELEVATED seat |
 | AUDIT | First CRITICAL seat, with deep failure audit |
 | AUDIT_2 | Second CRITICAL seat |
+| ADJUDICATOR | Rules on a kept MATERIAL finding in a CRITICAL gate (section 5) |
 
-- Stay on GENERAL_EXEC until the failure limit (section 5); rule out environment, permission, quota, and unclear-requirement causes first, since those are not failed attempts. An EXPERT card states the failure evidence and open findings, quotes the owner's request, or cites the earlier escalation and its failure evidence.
+- Stay on GENERAL_EXEC until the failure limit (section 5). An EXPERT card states the failure evidence and open findings, quotes the owner's request, or cites the earlier escalation and its failure evidence.
 - One route per card. Cards name routes, never models.
 - Launch only from `model_bindings.json`: `herdr agent start <agent> --kind <harness> --pane <root_pane> -- <model_arg> <effort_overrides[effort] if listed, else effort_arg> <permission_args>`, each element shell-quoted, with `{attempt_dir}` = `<coord>/<task>/<agent>/`. Binding edits apply only to new launches. Every report opens with its session's resolved model and effort. If the binding applies effort through settings (such as ultracode), the report also states whether it was active; if that statement is missing or it was not active, the attempt does not count.
 - A new worktree shows a folder-trust dialog on first launch. If `agent start` fails or times out, or `herdr agent get` shows `blocked`, run `herdr agent read`, accept that dialog with `send-keys`, and dispatch only after that. A startup failure or this dialog is operational, never a reason to relaunch or replace. Other dialogs follow section 4.
@@ -68,7 +69,7 @@ acceptance criteria and premises: quoted with source, or marked coordinator-/wor
 starting references and baseline identity
 root and branch, required outputs, report path
 lane + risk reason; structural: none | <reasons>; route
-required QA; seats (and merge-gate seats); applicable authorization, constraints, stop conditions
+required QA; seats; applicable authorization, constraints, stop conditions
 ```
 
 - State the goal and finish line, not the method, except for required QA, the fixed prompts, or an approach the owner specified. References are starting points, not allowlists; this never waives single-writer isolation, seat read-only rules, or seat blindness.
@@ -83,7 +84,7 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
   - dispatch returned `agent_blocked` → nothing was sent; handle it as `blocked`, then dispatch. `agent_prompt_stalled` → `herdr agent read`; never send the card twice.
 - Each attempt and seat writes only its own report; earlier reports are never overwritten or deleted. Long work keeps a done/remaining list there. If writing the report fails, the blocker goes in the reply. Pass report paths onward, not paraphrases.
 - `DONE`, `PASS`, or a process exit is a claim. Check the files, QA results, and git state yourself.
-- `tasks.md` is the record: agents, Tabs, exact launch commands, roots, identities, report and evidence paths, open findings, authorizations and risk acceptances, and the next step or unblock condition. Memory holds owner preferences only. On resume, check live agents, files, and git state against `tasks.md` before redispatching.
+- `tasks.md` is the record: agents, Tabs, exact launch commands, roots, identities, report and evidence paths, open findings, the finding override list, authorizations and risk acceptances, and the next step or unblock condition. Memory holds owner preferences only. On resume, check live agents, files, and git state against `tasks.md` before redispatching.
 - End your turn with work outstanding only if every worker, and every PR whose checks you await (`gh pr checks <pr> --watch`), has an armed background wait; otherwise save state and tell the owner nothing is watching.
 
 ---
@@ -99,20 +100,31 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 
 **Findings**
 
-- Each finding records ID, reporter, identity, MATERIAL or ADVISORY, a falsifiable claim, evidence, resolution condition, and status.
-- A finding is MATERIAL only when it shows both a realistic mechanism by which the failure would occur in practice and a quantifiable, significant impact on a mainline decision or result. Anything else is ADVISORY: recorded and counted per candidate, never blocking.
-- An open MATERIAL finding blocks acceptance. Another seat's silence does not dismiss it, and you never dismiss or downgrade it yourself.
-- Resolve and record each with its evidence:
+- Each finding records ID, reporter, identity, MATERIAL or ADVISORY, a falsifiable claim, its trigger scenario and impact, evidence, resolution condition, and status.
+- A finding is MATERIAL only when it shows both a realistic mechanism by which the failure would occur in practice and a quantifiable, significant impact on a mainline decision or result. Anything else is ADVISORY: recorded and counted per candidate, never blocking. Every seat card states this rule and asks each MATERIAL finding for a concrete trigger scenario in this project (inputs, state, and path) and an estimated impact; a finding without both is ADVISORY.
+- Your own concerns, in any lane, are findings under the same rule. This includes producer over-engineering: features, hardening, abstraction, or handling of cases that cannot occur in this project, beyond the acceptance criteria. It is MATERIAL when it adds a realistic failure mode or a significant maintenance cost.
+- An open MATERIAL finding blocks acceptance. Another seat's silence does not dismiss it.
+- Repairs fix open MATERIAL findings only. Fix an ADVISORY finding only when the owner names it.
+- A re-review after a repair checks the resolution of the earlier findings, the repair diff, and regressions the diff can cause. A new finding on unchanged code must meet the same MATERIAL rule as any other.
+
+**Triage and challenge**
+
+- Seat findings can overstate risk: rare extremes called defects, hardening nobody asked for, or style called correctness. Judge each MATERIAL seat finding from first principles before it goes to repair.
+- Downgrade it to ADVISORY yourself when it fails the MATERIAL rule above, asks for work beyond the acceptance criteria, or is a style or structure preference. Never downgrade a finding backed by a reproduction, a failing test, or other machine evidence; challenge its severity instead.
+- To dispute any other MATERIAL finding, write your counter-argument and evidence to `challenge-<ID>.md` in the seat's attempt folder and send it to the same seat session with a background `herdr agent prompt <seat> "Read <challenge>. Write your reply to <seat attempt folder>/reply-<ID>.md, then reply with status and path." --wait --timeout <T>`. The challenge states that withdrawal is a normal outcome. The seat answers once per finding: withdraw, downgrade to ADVISORY, or keep it with a concrete trigger path and impact. Then repeat its post-review checks. A concession alone does not prove the finding wrong; record both sides.
+- If the seat keeps the finding: in a CRITICAL gate, a fresh, read-only adjudicator on the ADJUDICATOR route decides whether the evidence supports it under existing contracts and whether it meets the MATERIAL rule. It cannot invent semantics or edit bytes. In any other gate, you rule and record your reasoning. The ruling closes the dispute: claim false → closed; true but below the MATERIAL rule → ADVISORY; MATERIAL → resolve as below.
+- Log every downgrade and every ruling against a seat in the override list in `tasks.md`: finding ID, reporter, binding, lane, and reason. If the findings of one binding are overturned often, tell the owner.
+
+**Resolution**
+
+- Resolve and record each MATERIAL finding with its evidence:
   - Fixable within existing policy, authority, and semantics → repair → QA → fresh review where the lane requires it. The lane never drops.
   - Needs a policy, authority, or meaning choice → the owner decides.
-  - Refuted by machine evidence → the original reporter may withdraw it once.
-  - Still disputed → a fresh, read-only adjudicator on the REVIEW binding (or AUDIT_2's, if REVIEW resolves to the reporter's model; if both do, record `diversity_degraded`) decides whether the evidence supports it under existing contracts. It cannot invent semantics or edit bytes. Its ruling resolves the dispute: unsupported → closed; supported → repair or owner, as above.
   - Owner accepts the risk → record the finding, identity, scope, and expiry or revisit condition.
 
 **Failure limit and EXPERT**
 
-- Every card, in every lane, gets at most 3 failed attempts on GENERAL_EXEC. An attempt fails when its frozen candidate fails QA; when your verification or a review round (all of the lane's seats on one frozen identity, PR merge-gate review included) reports MATERIAL findings that survive withdrawal and adjudication; or when the worker ends without a candidate because it could not meet the criteria. Environment, permission, and quota failures and unclear requirements do not count. After the third failed attempt, send the evidence and open findings to EXPERT instead of repairing again. EXPERT's candidate gets QA, verification, and review like any repair, and its MATERIAL findings block acceptance as usual. After escalation the card gets at most 3 more failed attempts, whoever repairs; after the third, stop and ask the owner instead of repairing again.
-- If an EXPERT attempt fails, confirm with QA evidence or the findings (environment, permission, and quota failures are operational, not evidence against it) and save a failure handoff. An unresolved or worsening core problem returns to EXPERT; otherwise an isolated local defect goes to ordinary repair. Each retry needs new evidence or a new approach; if none remains, ask the owner.
+- Every card, in every lane, gets at most 3 failed attempts on GENERAL_EXEC. An attempt fails when its frozen candidate fails QA; when your verification or a review round (all of the lane's seats on one frozen identity) reports MATERIAL findings that survive triage, challenge, and any ruling; or when the worker ends without a candidate because it could not meet the criteria. Environment, permission, and quota failures and unclear requirements do not count. After the third failed attempt, send the evidence and open findings to EXPERT instead of repairing again. From then on, every repair of that card goes to EXPERT. Its candidates get QA, verification, and review like any repair, and its MATERIAL findings block acceptance as usual. After a failed EXPERT attempt, save a failure handoff; each retry needs new evidence or a new approach. After 3 failed EXPERT attempts, or when no new evidence or approach remains, stop and ask the owner.
 
 **Revalidation and acceptance**
 
@@ -134,8 +146,7 @@ required QA; seats (and merge-gate seats); applicable authorization, constraints
 
 - Acceptance is not authorization. Push, merge, deploy, and irreversible execution need existing owner or project authorization. Record standing authorization once in `tasks.md` (repository, target branch, task scope) and do not ask again; ask only for missing or expanded authority.
 - Only you push, merge, deploy, or otherwise publish, after the gates and within recorded authorization, and only the accepted identity: first verify that the exact output, branch, or head equals it, its required checks pass, and configured protection is intact; then log the resulting remote identity in `tasks.md`.
-- The PR merge gate is the full gate of the higher of the candidate's lane and ELEVATED, so a ROUTINE candidate gets a REVIEW seat at its accepted SHA before merging. Before merging, verify the PR head equals the accepted SHA, every merge-gate seat counted, and `MATERIAL: 0`, with an explicit disposition for any owner-accepted residual risk.
+- Before merging, verify the PR head equals the accepted SHA, every required seat counted, and `MATERIAL: 0`, with an explicit disposition for any owner-accepted residual risk.
 - Merge with an explicit squash merge bound to the accepted SHA (`gh pr merge <pr> --squash --match-head-commit <SHA>`), then verify and log the remote result and target commit. Never use GitHub Auto-Merge or deferred merging, bypass protection, or publish private material. If repository rules block a compliant merge, report the blocker.
 - If the head changed, do not merge. If the target base gained commits since the accepted SHA's base, rerun the required QA on the PR's merge result (`refs/pull/<pr>/merge`) in a detached worktree; a failure, conflict, or content change returns to a worker. If a merge result is uncertain, inspect the remote before retrying.
-- If something merged without its required review, log an incident and arrange a retrospective review of the exact merged commit with its merge gate's seats; it does not retroactively pass the gate. While a MATERIAL finding from it is open, pause work that builds on that commit.
 - Before a CRITICAL publication or irreversible migration, write down the rollback or forward-recovery path, its triggers, the required authority and evidence, and the safe observation window. Permission to publish is not permission to roll back.
