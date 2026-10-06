@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="940" height="360" role="img" aria-labelledby="t d">
 <title id="t">System overview</title>
-<desc id="d">Portable rules and replaceable model bindings feed a Claude Code coordinator running in its own Herdr Tab. It dispatches cards to producers and review seats, each in a new Herdr Tab with its own git worktree; seats are fresh and read-only on a detached worktree at the frozen commit. Workers write reports into the coord directory outside the repository, which the coordinator reads and verifies before accepting the exact candidate. Read-only subagents only help the coordinator.</desc>
+<desc id="d">Portable rules and replaceable model bindings feed a Claude Code coordinator running in its own Herdr Tab. It dispatches cards to producers and review seats, each in a new Tab with its own git worktree inside a separate workers Herdr session that stays out of the owner's sidebar; seats are fresh and read-only on a detached worktree at the frozen commit. Workers write reports into the coord directory outside the repository, which the coordinator reads and verifies before accepting the exact candidate. Subagents are read-only helpers; one may also fill a seat for a narrow re-review.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
@@ -42,7 +42,7 @@
 <path d="M458,160 C530,160 530,150 594,150" class="acc" marker-end="url(#aa)"/>
 <path d="M458,160 C530,160 530,200 594,200" class="acc" marker-end="url(#aa)"/>
 
-<text x="600" y="62" class="k">HERDR TABS · EACH WITH A WORKTREE</text>
+<text x="600" y="62" class="k">WORKERS SESSION · TAB + WORKTREE EACH</text>
 <g>
 <rect x="600" y="80" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="100" r="3.5" class="fa"/><text x="630" y="105" class="t">Producers</text><text x="886" y="104" text-anchor="end" class="s">GENERAL_EXEC · EXPERT</text>
 <rect x="600" y="130" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="150" r="3.5" class="fa"/><text x="630" y="155" class="t">Elevated seat</text><text x="886" y="154" text-anchor="end" class="s">REVIEW</text>
@@ -59,7 +59,7 @@
 <text x="510" y="268" text-anchor="middle" class="s">read · verify</text>
 
 <rect x="40" y="256" width="210" height="44" rx="4" class="box" style="stroke-dasharray:4 3"/>
-<text x="58" y="276" class="t">Subagents</text><text x="58" y="294" class="s">read-only helpers</text>
+<text x="58" y="276" class="t">Subagents</text><text x="58" y="294" class="s">read-only · re-review</text>
 <path d="M250,278 C312,278 332,230 358,204" class="dash" marker-end="url(#am)"/>
 
 <text x="40" y="340" class="s">Producers write on task branches. Seats are fresh and read-only, detached at the frozen SHA.</text>

@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 456" width="940" height="456" role="img" aria-labelledby="t d">
+<title id="t">Owner focus</title>
+<desc id="d">The owner watches only the main Herdr sidebar, where each coordinator shows as needs you, working, or done. The coordinator sends out producers, review seats, QA, and other workers into a separate workers session that stays out of view; they start, report, and close often. The coordinator tracks every worker and calls the owner only in two cases: all the work is done, or it and its workers are stuck. Workers keep running even if the coordinator ends.</desc>
+<style>
+  svg{--paper:#FAF9F5;--panel:#F0EEE6;--ink:#141413;--mute:#6B6A65;--line:#D9D6CB;--clay:#D97757;--kraft:#C08A5B;--olive:#788C5D}
+  @media (prefers-color-scheme: dark){svg{--paper:#1F1E1D;--panel:#2A2927;--ink:#FAF9F5;--mute:#A8A69E;--line:#45433F;--clay:#D97757;--kraft:#D4A27F;--olive:#93A776}}
+  text{fill:var(--ink);font-family:"Styrene B","Söhne",ui-sans-serif,-apple-system,"Helvetica Neue",Arial,sans-serif}
+  .serif{font-family:"Tiempos Headline","Copernicus","Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif}
+  .h1{font-size:24px}
+  .sub{font-size:13.5px;fill:var(--mute)}
+  .cap{font-size:11px;letter-spacing:.12em;fill:var(--mute)}
+  .name{font-size:14px}
+  .small{font-size:11.5px;fill:var(--mute)}
+  .chip{font-size:12px}
+  .note{font-size:12.5px;fill:var(--mute)}
+  .mono{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;fill:var(--ink)}
+  .card{fill:var(--paper);stroke:var(--line);stroke-width:1}
+  .pill{fill:var(--paper);stroke:var(--mute);stroke-width:1}
+  .gone{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:3 3}
+  .traffic{fill:none;stroke:var(--mute);stroke-width:1;opacity:.75}
+</style>
+<defs>
+  <marker id="mc" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" style="fill:var(--clay)"/></marker>
+  <marker id="mo" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" style="fill:var(--olive)"/></marker>
+  <marker id="mm" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0.5 L7,4 L0,7.5z" style="fill:var(--mute)"/></marker>
+</defs>
+
+<rect x="0" y="0" width="940" height="456" rx="16" style="fill:var(--paper)"/>
+
+<text x="40" y="52" class="serif h1">Your attention stays on the coordinator</text>
+<text x="40" y="78" class="sub">Workers run out of view. The coordinator calls you only when the work is done, or when it and its workers are stuck.</text>
+
+<!-- What the owner sees -->
+<text x="40" y="124" class="cap">WHAT YOU SEE · MAIN HERDR SIDEBAR</text>
+<rect x="40" y="138" width="270" height="232" rx="12" style="fill:var(--panel);stroke:var(--line);stroke-width:1"/>
+<text x="60" y="166" class="serif name">Agents</text>
+<g style="fill:none;stroke:var(--mute);stroke-width:1.2">
+  <circle cx="284" cy="157" r="4.5"/>
+  <path d="M275,171 C275,163 293,163 293,171"/>
+</g>
+
+<rect x="56" y="180" width="238" height="40" rx="8" class="card" style="stroke:var(--clay)"/>
+<circle cx="76" cy="200" r="5" style="fill:var(--clay)"/>
+<text x="92" y="197" class="serif name">Coordinator</text>
+<text x="92" y="212" class="small">project A</text>
+<text x="282" y="204" text-anchor="end" class="chip" style="fill:var(--clay)">needs you</text>
+
+<rect x="56" y="230" width="238" height="40" rx="8" class="card"/>
+<circle cx="76" cy="250" r="4.5" style="fill:none;stroke:var(--kraft);stroke-width:1.6"/>
+<text x="92" y="247" class="serif name">Coordinator</text>
+<text x="92" y="262" class="small">project B</text>
+<text x="282" y="254" text-anchor="end" class="chip" style="fill:var(--kraft)">working</text>
+
+<rect x="56" y="280" width="238" height="40" rx="8" class="card"/>
+<circle cx="76" cy="300" r="5" style="fill:var(--olive)"/>
+<text x="92" y="297" class="serif name">Coordinator</text>
+<text x="92" y="312" class="small">project C</text>
+<text x="282" y="304" text-anchor="end" class="chip" style="fill:var(--olive)">done</text>
+
+<text x="60" y="350" class="note">Only coordinators appear here.</text>
+
+<!-- Coordinator -->
+<circle cx="470" cy="253" r="64" style="fill:var(--paper);stroke:var(--ink);stroke-width:1.5"/>
+<text x="470" y="250" text-anchor="middle" class="serif" style="font-size:17px">Coordinator</text>
+<text x="470" y="268" text-anchor="middle" class="small">tracks every worker</text>
+
+<!-- The only two calls to the owner -->
+<path d="M410,228 C372,206 350,200 300,200" style="fill:none;stroke:var(--clay);stroke-width:1.6" marker-end="url(#mc)"/>
+<text x="356" y="190" text-anchor="middle" class="chip" style="fill:var(--clay)">stuck</text>
+<path d="M410,278 C372,298 350,300 300,300" style="fill:none;stroke:var(--olive);stroke-width:1.6" marker-end="url(#mo)"/>
+<text x="356" y="322" text-anchor="middle" class="chip" style="fill:var(--olive)">all done</text>
+<text x="470" y="350" text-anchor="middle" class="note">It calls you only in these two cases.</text>
+
+<!-- Traffic with workers, out of view -->
+<text x="564" y="160" text-anchor="middle" class="small">dispatch · report</text>
+<path d="M532,236 C570,220 590,180 618,175" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M534,248 C575,240 595,216 618,215" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M534,256 C575,256 595,255 618,255" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M534,264 C575,272 595,294 618,295" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M532,276 C570,292 590,330 618,335" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+
+<text x="620" y="124" class="cap">WORKERS SESSION · OUT OF VIEW</text>
+<rect x="620" y="138" width="280" height="232" rx="12" style="fill:none;stroke:var(--mute);stroke-width:1;stroke-dasharray:5 5"/>
+
+<rect x="640" y="158" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="177" text-anchor="middle" class="chip">Producer</text>
+<rect x="770" y="158" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="177" text-anchor="middle" class="chip">REVIEW seat</text>
+<rect x="640" y="198" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="217" text-anchor="middle" class="chip">AUDIT</text>
+<rect x="770" y="198" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="217" text-anchor="middle" class="chip">AUDIT_2</text>
+<rect x="640" y="238" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="257" text-anchor="middle" class="chip">EXPERT</text>
+<rect x="770" y="238" width="115" height="30" rx="15" class="gone"/><text x="827.5" y="257" text-anchor="middle" class="chip" style="fill:var(--mute)">QA · closed</text>
+<rect x="640" y="278" width="115" height="30" rx="15" class="gone"/><text x="697.5" y="297" text-anchor="middle" class="chip" style="fill:var(--mute)">Seat · closed</text>
+<rect x="770" y="278" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="297" text-anchor="middle" class="chip">Adjudicator</text>
+<rect x="640" y="318" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="337" text-anchor="middle" class="chip">Integrator</text>
+<rect x="770" y="318" width="115" height="30" rx="15" class="gone"/><text x="827.5" y="337" text-anchor="middle" class="chip" style="fill:var(--mute)">Producer · closed</text>
+
+<!-- Footer -->
+<path d="M40,398 H900" style="stroke:var(--line);stroke-width:1"/>
+<text x="40" y="428" class="note">Workers start, report, and close often. They keep running even if the coordinator ends.</text>
+<text x="900" y="428" text-anchor="end" class="mono">herdr session attach workers</text>
+</svg>

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 280" width="1060" height="280" role="img" aria-labelledby="t d">
 <title id="t">Task lifecycle</title>
-<desc id="d">A card is dispatched to a new Herdr Tab and git worktree. The coordinator waits in the background on herdr agent prompt with the wait flag, reads the report, and runs QA at the frozen commit. The lane then decides review: a coordinator check for Routine, a REVIEW seat for Elevated, AUDIT and AUDIT_2 for Critical. The exact candidate is accepted and merged by an authorized squash merge. QA failures and open findings loop back as a repair with a new candidate.</desc>
+<desc id="d">A card is dispatched to a new Tab and git worktree in the workers Herdr session. The coordinator waits in the background on herdr agent prompt with the wait flag, reads the report, and runs QA at the frozen commit. The lane then decides review: a coordinator check for Routine, a REVIEW seat for Elevated, AUDIT and AUDIT_2 for Critical. The exact candidate is accepted and merged by an authorized squash merge. QA failures and open findings loop back as a repair with a new candidate.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}

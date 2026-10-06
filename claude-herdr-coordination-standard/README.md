@@ -1,8 +1,16 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.6.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.7.0`** (derived from Coordination Standard 0.9.0)
 
 A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
+
+## Why this standard
+
+As the owner, you watch one thing: the agent list in your main Herdr sidebar, where each agent shows as waiting for you or done. The workers that the coordinator sends out (producers, review seats, QA, and the others) are not your concern. They start often, talk with the coordinator often, and close often. They must not pull your attention away from more important work.
+
+So the workers run in a separate Herdr session named `workers`, and your sidebar does not show them. It shows only the coordinator, the main-line agent. The coordinator tracks the state of every worker it sends out. It interrupts you only when all the work is done, or when it and its workers cannot solve a problem.
+
+![Owner focus](assets/owner_focus.svg)
 
 | File | What it holds | Share it? |
 |---|---|---|
@@ -15,7 +23,7 @@ This README only explains. If it disagrees with the card, the card wins.
 
 ![System architecture](assets/system_architecture.svg)
 
-The coordinator never writes candidates. Each producer or seat is launched from `model_bindings.json` in a new Tab on its own worktree; seats review a detached worktree at the frozen commit. Cards, reports, and QA logs live in `<coord>`, outside the repository.
+The coordinator never writes candidates. Each producer or seat is launched from `model_bindings.json` in a new Tab on its own worktree, inside the `workers` Herdr session. Workers keep running if the coordinator ends. To look at them, run `herdr session attach workers` in another terminal window. Seats review a detached worktree at the frozen commit. Cards, reports, and QA logs live in `<coord>`, outside the repository.
 
 ## Lifecycle
 
@@ -29,7 +37,7 @@ Open a Herdr Tab, start Claude Code there, and point it at the files where they 
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.6.0.
+within the owner's authorization and project rules. Declared version: 0.7.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
