@@ -17,7 +17,7 @@ For any coordinator agent. One coordinator hands out task cards, reads the worke
 
 ![Auxiliary components](coordination-standard/assets/auxiliary_components.svg)
 
-## 2. Claude-herdr Coordination Standard 0.7.0
+## 2. Claude-herdr Coordination Standard 0.8.0
 
 For a Claude Code coordinator running in a Herdr Tab. The owner watches only the coordinator in the main Herdr sidebar. Every producer and review seat gets its own Tab and git worktree in a separate `workers` Herdr session that the sidebar does not show, and the coordinator interrupts the owner only when all the work is done or when it and its workers are stuck. Derived from 0.9.0; a background `herdr agent prompt --wait` wakes the coordinator when a report lands.
 

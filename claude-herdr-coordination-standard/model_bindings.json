@@ -1,6 +1,6 @@
 {
-  "bindings_version": "0.7.0",
-  "updated": "2026-10-06",
+  "bindings_version": "0.8.0",
+  "updated": "2026-10-07",
   "note": "Only file to edit when models change; rules live in coordinator.md. Placeholders: {id} {effort} {attempt_dir} (absolute <coord>/<task>/<agent>/, the launched session's own folder; all its attempts write inside it). Recheck flags with `claude --help` / `codex --help` after CLI updates.",
   "harnesses": {
     "claude": {
@@ -19,8 +19,12 @@
   },
   "models": {
     "opus": { "harness": "claude", "id": "opus" },
+    "sonnet": { "harness": "claude", "id": "sonnet" },
+    "haiku": { "harness": "claude", "id": "haiku" },
+    "fable": { "harness": "claude", "id": "fable" },
     "gpt": { "harness": "codex", "id": "gpt-6-astra" }
   },
+  "adjustments": { "harnesses": ["claude"], "min_effort": "medium", "max_effort": "xhigh" },
   "routes": {
     "GENERAL_EXEC": { "model": "opus", "effort": "high" },
     "EXPERT": { "model": "opus", "effort": "ultracode" },
@@ -28,6 +32,5 @@
     "AUDIT": { "model": "gpt", "effort": "high", "replacement": { "model": "opus", "effort": "high" } },
     "AUDIT_2": { "model": "opus", "effort": "high" },
     "ADJUDICATOR": { "model": "opus", "effort": "xhigh" }
-  },
-  "session_reuse": { "max_context_tokens": 200000, "max_idle_minutes": 55 }
+  }
 }

@@ -1,6 +1,6 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.7.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.8.0`** (derived from Coordination Standard 0.9.0)
 
 A working standard for running several AI coding agents on one project when the coordinator is a **Claude Code** session in a **Herdr** Tab. Producers, review seats, and integrators each run in their own Herdr Tab and git worktree; the coordinator dispatches, waits in the background, verifies, and gates. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
 
@@ -15,7 +15,7 @@ So the workers run in a separate Herdr session named `workers`, and your sidebar
 | File | What it holds | Share it? |
 |---|---|---|
 | [`coordinator.md`](coordinator.md) | Every rule: roles, the three review lanes, routes, cards, waiting, QA and review, merge and publication. Names no worker model | Yes, portable |
-| [`model_bindings.json`](model_bindings.json) | Which model, harness flags, and reasoning effort each route uses right now | Personal; write your own |
+| [`model_bindings.json`](model_bindings.json) | Which model, harness flags, and reasoning effort each route uses by default, and what the coordinator may adjust | Personal; write your own |
 
 This README only explains. If it disagrees with the card, the card wins.
 
@@ -37,11 +37,13 @@ Open a Herdr Tab, start Claude Code there, and point it at the files where they 
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.7.0.
+within the owner's authorization and project rules. Declared version: 0.8.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
 ## Swapping a model
 
 Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. Check flags with `claude --help` and `codex --help` after CLI updates. Nothing else changes, with one caveat: under `-s workspace-write`, a Codex session cannot commit in a linked worktree (its git metadata lives in the main repository), so keep producer routes on the claude harness.
+
+Route bindings are defaults. When the coordinator is highly confident that another model or effort fits a task better, it may change one launch on its own (claude) harness to another model in `models`, with effort from `min_effort` to `max_effort`, and it logs the reason ([card §3](coordinator.md#3-routes-and-launching)). Routes on other harnesses stay as bound. To change what it may adjust, edit `adjustments`.
 
