@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.8.0
+# Claude-herdr Coordinator Card 0.8.1
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
