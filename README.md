@@ -31,13 +31,3 @@ The owner watches only the coordinator in the main Herdr sidebar. Workers with a
 ![System architecture](claude-herdr-coordination-standard/assets/system_architecture.svg)
 
 ![Task flow](claude-herdr-coordination-standard/assets/workflow_lifecycle.svg)
-
-## Versioning
-
-Both standards use semantic versioning: `MAJOR.MINOR.PATCH`, where each part is an integer, so 0.10.0 follows 0.9.0. Each stays at 0.x until the owner declares it stable as 1.0.0.
-
-- MINOR: a change to what the coordinator or agents do (rules, routes, gates, fixed prompts).
-- PATCH: no change in behavior (wording, README, diagrams, or a model ID swap in the bindings).
-- Every change to a policy file gets a new number. The card title, README, start and switch prompts, and JSON version fields always match.
-
-Coordination Standard 9.0 was renamed 0.9.0; earlier releases were numbered V1 to V9.0.

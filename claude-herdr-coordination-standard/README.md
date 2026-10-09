@@ -124,6 +124,6 @@ under 0.10.0. Ask me only if a task needs my decision.
 
 ## Swapping a model
 
-Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. Each edit gets a new version number ([Versioning](../README.md#versioning)). No rule in `coordinator.md` changes. To change what the coordinator may adjust by itself, edit `adjustments`.
+Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. No rule in `coordinator.md` changes. To change what the coordinator may adjust by itself, edit `adjustments`.
 
 After CLI updates, check the flags with `claude --help` and `codex --help`. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply. Keep producer routes on the claude harness. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository.
