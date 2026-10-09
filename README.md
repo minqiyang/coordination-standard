@@ -19,9 +19,9 @@ For any coordinator agent. One coordinator hands out task cards, reads the worke
 
 ## 2. Claude-herdr Coordination Standard 0.10.0
 
-For a Claude Code coordinator running in a Herdr Tab, derived from Coordination Standard 0.9.0. The owner watches only the coordinator in the main Herdr sidebar. The coordinator interrupts the owner only when all the work is done or when it and its workers are stuck. Each producer, integrator, Claude seat, and adjudicator gets a new Tab and git worktree in a separate `workers` Herdr session that the sidebar does not show. GPT seats run headless and read-only as background `codex exec` tasks, each in its own detached worktree.
+For a Claude Code coordinator running in a Herdr Tab, derived from Coordination Standard 0.9.0. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
 
-One worker owns a whole dev loop. It edits, runs, and reads results in its worktree, and stops to report at the checkpoints its card names or when it is blocked. The lane's gate runs once, at the first real use of a frozen commit, such as a run of record, a merge, or input to another card. Runs of record use only accepted code, and numbers from dev runs never feed a result.
+The owner watches only the coordinator in the main Herdr sidebar. Workers with a Tab run in a separate `workers` Herdr session that the sidebar does not show, and GPT seats run headless and read-only. The coordinator interrupts the owner only when all the work is done or when it and its workers are stuck.
 
 - Policy files: [`coordinator.md`](claude-herdr-coordination-standard/coordinator.md), [`model_bindings.json`](claude-herdr-coordination-standard/model_bindings.json)
 - Start: [`claude-herdr-coordination-standard/README.md`](claude-herdr-coordination-standard/README.md)
@@ -30,7 +30,7 @@ One worker owns a whole dev loop. It edits, runs, and reads results in its workt
 
 ![System architecture](claude-herdr-coordination-standard/assets/system_architecture.svg)
 
-![Workflow lifecycle](claude-herdr-coordination-standard/assets/workflow_lifecycle.svg)
+![Task flow](claude-herdr-coordination-standard/assets/workflow_lifecycle.svg)
 
 ## Versioning
 

@@ -2,52 +2,98 @@
 
 **Version `0.10.0`** (derived from Coordination Standard 0.9.0)
 
-A working standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. The coordinator plans, dispatches cards, verifies, gates, records, and merges when authorized. It writes no candidate code unless the owner names that change. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
-
-- One worker owns a whole dev loop. It edits, runs, and reads results in its own git worktree as often as it needs. It stops to report at the checkpoints its card names, or when it is blocked. At a checkpoint the coordinator replies with evidence, findings, priorities, or owner changes, never code.
-- The lane's gate runs once, at the use point. A use point is the first time a frozen commit becomes load-bearing, such as a run of record, a merge or PR, a publication, or input that another card builds on. Dev rounds get no gate and never count as failures.
-- Runs of record use only accepted code. Numbers from dev runs carry the label "unaccepted code" and never feed a result.
-- GPT seats run headless and read-only, as background `codex exec` tasks. Producers, integrators, Claude seats, and adjudicators each get a new Tab and git worktree in a separate `workers` Herdr session.
-
-## Why this standard
-
-As the owner, you watch one thing: the coordinator in your main Herdr sidebar. The coordinator sends out producers, review seats, adjudicators, and integrators. These workers start, report, and close often, and they must not pull your attention away from more important work.
-
-So the workers run where your sidebar does not show them. Most run in a separate Herdr session named `workers`, and GPT seats run headless. The coordinator tracks every worker. It interrupts you only when all the work is done, or when it and its workers cannot go on because of missing authority, a choice of meaning only you can make, the failure limit, or a blocker.
-
-![Owner focus](assets/owner_focus.svg)
+A standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
 
 | File | What it holds | Share it? |
 |---|---|---|
 | [`coordinator.md`](coordinator.md) | Every rule: roles and Tabs, lanes and use points, routes and launching, cards and dev loops, QA and review, the failure limit, runs of record, plans, merge and publication. Names routes, never models | Yes, portable |
 | [`model_bindings.json`](model_bindings.json) | Each route's default model and effort, and its replacement if it has one. The harness flags, also for headless seats. What the coordinator may adjust | Personal; write your own |
 
-This README only explains. If it disagrees with the card, the card wins.
+This README only explains. If it disagrees with `coordinator.md`, `coordinator.md` wins.
 
-## How it fits together
+## Who does what
 
 ![System architecture](assets/system_architecture.svg)
 
-The coordinator launches every worker from `model_bindings.json`. Producers, integrators, Claude seats, and adjudicators each run in a new Tab in the `workers` Herdr session, on their own git worktree, and keep running if the coordinator ends. To look at them, run `herdr session attach workers` in another terminal window. A GPT seat runs as a background `codex exec -s read-only` task in its own detached worktree, with no Tab. Every seat reviews a detached worktree at the frozen commit.
+**The coordinator runs the project.** It is the Claude Code session in your Herdr sidebar. It plans the work, sends cards to workers, checks their results, runs the gates, and keeps the records. It merges only when you authorize it. It does not write code itself, unless you tell it to for one specific change. While workers run, it waits in the background until a worker replies or a headless seat exits.
 
-The coordinator waits in the background. The exit of a `herdr agent prompt --wait` task, or of a headless seat's `codex exec`, wakes it. `tasks.md`, `decisions.md`, each launch's `launch.md`, cards, reports, QA logs, `runs/`, and the worktrees under `wt/` live in `<coord>`, outside the repository.
+**One long-running worker writes the code.** This worker is the producer. Its default route is GENERAL_EXEC. After two failed attempts, or when you ask, the card moves to EXPERT. Both are Opus sessions. Their effort is set in `model_bindings.json`. To combine accepted work from several cards, the coordinator starts a fresh GENERAL_EXEC integrator.
 
-## Lifecycle
+**Review seats read frozen code and write reports.** REVIEW and AUDIT are GPT seats. They run read-only as background `codex exec` tasks, with no Tab. If GPT cannot run, that seat uses its Opus replacement once. AUDIT_2 is an Opus seat in a Tab. The ADJUDICATOR is not a seat. It is a fresh, read-only Opus session in a Tab that rules on disputed findings.
 
-![Workflow lifecycle](assets/workflow_lifecycle.svg)
+**Each worker has its own git worktree.** Workers with a Tab run in a separate Herdr session named `workers`, so your sidebar does not show them. They keep running if the coordinator ends. To look at them, run `herdr session attach workers` in another terminal window.
 
-A card goes to one worker, which runs its dev loop and stops to report at the card's checkpoints or when it is blocked. At the first use point, the lane's gate runs once ([card §2](coordinator.md#2-lanes-and-gates)):
+**The coordinator's subagents only read.** They scout, read reports and diffs, and check claims. A subagent may fill a seat on the claude harness, but only for a re-review after a small repair or when you ask for it. A subagent never fills any other role, such as the ADJUDICATOR.
 
-1. Freeze the candidate as a commit SHA.
-2. Run deterministic QA at that SHA.
-3. Run the lane's seats. ROUTINE gets a coordinator check and no seat, ELEVATED gets a REVIEW seat, and CRITICAL gets AUDIT and AUDIT_2.
-4. Accept that exact SHA, then use it within recorded authorization.
+**Model bindings are defaults.** The exact model and effort of each route live in `model_bindings.json`. When the coordinator is highly confident that another model or effort fits a card better, it may change that one launch. It does this only for task fit, never to make a gate easier to pass. The change must stay on the Claude side and within the effort range in `adjustments`. The coordinator writes the change and the reason in that launch's `launch.md`. GPT seats stay as bound. If a route with no replacement cannot run, the coordinator pauses the task and tells you.
 
-Before the use point, the coordinator may send a frozen commit to one interim seat. Its findings are evidence and go through triage, and an unresolved MATERIAL finding blocks acceptance. An interim review never fails an attempt and never counts as the gate.
+## How a task moves
 
-An attempt fails when the candidate frozen for the use point fails QA, or when the coordinator's check or a review round reports a MATERIAL finding that survives triage and any dispute. It also fails when the author stops without a candidate because it could not meet a criterion. The same worker repairs the candidate. The repair is a new candidate that needs new QA, and a fresh review if the lane has seats. After 2 failed attempts the card goes to EXPERT. After 2 failed EXPERT attempts the coordinator asks the owner ([card §5](coordinator.md#5-qa-review-acceptance)).
+![Task flow](assets/workflow_lifecycle.svg)
 
-A run of record uses only accepted code, from a clean detached worktree. Each input it loads from outside that worktree is a frozen copy with a sha256 manifest. Before the start and before every resume, the coordinator checks that HEAD is the accepted SHA, that the tree is clean, and that the manifest verifies. Outputs go outside the worktree ([card §5](coordinator.md#5-qa-review-acceptance)).
+1. **Card.** The card states the goal, the finish line, and the acceptance criteria. It does not state the method. It also names the lane, the use points (step 3), the checkpoints, and the dev paths.
+2. **Dev loop.** The worker edits, runs, and reads results in its own worktree as often as it needs. The loop has no gate, and nothing in it counts as a failure. The worker stops to report only at a checkpoint or when it is blocked. The coordinator replies with evidence, findings, priorities, or changes from you. It never sends code, or a method that you did not specify. If you change the requirements, the coordinator tells the worker at once. Every number from a dev run carries the label "unaccepted code".
+3. **Use point.** A use point is the first time the worker's code is put to real use. Examples are a run of record, a merge or PR, a publication, an irreversible action, and input that another card builds on. Here the coordinator freezes the code as a commit SHA. This frozen code is the candidate. The gate runs once for that SHA. QA runs first, then the lane's seats. If the gate passes, the coordinator accepts that exact SHA and uses it within your authorization. If the gate fails, the worker repairs the candidate ([Failures and escalation](#failures-and-escalation)).
+4. **Lane.** The lane sets how much review the gate needs:
+
+   | Lane | When | Gate |
+   |---|---|---|
+   | ROUTINE | Ordinary, local work that is easy to undo | QA and a coordinator check |
+   | ELEVATED | An important change to behavior or correctness | QA and a REVIEW seat |
+   | CRITICAL | An error could spoil results, corrupt state, or cause effects that cannot be undone | QA, an AUDIT seat, and an AUDIT_2 seat |
+
+   A lane can rise but never drop. Work that merges by PR is at least ELEVATED. Structural work is CRITICAL. [`coordinator.md` §2](coordinator.md#2-lanes-and-gates) gives the full rules.
+5. **Interim seat.** Before the use point, the coordinator may freeze an interim candidate and send it to one seat. It should do this early when the dev loop steers by numbers from the card's own code, such as a scorer. The seat's findings go through triage like any others, and an open MATERIAL finding blocks acceptance. An interim review never fails an attempt and does not count as the gate.
+
+## How review stays independent
+
+- Each seat is a new session and is read-only. It does not see the worker's own notes or context. In the first round it does not see other seats' reports.
+- The seat reviews a detached worktree at the candidate's SHA. Every seat card uses one template. Its scope is the full diff plus the frozen copies of outside inputs. The card never narrows the scope and never tells how the worker built or tested the candidate.
+- After the report arrives, the coordinator checks that the worktree is still clean at the SHA and that the seat's launch matches its binding. If not, the seat does not count.
+- A finding is MATERIAL only when it shows both a concrete trigger scenario in this project and a measurable, significant impact on a main decision or result. Any other finding is ADVISORY. ADVISORY findings are recorded but never block.
+- The coordinator triages each MATERIAL finding first. It may downgrade one that fails the MATERIAL rule, asks for work beyond the criteria, or is only a style preference. It may never downgrade by itself a finding that has a reproduction, a failing test, or other machine evidence.
+- For any other disputed finding, the coordinator chooses how to settle it. It can ask the seat to withdraw the finding or show a trigger path, rule itself, or call a fresh ADJUDICATOR. In a CRITICAL gate, only the ADJUDICATOR may rule against a seat. Each downgrade and each ruling against a seat gets an `OVERRIDE` line in `decisions.md`.
+
+## Failures and escalation
+
+An attempt is one candidate frozen for a use point, or one repair of it. An attempt fails only when:
+
+- the frozen candidate fails QA,
+- a MATERIAL finding from the coordinator's check or from a review round is still valid after triage and any dispute, or
+- the worker stops without a candidate because it could not meet a criterion.
+
+Environment, permission, and quota problems do not count. Unclear requirements and measured results that are not criteria do not count either.
+
+The same worker repairs the candidate, and it fixes only the open MATERIAL findings. Each repair is a new candidate, so it needs new QA and, if the lane has seats, a fresh review. After two failed attempts the card moves to EXPERT, which makes every later repair. After two failed EXPERT attempts, or when no new evidence or approach is left, the coordinator asks you.
+
+## Runs of record
+
+A run of record is a run whose output feeds a project result, another card or its gate, a report or benchmark, or one of your go/no-go decisions. To use a number from a dev run, run it again as a run of record.
+
+- It runs only an accepted candidate, from a clean detached worktree at its SHA.
+- Each input from outside that worktree, such as a skill, prompt, or config, is a frozen copy with a sha256 manifest.
+- Before the start and before every resume, the coordinator checks that HEAD is the accepted SHA, that the tree is clean, and that the manifest verifies. Outputs go outside the worktree.
+- The coordinator approves and starts runs of record itself. It asks you only if the run is also an irreversible action.
+
+## Records and authority
+
+The records live in `<coord>`, a folder outside the repository. Cards, reports, QA logs, and the worktrees under `wt/` live there too.
+
+| Record | What it holds |
+|---|---|
+| `tasks.md` | The live board, edited in place, and your standing authorization |
+| `decisions.md` | Each task's downgrades, rulings, risk acceptances, plan acceptances, and publication results |
+| `launch.md` | The exact command of each launch, and any adjustment or replacement |
+| `runs/` | Runs of record |
+
+- Acceptance is not authorization. Push, merge, deploy, and irreversible actions need your authorization. Standing authorization goes in `tasks.md` once, and the coordinator does not ask for it again.
+- Only the coordinator publishes, and only the accepted SHA. It merges with a squash merge bound to that SHA.
+
+## What the owner sees
+
+![Owner focus](assets/owner_focus.svg)
+
+You watch only the coordinator. Workers start, report, and close often, and they run where your sidebar does not show them. The coordinator interrupts you only when all the work is done, or when it and its workers cannot go on. They cannot go on when authority is missing, when a choice of meaning needs you, when the failure limit is reached, or when another blocker stops them. The rest of the time it keeps working and keeps `tasks.md` current.
 
 ## Getting started
 
@@ -78,6 +124,6 @@ under 0.10.0. Ask me only if a task needs my decision.
 
 ## Swapping a model
 
-Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. Each edit also gets a new version number ([Versioning](../README.md#versioning)). No rule in the card changes. Check flags with `claude --help` and `codex --help` after CLI updates. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository. So keep producer routes on the claude harness.
+Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. Each edit gets a new version number ([Versioning](../README.md#versioning)). No rule in `coordinator.md` changes. To change what the coordinator may adjust by itself, edit `adjustments`.
 
-Route bindings are defaults. When the coordinator is highly confident that another model or effort fits a card's task better, it may adjust that one launch. The route's default model and the new model must both use a harness listed in `adjustments`, and only claude is listed. The new model must be in `models`, and the effort must be from `min_effort` to `max_effort`. It adjusts for task fit only, never to make a gate easier to pass, and logs the change and its reason in that session's `launch.md` ([card §3](coordinator.md#3-routes-and-launching)). Routes on other harnesses, such as the GPT seats, stay as bound. If a route's model cannot run, the coordinator uses the route's `replacement` once, if it has one. Otherwise it pauses the task and tells the owner. To change what the coordinator may adjust, edit `adjustments`.
+After CLI updates, check the flags with `claude --help` and `codex --help`. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply. Keep producer routes on the claude harness. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository.
