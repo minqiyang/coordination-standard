@@ -1,6 +1,6 @@
 # Standards
 
-Two peer coordination standards for running several AI coding agents on one project, with Herdr hosting each agent in its own Tab. A coordinator session loads exactly one of them.
+Two peer coordination standards for running several AI coding agents on one project with Herdr. A coordinator session loads exactly one of them.
 
 `archive/` (historical drafts, no authority) and `project-notes/` (project handoffs) are local only and not in git.
 
@@ -19,7 +19,9 @@ For any coordinator agent. One coordinator hands out task cards, reads the worke
 
 ## 2. Claude-herdr Coordination Standard 0.9.0
 
-For a Claude Code coordinator running in a Herdr Tab. The owner watches only the coordinator in the main Herdr sidebar. Every producer and Claude review seat gets its own Tab and git worktree in a separate `workers` Herdr session that the sidebar does not show (GPT seats run headless in their own worktrees), and the coordinator interrupts the owner only when all the work is done or when it and its workers are stuck. Derived from 0.9.0; a background `herdr agent prompt --wait` wakes the coordinator when a report lands.
+For a Claude Code coordinator running in a Herdr Tab, derived from Coordination Standard 0.9.0. The owner watches only the coordinator in the main Herdr sidebar. The coordinator interrupts the owner only when all the work is done or when it and its workers are stuck. Each producer, integrator, Claude seat, and adjudicator gets a new Tab and git worktree in a separate `workers` Herdr session that the sidebar does not show. GPT seats run headless and read-only as background `codex exec` tasks, each in its own detached worktree.
+
+One worker owns a whole dev loop. It edits, runs, and reads results in its worktree, and stops to report at the checkpoints its card names or when it is blocked. The lane's gate runs once, at the first real use of a frozen commit, such as a run of record, a merge, or input to another card. Runs of record use only accepted code, and numbers from dev runs never feed a result.
 
 - Policy files: [`coordinator.md`](claude-herdr-coordination-standard/coordinator.md), [`model_bindings.json`](claude-herdr-coordination-standard/model_bindings.json)
 - Start: [`claude-herdr-coordination-standard/README.md`](claude-herdr-coordination-standard/README.md)
@@ -36,6 +38,6 @@ Both standards use semantic versioning: `MAJOR.MINOR.PATCH`, where each part is 
 
 - MINOR: a change to what the coordinator or agents do (rules, routes, gates, fixed prompts).
 - PATCH: no change in behavior (wording, README, diagrams, or a model ID swap in the bindings).
-- Every change to a policy file gets a new number. The card title, README, start prompt, and JSON version fields always match.
+- Every change to a policy file gets a new number. The card title, README, start and switch prompts, and JSON version fields always match.
 
 Coordination Standard 9.0 was renamed 0.9.0; earlier releases were numbered V1 to V9.0.

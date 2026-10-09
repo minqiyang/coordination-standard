@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 360" width="940" height="360" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 406" width="940" height="406" role="img" aria-labelledby="t d">
 <title id="t">System overview</title>
-<desc id="d">Portable rules and replaceable model bindings feed a Claude Code coordinator running in its own Herdr Tab. It dispatches cards to producers and review seats, each with its own git worktree: producers and Claude seats in a new Tab inside a separate workers Herdr session that stays out of the owner's sidebar, GPT seats as headless read-only Codex runs; seats are fresh and read-only on a detached worktree at the frozen commit. Workers write reports into the coord directory outside the repository, which the coordinator reads and verifies before accepting the exact candidate. Subagents are read-only helpers; one may also fill a seat for a narrow re-review.</desc>
+<desc id="d">Portable rules and replaceable model bindings feed a Claude Code coordinator that runs in its own Herdr Tab. It dispatches cards by route. Producers (GENERAL_EXEC, EXPERT), the AUDIT_2 seat, and the ADJUDICATOR each run in a new Tab in the separate workers Herdr session, which stays out of the owner's sidebar. With the default bindings, the REVIEW and AUDIT seats run headless, as background tasks of the coordinator with no Tab. Each worker has its own git worktree, and the harness in a seat's binding decides Tab or headless. Producers write on task branches. Seats are fresh and read-only, on a detached worktree at the frozen SHA. The report of every worker, in a Tab or headless, goes into the coord directory outside the repository, which also holds tasks.md, cards, QA logs, runs of record, and the worktrees. The coordinator reads and verifies them before it accepts the exact commit. Subagents are read-only helpers; one may also fill a seat for a re-review after a small repair.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
@@ -40,27 +40,32 @@
 <text x="505" y="92" text-anchor="middle" class="s">dispatch</text>
 <path d="M458,160 C530,160 530,100 594,100" class="acc" marker-end="url(#aa)"/>
 <path d="M458,160 C530,160 530,150 594,150" class="acc" marker-end="url(#aa)"/>
-<path d="M458,160 C530,160 530,200 594,200" class="acc" marker-end="url(#aa)"/>
+<path d="M458,160 C530,160 530,234 594,234" class="acc" marker-end="url(#aa)"/>
 
-<text x="600" y="62" class="k">WORKERS SESSION · OWN WORKTREE EACH</text>
+<text x="600" y="62" class="k">WORKERS SESSION · NEW TAB EACH</text>
 <g>
 <rect x="600" y="80" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="100" r="3.5" class="fa"/><text x="630" y="105" class="t">Producers</text><text x="886" y="104" text-anchor="end" class="s">GENERAL_EXEC · EXPERT</text>
-<rect x="600" y="130" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="150" r="3.5" class="fa"/><text x="630" y="155" class="t">Elevated seat</text><text x="886" y="154" text-anchor="end" class="s">REVIEW</text>
-<rect x="600" y="180" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="200" r="3.5" class="fa"/><text x="630" y="205" class="t">Critical seats</text><text x="886" y="204" text-anchor="end" class="s">AUDIT · AUDIT_2</text>
+<rect x="600" y="130" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="150" r="3.5" class="fa"/><text x="630" y="155" class="t">Reviewers</text><text x="886" y="154" text-anchor="end" class="s">AUDIT_2 · ADJUDICATOR</text>
+</g>
+<text x="600" y="196" class="k">BACKGROUND TASK · NO TAB</text>
+<g>
+<rect x="600" y="214" width="300" height="40" rx="4" class="box"/><circle cx="616" cy="234" r="3.5" class="fa"/><text x="630" y="239" class="t">Headless seats</text><text x="886" y="238" text-anchor="end" class="s">REVIEW · AUDIT</text>
 </g>
 
-<path d="M642,220 V246" class="ink" marker-end="url(#ai)"/>
-<rect x="620" y="254" width="44" height="46" rx="3" class="box" transform="translate(6,-6)" style="stroke:var(--line)"/>
-<rect x="620" y="254" width="44" height="46" rx="3" class="box"/>
-<path d="M629,268 H655 M629,277 H655 M629,286 H646" class="ln"/>
-<text x="684" y="274" class="t">&lt;coord&gt;/</text>
-<text x="684" y="292" class="s">tasks.md · cards · reports · QA</text>
-<path d="M620,277 H400 V224" class="dash" marker-end="url(#am)"/>
-<text x="510" y="268" text-anchor="middle" class="s">read · verify</text>
+<path d="M900,150 H916 M900,234 H916 M900,100 H916 V264 H642 V278" class="ink" marker-end="url(#ai)"/>
+<rect x="620" y="286" width="44" height="46" rx="3" class="box" transform="translate(6,-6)" style="stroke:var(--line)"/>
+<rect x="620" y="286" width="44" height="46" rx="3" class="box"/>
+<path d="M629,300 H655 M629,309 H655 M629,318 H646" class="ln"/>
+<text x="684" y="304" class="t">&lt;coord&gt;/</text>
+<text x="684" y="322" class="s">tasks.md · cards · reports</text>
+<text x="684" y="338" class="s">QA logs · runs · worktrees</text>
+<path d="M620,309 H400 V224" class="dash" marker-end="url(#am)"/>
+<text x="510" y="300" text-anchor="middle" class="s">read · verify</text>
 
-<rect x="40" y="256" width="210" height="44" rx="4" class="box" style="stroke-dasharray:4 3"/>
-<text x="58" y="276" class="t">Subagents</text><text x="58" y="294" class="s">read-only · re-review</text>
-<path d="M250,278 C312,278 332,230 358,204" class="dash" marker-end="url(#am)"/>
+<rect x="40" y="288" width="210" height="44" rx="4" class="box" style="stroke-dasharray:4 3"/>
+<text x="58" y="308" class="t">Subagents</text><text x="58" y="326" class="s">read-only · re-review</text>
+<path d="M250,310 C312,310 332,230 358,204" class="dash" marker-end="url(#am)"/>
 
-<text x="40" y="340" class="s">Producers write on task branches. Seats are fresh and read-only, detached at the frozen SHA; GPT seats run headless.</text>
+<text x="40" y="368" class="s">Producers write on task branches. Seats are fresh and read-only, on a detached worktree at the frozen SHA.</text>
+<text x="40" y="386" class="s">Each worker has its own worktree. The harness in a seat's binding decides Tab or headless.</text>
 </svg>

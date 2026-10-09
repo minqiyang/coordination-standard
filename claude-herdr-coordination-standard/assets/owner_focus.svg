@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 456" width="940" height="456" role="img" aria-labelledby="t d">
 <title id="t">Owner focus</title>
-<desc id="d">The owner watches only the main Herdr sidebar, where each coordinator shows as needs you, working, or done. The coordinator sends out producers, review seats, QA, and other workers into a separate workers session that stays out of view; they start, report, and close often. The coordinator tracks every worker and calls the owner only in two cases: all the work is done, or it and its workers are stuck. Workers keep running even if the coordinator ends.</desc>
+<desc id="d">The owner watches only the main Herdr sidebar, where each coordinator shows as needs you, working, or done. The coordinator sends producers, EXPERT, the AUDIT_2 seat, the adjudicator, and the integrator to Tabs in a separate workers session. The REVIEW and AUDIT seats run on GPT by default, so they run headless with no Tab. Both groups stay out of the owner's view. Workers start, report, and close often. The coordinator tracks every worker and calls the owner only in two cases: all the work is done, or it and its workers are stuck. Workers in Tabs keep running even if the coordinator ends.</desc>
 <style>
   svg{--paper:#FAF9F5;--panel:#F0EEE6;--ink:#141413;--mute:#6B6A65;--line:#D9D6CB;--clay:#D97757;--kraft:#C08A5B;--olive:#788C5D}
   @media (prefers-color-scheme: dark){svg{--paper:#1F1E1D;--panel:#2A2927;--ink:#FAF9F5;--mute:#A8A69E;--line:#45433F;--clay:#D97757;--kraft:#D4A27F;--olive:#93A776}}
@@ -73,28 +73,29 @@
 
 <!-- Traffic with workers, out of view -->
 <text x="564" y="160" text-anchor="middle" class="small">dispatch · report</text>
-<path d="M532,236 C570,220 590,180 618,175" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
-<path d="M534,248 C575,240 595,216 618,215" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
-<path d="M534,256 C575,256 595,255 618,255" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
-<path d="M534,264 C575,272 595,294 618,295" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
-<path d="M532,276 C570,292 590,330 618,335" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M532,236 C570,220 590,175 618,170" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M534,248 C575,240 595,212 618,210" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M534,258 C575,258 595,250 618,250" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
+<path d="M532,276 C570,292 590,336 618,342" class="traffic" marker-start="url(#mm)" marker-end="url(#mm)"/>
 
 <text x="620" y="124" class="cap">WORKERS SESSION · OUT OF VIEW</text>
-<rect x="620" y="138" width="280" height="232" rx="12" style="fill:none;stroke:var(--mute);stroke-width:1;stroke-dasharray:5 5"/>
+<rect x="620" y="138" width="280" height="144" rx="12" style="fill:none;stroke:var(--mute);stroke-width:1;stroke-dasharray:5 5"/>
 
-<rect x="640" y="158" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="177" text-anchor="middle" class="chip">Producer</text>
-<rect x="770" y="158" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="177" text-anchor="middle" class="chip">REVIEW seat</text>
-<rect x="640" y="198" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="217" text-anchor="middle" class="chip">AUDIT</text>
-<rect x="770" y="198" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="217" text-anchor="middle" class="chip">AUDIT_2</text>
-<rect x="640" y="238" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="257" text-anchor="middle" class="chip">EXPERT</text>
-<rect x="770" y="238" width="115" height="30" rx="15" class="gone"/><text x="827.5" y="257" text-anchor="middle" class="chip" style="fill:var(--mute)">QA · closed</text>
-<rect x="640" y="278" width="115" height="30" rx="15" class="gone"/><text x="697.5" y="297" text-anchor="middle" class="chip" style="fill:var(--mute)">Seat · closed</text>
-<rect x="770" y="278" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="297" text-anchor="middle" class="chip">Adjudicator</text>
-<rect x="640" y="318" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="337" text-anchor="middle" class="chip">Integrator</text>
-<rect x="770" y="318" width="115" height="30" rx="15" class="gone"/><text x="827.5" y="337" text-anchor="middle" class="chip" style="fill:var(--mute)">Producer · closed</text>
+<rect x="640" y="155" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="174" text-anchor="middle" class="chip">Producer</text>
+<rect x="770" y="155" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="174" text-anchor="middle" class="chip">AUDIT_2</text>
+<rect x="640" y="195" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="214" text-anchor="middle" class="chip">EXPERT</text>
+<rect x="770" y="195" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="214" text-anchor="middle" class="chip">Adjudicator</text>
+<rect x="640" y="235" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="254" text-anchor="middle" class="chip">Integrator</text>
+<rect x="770" y="235" width="115" height="30" rx="15" class="gone"/><text x="827.5" y="254" text-anchor="middle" class="chip" style="fill:var(--mute)">Seat · closed</text>
+
+<!-- GPT seats, headless, also out of view -->
+<text x="620" y="300" class="cap">HEADLESS SEATS · NO TAB</text>
+<rect x="620" y="314" width="280" height="56" rx="12" style="fill:none;stroke:var(--mute);stroke-width:1;stroke-dasharray:5 5"/>
+<rect x="640" y="327" width="115" height="30" rx="15" class="pill"/><text x="697.5" y="346" text-anchor="middle" class="chip">REVIEW seat</text>
+<rect x="770" y="327" width="115" height="30" rx="15" class="pill"/><text x="827.5" y="346" text-anchor="middle" class="chip">AUDIT</text>
 
 <!-- Footer -->
 <path d="M40,398 H900" style="stroke:var(--line);stroke-width:1"/>
-<text x="40" y="428" class="note">Workers start, report, and close often. They keep running even if the coordinator ends.</text>
+<text x="40" y="428" class="note">Workers start, report, and close often. Workers in Tabs keep running if the coordinator ends.</text>
 <text x="900" y="428" text-anchor="end" class="mono">herdr session attach workers</text>
 </svg>

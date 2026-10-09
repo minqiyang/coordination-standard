@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 280" width="1060" height="280" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 390" width="1100" height="390" role="img" aria-labelledby="t d">
 <title id="t">Task lifecycle</title>
-<desc id="d">A card is dispatched to a new Tab and git worktree in the workers Herdr session. The coordinator waits in the background on herdr agent prompt with the wait flag, reads the report, and runs QA at the frozen commit. The lane then decides review: a coordinator check for Routine, a REVIEW seat for Elevated, AUDIT and AUDIT_2 for Critical. The exact candidate is accepted and merged by an authorized squash merge. QA failures and open findings loop back as a repair with a new candidate.</desc>
+<desc id="d">The picture reads left to right. A card with one lane and named checkpoints goes to a worker in its own Tab and git worktree. The worker runs a dev loop: edit, run, read results, and repeat as needed. A short branch off the top of the loop leads to a named checkpoint. The worker stops and reports to the coordinator at a named checkpoint, or when it is blocked, and the coordinator replies. The dev loop has no gate. The gate runs once per frozen SHA, at the use point. The candidate is frozen as a commit SHA and goes through deterministic QA. The lane then sets the review: a coordinator check for ROUTINE, a REVIEW seat for ELEVATED, and the AUDIT and AUDIT_2 seats for CRITICAL. The three lanes join where the coordinator accepts the exact SHA. With authorization, the SHA then goes to its use: a run of record, a merge or PR, or a publication. Two dashed lines lead to repair. One starts at QA, for a QA failure. The other starts where the three lanes join, for a MATERIAL finding from any lane that survives triage. Both go back to the same worker, which repairs the candidate and makes a new one. After 2 failed attempts the card goes to EXPERT, and after 2 failed EXPERT attempts the coordinator asks the owner. Footer notes say that at a checkpoint the coordinator replies with evidence, findings, priorities, or owner changes and never with code, that dev rounds get no gate and never count as failures, and that runs of record use only accepted code.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
@@ -22,37 +22,64 @@
   <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
   <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
 </defs>
+<!-- zones -->
+<text x="215" y="24" class="k">DEV LOOP · NO GATE</text>
+<path d="M215,40 V34 H425 V40" class="ln"/>
+<text x="470" y="24" class="k">GATE AT THE USE POINT · RUNS ONCE PER SHA</text>
+<path d="M470,40 V34 H970 V40" class="ln"/>
+<!-- track -->
 <g style="fill:none;stroke:var(--ink);stroke-width:3;stroke-linecap:round">
-<path d="M50,100 H530"/>
-<path d="M570,100 C605,100 605,60 640,60 H820 C855,60 855,100 890,100"/>
-<path d="M530,100 H890"/>
-<path d="M570,100 C605,100 605,140 640,140 H820 C855,140 855,100 890,100"/>
-<path d="M890,100 H1000"/>
+<path d="M50,190 H640"/>
+<path d="M640,190 C675,190 675,150 710,150 H875 C910,150 910,190 945,190"/>
+<path d="M640,190 H945"/>
+<path d="M640,190 C675,190 675,230 710,230 H875 C910,230 910,190 945,190"/>
+<path d="M945,190 H1045"/>
 </g>
-<path d="M284,92 C266,62 314,62 296,92" class="acc" marker-end="url(#aa)"/>
+<!-- dev loop, with the checkpoint on a side branch -->
+<path d="M400,183 C400,120 240,120 240,183" class="acc" marker-end="url(#aa)"/>
+<text x="320" y="164" text-anchor="middle" class="s">repeat as needed</text>
+<path d="M320,136 V115" class="acc"/>
+<path d="M320,101 L327,108 L320,115 L313,108 Z" class="box" style="stroke-width:1.5"/>
+<text x="336" y="112" class="s">named checkpoint</text>
+<text x="320" y="60" text-anchor="middle" class="m">coordinator</text>
+<path d="M314,100 V70" class="dash" marker-end="url(#am)"/>
+<path d="M326,70 V100" class="dash" marker-end="url(#am)"/>
+<text x="306" y="89" text-anchor="end" class="s">report</text>
+<text x="334" y="89" class="s">reply</text>
+<!-- nodes -->
 <g class="box" style="stroke-width:2.5">
-<circle cx="50" cy="100" r="7"/><circle cx="170" cy="100" r="7"/><circle cx="290" cy="100" r="7"/>
-<circle cx="410" cy="100" r="7"/><circle cx="530" cy="100" r="7"/>
-<circle cx="890" cy="100" r="8" style="stroke:var(--accent)"/>
+<circle cx="50" cy="190" r="7"/><circle cx="150" cy="190" r="7"/>
+<circle cx="495" cy="190" r="7"/><circle cx="600" cy="190" r="7"/>
+<circle cx="945" cy="190" r="8" style="stroke:var(--accent)"/>
 </g>
-<circle cx="1000" cy="100" r="9" class="fi"/>
+<g class="box" style="stroke-width:2">
+<circle cx="240" cy="190" r="5"/><circle cx="320" cy="190" r="5"/><circle cx="400" cy="190" r="5"/>
+</g>
+<circle cx="1045" cy="190" r="9" class="fi"/>
 <g text-anchor="middle">
-<text x="50" y="128" class="t">Card</text><text x="50" y="146" class="s">one lane</text>
-<text x="170" y="128" class="t">New Tab</text><text x="170" y="146" class="s">+ worktree</text>
-<text x="290" y="128" class="t">Wait</text><text x="290" y="146" class="s">background</text>
-<text x="410" y="128" class="t">Report</text><text x="410" y="146" class="s">read · verify</text>
-<text x="530" y="128" class="t">QA</text><text x="530" y="146" class="s">frozen SHA</text>
-<text x="890" y="128" class="t">Accept</text><text x="890" y="146" class="s">exact SHA</text>
-<text x="1000" y="128" class="t">Merge</text><text x="1000" y="146" class="s">authorized</text>
+<text x="50" y="218" class="t">Card</text><text x="50" y="236" class="s">one lane</text><text x="50" y="254" class="s">checkpoints</text>
+<text x="150" y="218" class="t">Worker</text><text x="150" y="236" class="s">own Tab</text><text x="150" y="254" class="s">+ worktree</text>
+<text x="240" y="218" class="m">edit</text>
+<text x="320" y="218" class="m">run</text>
+<text x="400" y="218" class="m">read results</text>
+<text x="495" y="218" class="t">Freeze</text><text x="495" y="236" class="s">commit SHA</text>
+<text x="600" y="218" class="t">QA</text><text x="600" y="236" class="s">deterministic</text>
+<text x="945" y="218" class="t">Accept</text><text x="945" y="236" class="s">exact SHA</text>
+<text x="1045" y="218" class="t">Use</text><text x="1045" y="236" class="s">run of record</text><text x="1045" y="254" class="s">merge or PR</text><text x="1045" y="272" class="s">publication</text><text x="1045" y="290" class="s">if authorized</text>
 </g>
-<text x="640" y="46" class="k">ROUTINE</text><text x="705" y="46" class="s">coordinator check</text>
-<text x="640" y="86" class="k">ELEVATED</text><text x="715" y="86" class="s">REVIEW</text>
-<text x="640" y="126" class="k">CRITICAL</text><text x="710" y="126" class="s">AUDIT + AUDIT_2</text>
-<circle cx="790" cy="60" r="5.5" class="fp" style="stroke:var(--accent);stroke-width:2"/>
-<circle cx="790" cy="100" r="5.5" class="fa"/>
-<circle cx="778" cy="140" r="5.5" class="fa"/><circle cx="802" cy="140" r="5.5" class="fa"/>
-<path d="M530,156 V222 M820,148 V222" class="dash"/>
-<path d="M820,222 H50 V158" class="dash" marker-end="url(#am)"/>
-<text x="290" y="212" text-anchor="middle" class="s">QA fails or finding open → repair → new candidate</text>
-<text x="50" y="262" class="s">herdr agent prompt --wait runs as a background task; its exit wakes the coordinator.</text>
+<!-- lanes -->
+<text x="710" y="136" class="k">ROUTINE</text><text x="775" y="136" class="s">coordinator check</text>
+<text x="710" y="176" class="k">ELEVATED</text><text x="785" y="176" class="s">REVIEW</text>
+<text x="710" y="216" class="k">CRITICAL</text><text x="780" y="216" class="s">AUDIT + AUDIT_2</text>
+<circle cx="850" cy="150" r="5.5" class="fp" style="stroke:var(--accent);stroke-width:2"/>
+<circle cx="850" cy="190" r="5.5" class="fa"/>
+<circle cx="838" cy="230" r="5.5" class="fa"/><circle cx="862" cy="230" r="5.5" class="fa"/>
+<!-- repair loop: from QA, and from the join of all three lanes -->
+<path d="M600,246 V300 M945,246 V300" class="dash"/>
+<path d="M945,300 H150 V264" class="dash" marker-end="url(#am)"/>
+<text x="375" y="290" text-anchor="middle" class="s">QA fails or MATERIAL finding survives triage → repair</text>
+<text x="512" y="318" text-anchor="middle" class="s">same worker makes a new candidate; 2 failed attempts → EXPERT; 2 failed EXPERT attempts → owner</text>
+<!-- footer -->
+<text x="50" y="354" class="s">At a checkpoint the worker reports, and the coordinator replies with evidence, findings, priorities, or owner changes, never code.</text>
+<text x="50" y="372" class="s">Dev rounds get no gate and never count as failures. Runs of record use only accepted code.</text>
 </svg>
