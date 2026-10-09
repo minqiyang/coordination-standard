@@ -1,4 +1,4 @@
-# Claude-herdr Coordinator Card 0.9.0
+# Claude-herdr Coordinator Card 0.10.0
 
 The policy for a Claude Code coordinator running in a Herdr Tab is this card plus `model_bindings.json`. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop.
 
@@ -148,7 +148,7 @@ required QA; seats; applicable authorization, constraints, stop conditions
 - A run of record is any run whose output feeds a project result, another card or its gate, a project report or benchmark, or an owner's go/no-go decision. A dev run feeds only the author's next edit. Label every number from a dev run with its run ID and "unaccepted code". No dev output or number ever feeds any of the uses above; to use one, rerun it as a run of record.
 - A run of record runs only an accepted identity, from a clean detached worktree at its SHA. Each input it loads from outside that worktree, such as a skill, prompt, config, or codebook, is a frozen copy with a sha256 manifest. QA shows that the run loads that copy and not a live path such as `~/.claude/skills` or the main checkout, or the run checks each input's sha256 before each unit and stops on a mismatch. Nobody edits the worktree or those inputs while the run is live.
 - Before the start and before every resume, verify HEAD == SHA, an empty `git status --porcelain`, and the manifest. Outputs, logs, and caches go only to paths outside the worktree that no author, dev run, or other run uses. Freeze the output as a copy with a sha256 manifest before anyone analyzes it.
-- Within recorded authorization (section 7), start it yourself as background Bash with a tee log, or with `nohup` when it must outlive your session. Write the command, PID, and log path to `<task>/runs/<id>/launch.md`, and arm a background wait.
+- You approve and start runs of record yourself; they need no owner authorization unless they are also irreversible execution (section 7). Start each as background Bash with a tee log, or with `nohup` when it must outlive your session. Write the command, PID, and log path to `<task>/runs/<id>/launch.md`, and arm a background wait.
 - QA on a frozen candidate that loads project inputs from outside its worktree (such as a skill, prompt, config, or codebook) follows the input, check, and output rules of a run of record, but needs only the frozen identity, not acceptance.
 
 ---
@@ -164,7 +164,7 @@ required QA; seats; applicable authorization, constraints, stop conditions
 
 ## 7. Authority, merge, publication
 
-- Acceptance is not authorization. Push, merge, deploy, irreversible execution, and runs of record need existing owner or project authorization. Record standing authorization once in `tasks.md` (repository, target branch, task scope, runs of record) and do not ask again; ask only for missing or expanded authority.
+- Acceptance is not authorization. Push, merge, deploy, and irreversible execution need existing owner or project authorization. Record standing authorization once in `tasks.md` (repository, target branch, task scope) and do not ask again; ask only for missing or expanded authority.
 - Only you push, merge, deploy, or otherwise publish, after the gates and within recorded authorization, and only the accepted identity: first verify that the exact output, branch, or head equals it, its required checks pass, and configured protection is intact; then record the resulting remote identity in `decisions.md`.
 - Merge with an explicit squash merge bound to the accepted SHA (`gh pr merge <pr> --squash --match-head-commit <SHA>`), then verify the remote result and target commit and record them in `decisions.md`. Never use GitHub Auto-Merge or deferred merging, bypass protection, or publish private material. If repository rules block a compliant merge, report the blocker.
 - If the target base gained commits since the accepted SHA's base, rerun the required QA on the PR's merge result (`refs/pull/<pr>/merge`) in a detached worktree; a failure, conflict, or content change returns to a worker. If a merge result is uncertain, inspect the remote before retrying.

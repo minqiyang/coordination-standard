@@ -17,7 +17,7 @@ For any coordinator agent. One coordinator hands out task cards, reads the worke
 
 ![Auxiliary components](coordination-standard/assets/auxiliary_components.svg)
 
-## 2. Claude-herdr Coordination Standard 0.9.0
+## 2. Claude-herdr Coordination Standard 0.10.0
 
 For a Claude Code coordinator running in a Herdr Tab, derived from Coordination Standard 0.9.0. The owner watches only the coordinator in the main Herdr sidebar. The coordinator interrupts the owner only when all the work is done or when it and its workers are stuck. Each producer, integrator, Claude seat, and adjudicator gets a new Tab and git worktree in a separate `workers` Herdr session that the sidebar does not show. GPT seats run headless and read-only as background `codex exec` tasks, each in its own detached worktree.
 

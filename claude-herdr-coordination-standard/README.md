@@ -1,6 +1,6 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.9.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.10.0`** (derived from Coordination Standard 0.9.0)
 
 A working standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. The coordinator plans, dispatches cards, verifies, gates, records, and merges when authorized. It writes no candidate code unless the owner names that change. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
 
@@ -55,7 +55,7 @@ Open a Herdr Tab, start Claude Code there, and send it this prompt. Replace `<di
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.9.0.
+within the owner's authorization and project rules. Declared version: 0.10.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
@@ -64,16 +64,16 @@ Do not load coordination-standard/ or archive/. Follow the card.
 To move a coordinator that already runs an earlier version, send it this prompt:
 
 ```text
-Switch to Claude-herdr 0.9.0. Re-read <dir>/coordinator.md and
+Switch to Claude-herdr 0.10.0. Re-read <dir>/coordinator.md and
 <dir>/model_bindings.json as the coordinator policy, within the owner's
 authorization and project rules. Do not load coordination-standard/ or archive/.
 Keep what is already valid: frozen SHAs, accepted candidates, finished seat
 reports, and failed attempts already counted (a card already on EXPERT stays
 there).
-Let live workers and seats finish their current card; apply 0.9.0 from each
+Let live workers and seats finish their current card; apply 0.10.0 from each
 task's next step, and launch new GPT seats headless.
 Before your next dispatch, update tasks.md with each open task's next step
-under 0.9.0. Ask me only if a task needs my decision.
+under 0.10.0. Ask me only if a task needs my decision.
 ```
 
 ## Swapping a model
