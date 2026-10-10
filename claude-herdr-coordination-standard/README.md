@@ -2,7 +2,7 @@
 
 **Version `0.10.0`** (derived from Coordination Standard 0.9.0)
 
-A standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. For any other coordinator, use [Coordination Standard 0.13.0](../coordination-standard/README.md).
+A standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0, for any coordinator, is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
 | File | What it holds | Share it? |
 |---|---|---|
@@ -17,15 +17,15 @@ This README only explains. If it disagrees with `coordinator.md`, `coordinator.m
 
 **The coordinator runs the project.** It is the Claude Code session in your Herdr sidebar. It plans the work, sends cards to workers, checks their results, runs the gates, and keeps the records. It merges only when you authorize it. It does not write code itself, unless you tell it to for one specific change. While workers run, it waits in the background until a worker replies or a headless seat exits.
 
-**One long-running worker writes the code.** This worker is the producer. Its default route is GENERAL_EXEC. After two failed attempts, or when you ask, the card moves to EXPERT. Both are Opus sessions. Their effort is set in `model_bindings.json`. To combine accepted work from several cards, the coordinator starts a fresh GENERAL_EXEC integrator.
+**One long-running worker writes the code.** This worker is the producer. Its default route is GENERAL_EXEC. After two failed attempts, or when you ask, the card moves to EXPERT. By default, both are Opus sessions. Their model and effort are set in `model_bindings.json`. To combine accepted work from several cards, the coordinator starts a fresh GENERAL_EXEC integrator.
 
-**Review seats read frozen code and write reports.** REVIEW and AUDIT are GPT seats. They run read-only as background `codex exec` tasks, with no Tab. If GPT cannot run, that seat uses its Opus replacement once. AUDIT_2 is an Opus seat in a Tab. The ADJUDICATOR is not a seat. It is a fresh, read-only Opus session in a Tab that rules on disputed findings.
+**Review seats read frozen code and write reports.** By default, REVIEW and AUDIT are GPT seats. They run read-only as background `codex exec` tasks, with no Tab. If GPT cannot run, that seat uses its Opus replacement once. AUDIT_2 is an Opus seat in a Tab. The ADJUDICATOR is not a seat. It is a fresh, read-only session, Opus by default, in a Tab that rules on disputed findings.
 
 **Each worker has its own git worktree.** Workers with a Tab run in a separate Herdr session named `workers`, so your sidebar does not show them. They keep running if the coordinator ends. To look at them, run `herdr session attach workers` in another terminal window.
 
 **The coordinator's subagents only read.** They scout, read reports and diffs, and check claims. A subagent may fill a seat on the claude harness, but only for a re-review after a small repair or when you ask for it. A subagent never fills any other role, such as the ADJUDICATOR.
 
-**Model bindings are defaults.** The exact model and effort of each route live in `model_bindings.json`. When the coordinator is highly confident that another model or effort fits a card better, it may change that one launch. It does this only for task fit, never to make a gate easier to pass. The change must stay on the Claude side and within the effort range in `adjustments`. The coordinator writes the change and the reason in that launch's `launch.md`. GPT seats stay as bound. If a route with no replacement cannot run, the coordinator pauses the task and tells you.
+**Model bindings are defaults.** The exact model and effort of each route live in `model_bindings.json`. When the coordinator is highly confident that another model or effort fits a card better, it may change that one launch. It does this only for task fit, never to make a gate easier to pass. The change must stay on the Claude side and within the effort range in `adjustments`. The coordinator writes the change and the reason in that launch's `launch.md`. GPT seats stay as bound. If a route with no replacement cannot run, the coordinator pauses the task and tells you. You set the defaults yourself ([Choosing models](#choosing-models)).
 
 ## How a task moves
 
@@ -122,8 +122,16 @@ Before your next dispatch, update tasks.md with each open task's next step
 under 0.10.0. Ask me only if a task needs my decision.
 ```
 
-## Swapping a model
+## Choosing models
 
-Edit `models.<name>.id`, or a route's `model`, `effort`, or `replacement`, in `model_bindings.json`, and set `updated`. No rule in `coordinator.md` changes. To change what the coordinator may adjust by itself, edit `adjustments`.
+You choose the model and effort of each route, and they do not have to be Claude models. The defaults are Opus for GENERAL_EXEC, EXPERT, AUDIT_2, and the ADJUDICATOR, and GPT-6.1 Sol at xhigh for REVIEW and AUDIT. To change them, edit `model_bindings.json` and set `updated`. No rule in `coordinator.md` changes.
 
-After CLI updates, check the flags with `claude --help` and `codex --help`. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply. Keep producer routes on the claude harness. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository.
+- To use a newer version of a model, edit `models.<name>.id`.
+- To move a route to another model or effort, edit the route's `model`, `effort`, or `replacement`.
+- To add a model, add it to `models` with the harness that runs it: `claude` for the Claude Code CLI, or `codex` for the Codex CLI.
+
+Seats and the ADJUDICATOR can use either harness. A seat on the codex harness runs headless, and a seat on the claude harness runs in a Tab. Producer routes (GENERAL_EXEC and EXPERT) stay on the claude harness. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository. The coordinator itself is always a Claude Code session.
+
+The coordinator may also change one launch by itself, within `adjustments` ([Who does what](#who-does-what)). To change what it may adjust, edit `adjustments`.
+
+After CLI updates, check the flags with `claude --help` and `codex --help`. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply.
