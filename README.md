@@ -1,4 +1,4 @@
-# Claude-herdr Coordination Standard 0.11.0
+# Claude-herdr Coordination Standard 0.12.0
 
 A standard for running several AI coding agents on one project, with a Claude Code coordinator in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
 
@@ -8,6 +8,7 @@ You choose the models. `model_bindings.json` sets the model and effort of each r
 
 - Policy files: [`coordinator.md`](claude-herdr-coordination-standard/coordinator.md), [`model_bindings.json`](claude-herdr-coordination-standard/model_bindings.json)
 - Start: [`claude-herdr-coordination-standard/README.md`](claude-herdr-coordination-standard/README.md)
+- Optional guard: [`guard/`](guard/), a Claude Code hook that blocks three repeated mistakes (seat without read-only sandbox, merge of an unaccepted SHA, seat before QA passes)
 
 ![Owner focus](claude-herdr-coordination-standard/assets/owner_focus.svg)
 

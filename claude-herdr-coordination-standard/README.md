@@ -1,6 +1,6 @@
 # Claude-herdr Coordination Standard
 
-**Version `0.11.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.12.0`** (derived from Coordination Standard 0.9.0)
 
 A standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0, for any coordinator, is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
@@ -42,7 +42,7 @@ This README only explains. If it disagrees with `coordinator.md`, `coordinator.m
    | ELEVATED | An important change to behavior or correctness | QA and a REVIEW seat |
    | CRITICAL | An error could spoil results, corrupt state, or cause effects that cannot be undone | QA, an AUDIT seat, and an AUDIT_2 seat |
 
-   A lane can rise but never drop. Work that merges by PR is at least ELEVATED. Structural work is CRITICAL. [`coordinator.md` §2](coordinator.md#2-lanes-and-gates) gives the full rules.
+   Code that computes scores, judgments, costs, or billing that feed results is CRITICAL. A lane can rise but never drop. When ELEVATED rises to CRITICAL, the REVIEW report counts as AUDIT and only AUDIT_2 is added. Work that merges by PR is at least ELEVATED. Structural work is CRITICAL. [`coordinator.md` §2](coordinator.md#2-lanes-and-gates) gives the full rules.
 5. **Interim seat.** Before the use point, the coordinator may freeze an interim candidate and send it to one seat. It should do this early when the dev loop steers by numbers from the card's own code, such as a scorer. The seat's findings go through triage like any others, and an open MATERIAL finding blocks acceptance. An interim review never fails an attempt and does not count as the gate.
 
 ## How review stays independent
@@ -51,6 +51,7 @@ This README only explains. If it disagrees with `coordinator.md`, `coordinator.m
 - The seat reviews a detached worktree at the candidate's SHA. Every seat card uses one template. Its scope is the full diff plus the frozen copies of outside inputs. The card never tells how the worker built or tested the candidate. It never narrows the scope, except in a delta re-review ([Failures and escalation](#failures-and-escalation)).
 - After the report arrives, the coordinator checks that the worktree is still clean at the SHA and that the seat's launch matches its binding. If not, the seat does not count.
 - A finding is MATERIAL only when it shows both a concrete trigger scenario in this project and a measurable, significant impact on a main decision or result. Any other finding is ADVISORY. ADVISORY findings are recorded but never block.
+- For a guard against the agent under test, such as a sandbox or answer-leak protection, seats assume a normal agent doing its task. A hole that only a command crafted on purpose can reach is ADVISORY: recorded, not blocking.
 - The coordinator triages each MATERIAL finding first. It may downgrade one that fails the MATERIAL rule, asks for work beyond the criteria, or is only a style preference. It may never downgrade by itself a finding that has a reproduction, a failing test, or other machine evidence.
 - For any other disputed finding, the coordinator chooses how to settle it. It can ask the seat to withdraw the finding or show a trigger path, rule itself, or call a fresh ADJUDICATOR. In a CRITICAL gate, only the ADJUDICATOR may rule against a seat. Each downgrade and each ruling against a seat gets an `OVERRIDE` line in `decisions.md`.
 
@@ -80,6 +81,7 @@ A run of record is a run whose output feeds a project result, another card or it
 - Each input from outside that worktree, such as a skill, prompt, or config, is a frozen copy with a sha256 manifest.
 - Before the start and before every resume, the coordinator checks that HEAD is the accepted SHA, that the tree is clean, and that the manifest verifies. Outputs go outside the worktree.
 - The coordinator approves and starts runs of record itself. It asks you only if the run is also an irreversible action.
+- When runs of record share a quota with seats, dev runs, or judges, the runs of record come first.
 
 ## Records and authority
 
@@ -88,18 +90,30 @@ The records live in `<coord>`, a folder outside the repository. Cards, reports, 
 | Record | What it holds |
 |---|---|
 | `tasks.md` | The live board, edited in place, and your standing authorization |
-| `decisions.md` | Each task's downgrades, rulings, risk acceptances, plan acceptances, reasons a change counts as small, and publication results |
+| `decisions.md` | Each task's acceptances (`ACCEPT <SHA>` lines), downgrades, rulings, risk acceptances, plan acceptances, reasons a change counts as small, and publication results |
 | `launch.md` | The exact command of each launch, and any adjustment or replacement |
 | `runs/` | Runs of record |
 
 - Acceptance is not authorization. Push, merge, deploy, and irreversible actions need your authorization. Standing authorization goes in `tasks.md` once, and the coordinator does not ask for it again.
-- Only the coordinator publishes, and only the accepted SHA. It merges with a squash merge bound to that SHA.
+- Only the coordinator publishes, and only the accepted SHA. It merges with a squash merge bound to that SHA. If the repository requires an up-to-date branch, it may merge a clean merge of the base into that SHA after QA passes on it, with no new review.
 
 ## What the owner sees
 
 ![Owner focus](assets/owner_focus.svg)
 
+The coordinator decides process questions itself: order, timing, seat scheduling, worktrees, retries, and QA layout. It brings you only what changes results or exposure: the content that the project measures or ships (such as skills and prompts), which models the project's own runs use, criteria and meaning, and external actions without standing authorization.
+
 You watch only the coordinator. Workers start, report, and close often, and they run where your sidebar does not show them. The coordinator interrupts you only when all the work is done, or when it and its workers cannot go on. They cannot go on when authority is missing, when a choice of meaning needs you, when the failure limit is reached, or when another blocker stops them. The rest of the time it keeps working and keeps `tasks.md` current.
+
+## The guard (optional)
+
+[`guard/`](../guard/) holds `coord-guard`, a small Go program that Claude Code runs as a PreToolUse hook before each Bash command. It stops three mistakes that agents made again and again although the card forbade them:
+
+- a `codex exec` seat without the read-only sandbox, including on resume;
+- a `gh pr merge` that is not a squash bound to an SHA with an `ACCEPT` line in `decisions.md`;
+- a GPT seat launch before every QA log of its SHA ends with `exit status: 0`, or from a dirty worktree.
+
+Judgment rules stay in `coordinator.md`. The card applies in full without the guard. The guard is a guardrail, not a security boundary. See [`guard/README.md`](../guard/README.md) to build and register it.
 
 ## Getting started
 
@@ -107,7 +121,7 @@ Open a Herdr Tab, start Claude Code there, and send it this prompt. Replace `<di
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.11.0.
+within the owner's authorization and project rules. Declared version: 0.12.0.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
@@ -116,18 +130,20 @@ Do not load coordination-standard/ or archive/. Follow the card.
 To move a coordinator that already runs an earlier version, send it this prompt:
 
 ```text
-Switch to Claude-herdr 0.11.0. Re-read <dir>/coordinator.md and
+Switch to Claude-herdr 0.12.0. Re-read <dir>/coordinator.md and
 <dir>/model_bindings.json as the coordinator policy, within the owner's
 authorization and project rules. Do not load coordination-standard/ or archive/.
 Keep what is already valid: frozen SHAs, accepted candidates, finished seat
 reports, and failed attempts already counted (a card already on EXPERT stays
 there).
-Let live workers and seats finish their current card; apply 0.11.0 from each
+Let live workers and seats finish their current card; apply 0.12.0 from each
 task's next step. Never gate a SHA that must still change before its use.
 Start all of a lane's seats at the same time. After a full gate, give a small
-change a delta re-review.
+change a delta re-review. Name QA logs qa/<sha7>-<name>.log, end each with
+"exit status: <n>", and record each acceptance as ACCEPT <full SHA> in
+decisions.md.
 Before your next dispatch, update tasks.md with each open task's next step
-under 0.11.0. Ask me only if a task needs my decision.
+under 0.12.0. Ask me only if a task needs my decision.
 ```
 
 ## Choosing models

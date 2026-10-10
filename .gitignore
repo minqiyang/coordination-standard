@@ -2,3 +2,4 @@ archive/
 project-notes/
 .DS_Store
 .cursorignore
+guard/bin/
