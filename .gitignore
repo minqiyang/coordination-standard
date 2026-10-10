@@ -3,3 +3,4 @@ project-notes/
 .DS_Store
 .cursorignore
 guard/bin/
+guard/coordguard
