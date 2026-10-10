@@ -1,4 +1,4 @@
-# Claude-herdr Coordination Standard 0.10.0
+# Claude-herdr Coordination Standard 0.11.0
 
 A standard for running several AI coding agents on one project, with a Claude Code coordinator in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
 
