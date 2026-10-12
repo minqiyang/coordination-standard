@@ -1,6 +1,6 @@
 # coord-guard
 
-coord-guard is a Claude Code PreToolUse hook for the Claude-herdr coordinator card (`../claude-herdr-coordination-standard/coordinator.md`). It checks Bash tool calls against three rules of the card and denies a call that breaks one. All other rules stay as text in the card.
+coord-guard is a Claude Code PreToolUse hook for the Herdr coordinator card (`../claude-herdr-coordination-standard/coordinator.md`). It checks Bash tool calls against three rules of the card and denies a call that breaks one. All other rules stay as text in the card.
 
 It is a guardrail, not a security boundary. It stops mistakes. It does not stop a person or agent who wants to get around it.
 

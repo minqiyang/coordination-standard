@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 556" width="940" height="556" role="img" aria-labelledby="t d">
+<title id="t">Agents and models</title>
+<desc id="d">Every role is a slot that you fill. The coordinator is any agent CLI that you start in a Herdr Tab, with the model you pick, and it starts each role. model_bindings.json gives each role a model and effort: GENERAL_EXEC writes the code (model 1, high); EXPERT takes over after 2 failures (model 1, xhigh); REVIEW reviews an important change (model 2, xhigh); AUDIT is the first review of high-risk work (model 2, xhigh); AUDIT_2 is the second review of high-risk work (model 1, xhigh); ADJUDICATOR settles a disputed finding (model 1, xhigh). Model 1 is the main model and model 2 gives a second opinion. Any of these agent CLIs can fill the coordinator or a role: Claude Code, Codex, Kimi Code, Droid, Devin, Gemini CLI, Cursor, OpenCode, Copilot CLI, Qwen Code, Amp, Kiro, Cline, or any other agent that Herdr runs. Any model that its CLI runs can fill model 1 or model 2: Claude, GPT, Gemini, Kimi, Qwen, DeepSeek, GLM, Grok, and others.</desc>
+<style>
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
+  text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
+  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
+  .t{font-size:14px;font-weight:700}
+  .s{font-size:12px;fill:var(--mute)}
+  .m{font-size:13px;font-weight:700}
+  .c{font-size:12px}
+  .cb{font-size:12px;font-weight:700}
+  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
+  .m1{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .m2{fill:var(--accent);fill-opacity:.2;stroke:var(--accent);stroke-width:1.5}
+  .pill{fill:var(--paper);stroke:var(--line);stroke-width:1.25}
+  .fa{fill:var(--accent)}
+</style>
+<defs>
+  <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+</defs>
+<circle cx="150" cy="170" r="60" class="box" style="stroke-width:1.5"/>
+<text x="150" y="166" text-anchor="middle" class="t">Coordinator</text>
+<text x="150" y="186" text-anchor="middle" class="s">any agent CLI</text>
+<text x="150" y="258" text-anchor="middle" class="s">you start it in a</text>
+<text x="150" y="276" text-anchor="middle" class="s">Herdr Tab, with</text>
+<text x="150" y="294" text-anchor="middle" class="s">the model you pick</text>
+<path d="M211,170 H342" class="acc" marker-end="url(#aa)"/>
+<text x="277" y="160" text-anchor="middle" class="s">starts</text>
+<text x="277" y="190" text-anchor="middle" class="s">each role</text>
+<text x="350" y="40" class="k">ROLES</text>
+<text x="408" y="40" class="s">model_bindings.json</text>
+<rect x="350" y="52" width="560" height="270" rx="6" class="box"/>
+<text x="366" y="72" class="k">ROLE</text>
+<text x="500" y="72" class="k">WHAT IT DOES</text>
+<text x="758" y="72" class="k">MODEL · EFFORT</text>
+<path d="M350,82 H910" class="ln"/>
+<text x="366" y="106.5" class="m">GENERAL_EXEC</text>
+<text x="500" y="106.0" class="s">writes the code</text>
+<rect x="758" y="90.0" width="136" height="24" rx="12" class="m1"/>
+<text x="826" y="106.0" text-anchor="middle" class="cb">model 1 · high</text>
+<path d="M350,122 H910" class="ln"/>
+<text x="366" y="146.5" class="m">EXPERT</text>
+<text x="500" y="146.0" class="s">takes over after 2 failures</text>
+<rect x="758" y="130.0" width="136" height="24" rx="12" class="m1"/>
+<text x="826" y="146.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
+<path d="M350,162 H910" class="ln"/>
+<text x="366" y="186.5" class="m">REVIEW</text>
+<text x="500" y="186.0" class="s">reviews an important change</text>
+<rect x="758" y="170.0" width="136" height="24" rx="12" class="m2"/>
+<text x="826" y="186.0" text-anchor="middle" class="cb">model 2 · xhigh</text>
+<path d="M350,202 H910" class="ln"/>
+<text x="366" y="226.5" class="m">AUDIT</text>
+<text x="500" y="226.0" class="s">1st review of high-risk work</text>
+<rect x="758" y="210.0" width="136" height="24" rx="12" class="m2"/>
+<text x="826" y="226.0" text-anchor="middle" class="cb">model 2 · xhigh</text>
+<path d="M350,242 H910" class="ln"/>
+<text x="366" y="266.5" class="m">AUDIT_2</text>
+<text x="500" y="266.0" class="s">2nd review of high-risk work</text>
+<rect x="758" y="250.0" width="136" height="24" rx="12" class="m1"/>
+<text x="826" y="266.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
+<path d="M350,282 H910" class="ln"/>
+<text x="366" y="306.5" class="m">ADJUDICATOR</text>
+<text x="500" y="306.0" class="s">settles a disputed finding</text>
+<rect x="758" y="290.0" width="136" height="24" rx="12" class="m1"/>
+<text x="826" y="306.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
+<rect x="350" y="336" width="40" height="16" rx="8" class="m1"/>
+<text x="400" y="348" class="s">model 1, the main model</text>
+<rect x="598" y="336" width="40" height="16" rx="8" class="m2"/>
+<text x="648" y="348" class="s">model 2, a second opinion</text>
+<path d="M40,378 H910" class="ln"/>
+<text x="40" y="408" class="k">ANY OF THESE CAN FILL THE COORDINATOR OR A ROLE</text>
+<text x="40" y="443" class="k">AGENT CLI</text>
+<rect x="170" y="426" width="102" height="26" rx="13" class="pill"/>
+<text x="221" y="443" text-anchor="middle" class="c">Claude Code</text>
+<rect x="280" y="426" width="58" height="26" rx="13" class="pill"/>
+<text x="309" y="443" text-anchor="middle" class="c">Codex</text>
+<rect x="346" y="426" width="87" height="26" rx="13" class="pill"/>
+<text x="390" y="443" text-anchor="middle" class="c">Kimi Code</text>
+<rect x="441" y="426" width="58" height="26" rx="13" class="pill"/>
+<text x="470" y="443" text-anchor="middle" class="c">Droid</text>
+<rect x="508" y="426" width="58" height="26" rx="13" class="pill"/>
+<text x="537" y="443" text-anchor="middle" class="c">Devin</text>
+<rect x="574" y="426" width="94" height="26" rx="13" class="pill"/>
+<text x="621" y="443" text-anchor="middle" class="c">Gemini CLI</text>
+<rect x="676" y="426" width="66" height="26" rx="13" class="pill"/>
+<text x="709" y="443" text-anchor="middle" class="c">Cursor</text>
+<rect x="750" y="426" width="80" height="26" rx="13" class="pill"/>
+<text x="790" y="443" text-anchor="middle" class="c">OpenCode</text>
+<rect x="170" y="460" width="102" height="26" rx="13" class="pill"/>
+<text x="221" y="477" text-anchor="middle" class="c">Copilot CLI</text>
+<rect x="280" y="460" width="87" height="26" rx="13" class="pill"/>
+<text x="323" y="477" text-anchor="middle" class="c">Qwen Code</text>
+<rect x="375" y="460" width="44" height="26" rx="13" class="pill"/>
+<text x="397" y="477" text-anchor="middle" class="c">Amp</text>
+<rect x="427" y="460" width="51" height="26" rx="13" class="pill"/>
+<text x="452" y="477" text-anchor="middle" class="c">Kiro</text>
+<rect x="486" y="460" width="58" height="26" rx="13" class="pill"/>
+<text x="515" y="477" text-anchor="middle" class="c">Cline</text>
+<rect x="552" y="460" width="145" height="26" rx="13" class="pill" style="stroke-dasharray:4 3"/>
+<text x="625" y="477" text-anchor="middle" class="s">+ any Herdr agent</text>
+<text x="40" y="519" class="k">MODEL</text>
+<rect x="170" y="502" width="66" height="26" rx="13" class="pill"/>
+<text x="203" y="519" text-anchor="middle" class="c">Claude</text>
+<rect x="244" y="502" width="44" height="26" rx="13" class="pill"/>
+<text x="265" y="519" text-anchor="middle" class="c">GPT</text>
+<rect x="295" y="502" width="66" height="26" rx="13" class="pill"/>
+<text x="328" y="519" text-anchor="middle" class="c">Gemini</text>
+<rect x="369" y="502" width="51" height="26" rx="13" class="pill"/>
+<text x="394" y="519" text-anchor="middle" class="c">Kimi</text>
+<rect x="428" y="502" width="51" height="26" rx="13" class="pill"/>
+<text x="453" y="519" text-anchor="middle" class="c">Qwen</text>
+<rect x="487" y="502" width="80" height="26" rx="13" class="pill"/>
+<text x="527" y="519" text-anchor="middle" class="c">DeepSeek</text>
+<rect x="575" y="502" width="44" height="26" rx="13" class="pill"/>
+<text x="597" y="519" text-anchor="middle" class="c">GLM</text>
+<rect x="626" y="502" width="51" height="26" rx="13" class="pill"/>
+<text x="652" y="519" text-anchor="middle" class="c">Grok</text>
+<rect x="686" y="502" width="196" height="26" rx="13" class="pill" style="stroke-dasharray:4 3"/>
+<text x="784" y="519" text-anchor="middle" class="s">+ any model its CLI runs</text>
+</svg>

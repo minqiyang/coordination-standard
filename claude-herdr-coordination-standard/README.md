@@ -1,31 +1,43 @@
-# Claude-herdr Coordination Standard
+# Herdr Coordination Standard
 
-**Version `0.12.0`** (derived from Coordination Standard 0.9.0)
+**Version `0.12.1`** (derived from Coordination Standard 0.9.0)
 
-A standard for running several AI coding agents on one project when the coordinator is a Claude Code session in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0, for any coordinator, is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
+A standard for running several AI coding agents on one project. One coordinator agent in a Herdr Tab runs the work, and you choose the agent CLI and the model of every role. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0 is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
 | File | What it holds | Share it? |
 |---|---|---|
 | [`coordinator.md`](coordinator.md) | Every rule: roles and Tabs, lanes and use points, routes and launching, cards and dev loops, QA and review, the failure limit, runs of record, plans, merge and publication. Names routes, never models | Yes, portable |
-| [`model_bindings.json`](model_bindings.json) | Each route's default model and effort, and its replacement if it has one. The harness flags, also for headless seats. What the coordinator may adjust | Personal; write your own |
+| [`model_bindings.json`](model_bindings.json) | Each route's default model and effort, and its replacement if it has one. Each harness (the agent CLI that runs a model) and its flags, also for headless seats. What the coordinator may adjust | Personal; write your own |
 
 This README only explains. If it disagrees with `coordinator.md`, `coordinator.md` wins.
+
+## Agents and models
+
+![Agents and models](assets/agents_and_models.svg)
+
+Every role is a slot, and you choose the agent CLI and the model that fill it. `coordinator.md` names roles and never a model. `model_bindings.json` gives each role a model and an effort.
+
+- **Coordinator.** Any agent CLI that runs shell commands and can run a command as a background task that wakes it when the command exits. You start it yourself in a Herdr Tab, with the model you choose. Today the standard runs with Claude Code as the coordinator.
+- **Workers.** Each model in `model_bindings.json` names its harness, the agent CLI that runs it. A harness name is a Herdr agent kind, such as `claude`, `codex`, `kimi`, `droid`, or `devin`. Run `herdr agent` to list them all. Herdr starts each worker with its CLI.
+- **Two models.** The diagrams use two model slots. Model 1 is the main model. It writes the code (GENERAL_EXEC and EXPERT) and fills AUDIT_2 and the ADJUDICATOR. Model 2 fills REVIEW and AUDIT, so the first review of each gate comes from a model that did not write the code. You can also use one model for every role, or more than two.
+
+[Setting up agents and models](#setting-up-agents-and-models) tells how to change them.
 
 ## Who does what
 
 ![System architecture](assets/system_architecture.svg)
 
-**The coordinator runs the project.** It is the Claude Code session in your Herdr sidebar. It plans the work, sends cards to workers, checks their results, runs the gates, and keeps the records. It merges only when you authorize it. It does not write code itself, unless you tell it to for one specific change. While workers run, it waits in the background until a worker replies or a headless seat exits.
+**The coordinator runs the project.** It is the agent session in your Herdr sidebar. It plans the work, sends cards to workers, checks their results, runs the gates, and keeps the records. It merges only when you authorize it. It does not write code itself, unless you tell it to for one specific change. While workers run, it waits on background tasks until a worker replies or a headless seat exits.
 
-**One long-running worker writes the code.** This worker is the producer. Its default route is GENERAL_EXEC. After two failed attempts, or when you ask, the card moves to EXPERT. By default, both are Opus sessions. Their model and effort are set in `model_bindings.json`. To combine accepted work from several cards, the coordinator starts a fresh GENERAL_EXEC integrator.
+**One long-running worker writes the code.** This worker is the producer. Its default route is GENERAL_EXEC. After two failed attempts, or when you ask, the card moves to EXPERT. To combine accepted work from several cards, the coordinator starts a fresh GENERAL_EXEC integrator.
 
-**Review seats read frozen code and write reports.** By default, REVIEW and AUDIT are GPT seats. They run read-only as background `codex exec` tasks, with no Tab. If GPT cannot run, that seat uses its Opus replacement once. AUDIT_2 is an Opus seat in a Tab. The ADJUDICATOR is not a seat. It is a fresh, read-only session, Opus by default, in a Tab that rules on disputed findings.
+**Review seats read frozen code and write reports.** REVIEW is the seat of an ELEVATED gate. AUDIT and AUDIT_2 are the two seats of a CRITICAL gate. A seat on the codex harness runs read-only as a background `codex exec` task, with no Tab. Every other seat runs in a Tab. If a seat's model cannot run, the seat uses its replacement once. The ADJUDICATOR is not a seat. It is a fresh, read-only session in a Tab that rules on disputed findings.
 
 **Each worker has its own git worktree.** Workers with a Tab run in a separate Herdr session named `workers`, so your sidebar does not show them. They keep running if the coordinator ends. To look at them, run `herdr session attach workers` in another terminal window.
 
-**The coordinator's subagents only read.** They scout, read reports and diffs, and check claims. A subagent may fill a seat on the claude harness, but only for a delta re-review ([Failures and escalation](#failures-and-escalation)) or when you ask for it. A subagent never fills any other role, such as the ADJUDICATOR.
+**The coordinator's subagents only read.** If the coordinator's agent CLI has subagents, they scout, read reports and diffs, and check claims. A subagent may fill a seat that is bound to the coordinator's own CLI, but only for a delta re-review ([Failures and escalation](#failures-and-escalation)) or when you ask for it. A subagent never fills any other role, such as the ADJUDICATOR.
 
-**Model bindings are defaults.** The exact model and effort of each route live in `model_bindings.json`. When the coordinator is highly confident that another model or effort fits a card better, it may change that one launch. It does this only for task fit, never to make a gate easier to pass. The change must stay on the Claude side and within the effort range in `adjustments`. The coordinator writes the change and the reason in that launch's `launch.md`. GPT seats stay as bound. If a route with no replacement cannot run, the coordinator pauses the task and tells you. You set the defaults yourself ([Choosing models](#choosing-models)).
+**Model bindings are defaults.** The exact model and effort of each route live in `model_bindings.json`. When the coordinator is highly confident that another model or effort fits a card better, it may change that one launch. It does this only for task fit, never to make a gate easier to pass. The change must stay within `adjustments`, which lists the harnesses it may change and the effort range. The coordinator writes the change and the reason in that launch's `launch.md`. If a route with no replacement cannot run, the coordinator pauses the task and tells you.
 
 ## How a task moves
 
@@ -99,29 +111,27 @@ The records live in `<coord>`, a folder outside the repository. Cards, reports, 
 
 ## What the owner sees
 
-![Owner focus](assets/owner_focus.svg)
-
 The coordinator decides process questions itself: order, timing, seat scheduling, worktrees, retries, and QA layout. It brings you only what changes results or exposure: the content that the project measures or ships (such as skills and prompts), which models the project's own runs use, criteria and meaning, and external actions without standing authorization.
 
 You watch only the coordinator. Workers start, report, and close often, and they run where your sidebar does not show them. The coordinator interrupts you only when all the work is done, or when it and its workers cannot go on. They cannot go on when authority is missing, when a choice of meaning needs you, when the failure limit is reached, or when another blocker stops them. The rest of the time it keeps working and keeps `tasks.md` current.
 
 ## The guard (optional)
 
-[`guard/`](../guard/) holds `coord-guard`, a small Go program that Claude Code runs as a PreToolUse hook before each Bash command. It stops three mistakes that agents made again and again although the card forbade them:
+[`guard/`](../guard/) holds `coord-guard`, a small Go program for a Claude Code coordinator. Claude Code runs it as a PreToolUse hook before each Bash command. It stops three mistakes that agents made again and again although the card forbade them:
 
 - a `codex exec` seat without the read-only sandbox, including on resume;
 - a `gh pr merge` that is not a squash bound to an SHA with an `ACCEPT` line in `decisions.md`;
-- a GPT seat launch before every QA log of its SHA ends with `exit status: 0`, or from a dirty worktree.
+- a `codex exec` seat launch before every QA log of its SHA ends with `exit status: 0`, or from a dirty worktree.
 
-Judgment rules stay in `coordinator.md`. The card applies in full without the guard. The guard is a guardrail, not a security boundary. See [`guard/README.md`](../guard/README.md) to build and register it.
+Judgment rules stay in `coordinator.md`. The card applies in full without the guard, also with another coordinator CLI. The guard is a guardrail, not a security boundary. See [`guard/README.md`](../guard/README.md) to build and register it.
 
 ## Getting started
 
-Open a Herdr Tab, start Claude Code there, and send it this prompt. Replace `<dir>` with the path of this folder, and do not copy the files.
+Open a Herdr Tab, start your coordinator agent CLI there, and send it this prompt. Replace `<dir>` with the path of this folder, and do not copy the files.
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.12.0.
+within the owner's authorization and project rules. Declared version: 0.12.1.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
@@ -130,32 +140,33 @@ Do not load coordination-standard/ or archive/. Follow the card.
 To move a coordinator that already runs an earlier version, send it this prompt:
 
 ```text
-Switch to Claude-herdr 0.12.0. Re-read <dir>/coordinator.md and
+Switch to Herdr Coordination Standard 0.12.1. Re-read <dir>/coordinator.md and
 <dir>/model_bindings.json as the coordinator policy, within the owner's
 authorization and project rules. Do not load coordination-standard/ or archive/.
 Keep what is already valid: frozen SHAs, accepted candidates, finished seat
 reports, and failed attempts already counted (a card already on EXPERT stays
 there).
-Let live workers and seats finish their current card; apply 0.12.0 from each
+Let live workers and seats finish their current card; apply 0.12.1 from each
 task's next step. Never gate a SHA that must still change before its use.
 Start all of a lane's seats at the same time. After a full gate, give a small
 change a delta re-review. Name QA logs qa/<sha7>-<name>.log, end each with
 "exit status: <n>", and record each acceptance as ACCEPT <full SHA> in
 decisions.md.
 Before your next dispatch, update tasks.md with each open task's next step
-under 0.12.0. Ask me only if a task needs my decision.
+under 0.12.1. Ask me only if a task needs my decision.
 ```
 
-## Choosing models
+## Setting up agents and models
 
-You choose the model and effort of each route, and they do not have to be Claude models. The defaults are Opus for GENERAL_EXEC, EXPERT, AUDIT_2, and the ADJUDICATOR, and GPT-6.1 Sol at xhigh for REVIEW and AUDIT. To change them, edit `model_bindings.json` and set `updated`. No rule in `coordinator.md` changes.
+The coordinator is the CLI you start, with the model you start it with; it is not in `model_bindings.json`. For every other role, edit `model_bindings.json` and set `updated`. No rule in `coordinator.md` changes.
 
 - To use a newer version of a model, edit `models.<name>.id`.
 - To move a route to another model or effort, edit the route's `model`, `effort`, or `replacement`.
-- To add a model, add it to `models` with the harness that runs it: `claude` for the Claude Code CLI, or `codex` for the Codex CLI.
+- To add a model, add it to `models` with the harness that runs it.
+- To add an agent CLI, add a harness to `harnesses`. Its key is the Herdr agent kind. It lists `model_arg`, `effort_arg`, and `permission_args`, the flags that set the model, the effort, and the permissions.
 
-Seats and the ADJUDICATOR can use either harness. A seat on the codex harness runs headless, and a seat on the claude harness runs in a Tab. Producer routes (GENERAL_EXEC and EXPERT) stay on the claude harness. Under `-s workspace-write`, a Codex session cannot commit in a linked worktree, because the worktree's git metadata lives in the main repository. The coordinator itself is always a Claude Code session.
+Producer routes (GENERAL_EXEC and EXPERT) need a CLI that can commit in a linked git worktree. Codex under `-s workspace-write` cannot, because the worktree's git metadata lives in the main repository. A seat on the codex harness runs headless: `seat_args` and `seat_resume_args` start and resume it read-only, and `-o {report}` writes its report or reply. Seats and the ADJUDICATOR on any other harness run in a Tab.
 
 The coordinator may also change one launch by itself, within `adjustments` ([Who does what](#who-does-what)). To change what it may adjust, edit `adjustments`.
 
-After CLI updates, check the flags with `claude --help` and `codex --help`. Each harness has `model_arg`, `effort_arg`, and `permission_args`. The codex harness also has `seat_args` and `seat_resume_args`. They start and resume a headless seat read-only, and `-o {report}` writes its report or reply.
+After a CLI update, check its flags with that CLI's `--help`.

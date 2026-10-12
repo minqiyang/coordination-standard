@@ -1,21 +1,21 @@
-# Claude-herdr Coordination Standard 0.12.0
+# Herdr Coordination Standard 0.12.1
 
-A standard for running several AI coding agents on one project, with a Claude Code coordinator in a Herdr Tab. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
+A standard for running several AI coding agents on one project. One coordinator agent in a Herdr Tab runs the work. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
 
-The owner watches only the coordinator in the main Herdr sidebar. Workers with a Tab run in a separate `workers` Herdr session that the sidebar does not show, and GPT seats run headless and read-only. The coordinator interrupts the owner only when all the work is done or when it and its workers are stuck.
+Every role is a slot that you fill with the agent CLI and the model you choose. The coordinator can be any agent CLI that can wait on background tasks, such as Claude Code. Each worker runs on an agent CLI that Herdr starts, such as Claude Code, Codex, Kimi Code, Droid, or Devin, with any model that CLI runs. The rules name roles, never models.
 
-You choose the models. `model_bindings.json` sets the model and effort of each role, and you can rebind any role. The defaults use Opus and GPT-6.1 Sol. A review seat can use any model that the `claude` or `codex` CLI can run, so review is not limited to Claude. Workers that write code stay on the `claude` CLI for now ([Choosing models](claude-herdr-coordination-standard/README.md#choosing-models)).
+![Agents and models](claude-herdr-coordination-standard/assets/agents_and_models.svg)
 
-- Policy files: [`coordinator.md`](claude-herdr-coordination-standard/coordinator.md), [`model_bindings.json`](claude-herdr-coordination-standard/model_bindings.json)
-- Start: [`claude-herdr-coordination-standard/README.md`](claude-herdr-coordination-standard/README.md)
-- Optional guard: [`guard/`](guard/), a Claude Code hook that blocks three repeated mistakes (seat without read-only sandbox, merge of an unaccepted SHA, seat before QA passes)
-
-![Owner focus](claude-herdr-coordination-standard/assets/owner_focus.svg)
+You watch only the coordinator in the main Herdr sidebar. Workers run in a separate `workers` Herdr session that the sidebar does not show, or headless. The coordinator interrupts you only when all the work is done or when it and its workers are stuck.
 
 ![System architecture](claude-herdr-coordination-standard/assets/system_architecture.svg)
 
 ![Task flow](claude-herdr-coordination-standard/assets/workflow_lifecycle.svg)
 
-The earlier Coordination Standard 0.13.0, for any coordinator agent, is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
+- Policy files: [`coordinator.md`](claude-herdr-coordination-standard/coordinator.md), [`model_bindings.json`](claude-herdr-coordination-standard/model_bindings.json)
+- Start: [`claude-herdr-coordination-standard/README.md`](claude-herdr-coordination-standard/README.md)
+- Optional guard: [`guard/`](guard/), a hook for a Claude Code coordinator that blocks three repeated mistakes (seat without read-only sandbox, merge of an unaccepted SHA, seat before QA passes)
+
+The earlier Coordination Standard 0.13.0 is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
 `archive/` (historical drafts, no authority) and `project-notes/` (project handoffs) are local only and not in git.

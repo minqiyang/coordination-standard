@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 290" width="1000" height="290" role="img" aria-labelledby="t d">
 <title id="t">Task flow</title>
-<desc id="d">A card with a goal and one lane goes to a worker. The worker runs a dev loop. It edits, runs, and reads results as often as it needs, and the dev loop has no gate. At a checkpoint, the worker reports to the coordinator and the coordinator replies. At the use point, the code is frozen as a commit SHA and goes through deterministic QA. The lane then sets the review: a coordinator check for ROUTINE, one seat for ELEVATED, and two seats for CRITICAL. The coordinator accepts the exact SHA, and the SHA goes to its use, such as a run of record or a merge. A QA failure, or a MATERIAL finding that survives triage, sends the work back to the dev loop. The repair makes a new SHA, which gets new QA and a new review. A legend shows a hollow dot for the coordinator check and a filled dot for a seat.</desc>
+<desc id="d">A card with a goal and one lane goes to a worker. The worker runs a dev loop. It edits, runs, and reads results as often as it needs, and the dev loop has no gate. At a checkpoint, the worker reports to the coordinator and the coordinator replies. At the use point, the code is frozen as a commit SHA and goes through QA, which runs scripted tests. The lane then sets the review: a coordinator check for ROUTINE, one seat for ELEVATED, and two seats for CRITICAL. The coordinator accepts the exact SHA, and the SHA goes to its use, such as a run of record or a merge. A QA failure, or a MATERIAL finding that survives triage, sends the work back to the dev loop. The repair makes a new SHA, which gets QA and review again. A legend shows a hollow dot for the coordinator check and a filled dot for a review seat.</desc>
 <style>
   svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
   @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
@@ -48,7 +48,7 @@
 <text x="50" y="158" class="t">Card</text><text x="50" y="176" class="s">goal · lane</text>
 <text x="177" y="158" class="t">Dev loop</text><text x="177" y="176" class="s">edit · run · read</text>
 <text x="303" y="158" class="t">Freeze</text><text x="303" y="176" class="s">at use point</text>
-<text x="430" y="158" class="t">QA</text><text x="430" y="176" class="s">deterministic</text>
+<text x="430" y="158" class="t">QA</text><text x="430" y="176" class="s">scripted tests</text>
 <text x="670" y="204" class="t">Review</text>
 <text x="830" y="158" class="t">Accept</text><text x="830" y="176" class="s">exact SHA</text>
 <text x="930" y="158" class="t">Use</text><text x="930" y="176" class="s">run · merge</text>
@@ -61,8 +61,8 @@
 <!-- repair -->
 <path d="M430,186 V232 M775,160 V232" class="dash"/>
 <path d="M775,232 H177 V188" class="dash" marker-end="url(#am)"/>
-<text x="303" y="224" text-anchor="middle" class="s">repair → new SHA</text>
+<text x="303" y="224" text-anchor="middle" class="s">fails → repair → new SHA</text>
 <!-- legend -->
 <circle cx="706" cy="266" r="5" class="fp" style="stroke:var(--accent);stroke-width:2"/><text x="718" y="270" class="s">coordinator check</text>
-<circle cx="876" cy="266" r="5" class="fa"/><text x="888" y="270" class="s">seat</text>
+<circle cx="876" cy="266" r="5" class="fa"/><text x="888" y="270" class="s">review seat</text>
 </svg>
