@@ -1,4 +1,4 @@
-# Herdr Coordinator Card 0.12.1
+# Herdr Coordinator Card 0.12.2
 
 The policy for a coordinator agent running in a Herdr Tab is this card plus `model_bindings.json`. The coordinator can be any agent CLI that runs shell commands and can run a command as a background task that wakes it when the command exits; "background task" in this card means that. Owner authorization and project rules govern. Do not load the original `coordination-standard/` or `archive/`. Use the Herdr skill only for CLI syntax; where it differs from this card, this card wins. Before any Herdr command, run `test "$HERDR_ENV" = 1`; if it fails, say so and stop. For a Claude Code coordinator, the optional coord-guard hook (`guard/` in the standard's repository) checks a few of these rules before each Bash command runs. A guard denial is a policy stop: fix the cause, and never route around it with a script, another language, or another path. Without the guard, the card still applies in full.
 

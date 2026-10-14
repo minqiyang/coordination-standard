@@ -1,4 +1,4 @@
-# Herdr Coordination Standard 0.12.1
+# Herdr Coordination Standard 0.12.2
 
 A standard for running several AI coding agents on one project. One coordinator agent in a Herdr Tab runs the work. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
 

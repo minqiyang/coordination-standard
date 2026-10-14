@@ -1,6 +1,6 @@
 {
-  "bindings_version": "0.12.1",
-  "updated": "2026-10-11",
+  "bindings_version": "0.12.2",
+  "updated": "2026-10-13",
   "note": "Only file to edit when models change; rules live in coordinator.md. Each harness key is a Herdr agent kind (`herdr agent` lists them). Placeholders: {id} {effort} {attempt_dir} (absolute <coord>/<task>/<agent>/, the launched session's own folder; all its attempts write inside it) {worktree} (a headless seat's detached worktree) {report} (a headless seat's report or reply file). Recheck flags with `claude --help` / `codex --help` after CLI updates.",
   "harnesses": {
     "claude": {
@@ -26,7 +26,7 @@
     "fable": { "harness": "claude", "id": "fable" },
     "gpt": { "harness": "codex", "id": "gpt-6.1-sol" }
   },
-  "adjustments": { "harnesses": ["claude"], "min_effort": "medium", "max_effort": "xhigh" },
+  "adjustments": { "harnesses": ["claude"], "min_effort": "high", "max_effort": "xhigh" },
   "routes": {
     "GENERAL_EXEC": { "model": "opus", "effort": "high" },
     "EXPERT": { "model": "opus", "effort": "ultracode" },
