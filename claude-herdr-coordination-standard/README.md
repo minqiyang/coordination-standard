@@ -1,6 +1,6 @@
 # Herdr Coordination Standard
 
-**Version `0.12.2`** (derived from Coordination Standard 0.9.0)
+**Version `0.12.3`** (derived from Coordination Standard 0.9.0)
 
 A standard for running several AI coding agents on one project. One coordinator agent in a Herdr Tab runs the work, and you choose the agent CLI and the model of every role. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0 is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
@@ -131,7 +131,7 @@ Open a Herdr Tab, start your coordinator agent CLI there, and send it this promp
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.12.2.
+within the owner's authorization and project rules. Declared version: 0.12.3.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 
@@ -140,20 +140,20 @@ Do not load coordination-standard/ or archive/. Follow the card.
 To move a coordinator that already runs an earlier version, send it this prompt:
 
 ```text
-Switch to Herdr Coordination Standard 0.12.2. Re-read <dir>/coordinator.md and
+Switch to Herdr Coordination Standard 0.12.3. Re-read <dir>/coordinator.md and
 <dir>/model_bindings.json as the coordinator policy, within the owner's
 authorization and project rules. Do not load coordination-standard/ or archive/.
 Keep what is already valid: frozen SHAs, accepted candidates, finished seat
 reports, and failed attempts already counted (a card already on EXPERT stays
 there).
-Let live workers and seats finish their current card; apply 0.12.2 from each
+Let live workers and seats finish their current card; apply 0.12.3 from each
 task's next step. Never gate a SHA that must still change before its use.
 Start all of a lane's seats at the same time. After a full gate, give a small
 change a delta re-review. Name QA logs qa/<sha7>-<name>.log, end each with
 "exit status: <n>", and record each acceptance as ACCEPT <full SHA> in
 decisions.md.
 Before your next dispatch, update tasks.md with each open task's next step
-under 0.12.2. Ask me only if a task needs my decision.
+under 0.12.3. Ask me only if a task needs my decision.
 ```
 
 ## Setting up agents and models
