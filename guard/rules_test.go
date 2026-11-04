@@ -139,6 +139,7 @@ func TestR1CodexSandbox(t *testing.T) {
 		{name: "long sandbox eq", cmd: "codex exec --sandbox=read-only -o r.md -"},
 		{name: "attached short", cmd: "codex exec -sread-only -"},
 		{name: "free value quoted var", cmd: `codex exec -s read-only -o "$OUT" -`},
+		{name: "free value unquoted var", deny: "Put it in double quotes", cmd: `codex exec -s read-only -o $OUT -`},
 		{name: "resume with override", cmd: `codex exec resume 019a7c3e -m gpt-6.1-sol -c sandbox_mode="read-only" -o r2.md "why?"`},
 		{name: "resume quoted override", cmd: `codex exec resume 019a -c 'sandbox_mode = "read-only"' -o r.md q`},
 		{name: "resume bare value", cmd: `codex exec resume 019a -c sandbox_mode=read-only q`},
@@ -215,8 +216,10 @@ func TestR2Merge(t *testing.T) {
 		{name: "wrong depth", setup: func(f *fx) { write(f.t, filepath.Join(f.task, "sub", "decisions.md"), "ACCEPT "+testSHA+"\n") },
 			deny: "no line", cmd: "gh pr merge 1 --squash --match-head-commit {SHA}"},
 		{name: "in subshell list", setup: accept, deny: "--auto", cmd: "(cd /tmp && gh pr merge 12 --auto --squash) || true"},
-		{name: "no coord", setup: func(f *fx) { f.cwd = f.root }, deny: "cannot find the coord folder",
+		{name: "no coord is not coordination work", setup: func(f *fx) { f.cwd = f.root },
 			cmd: "gh pr merge 1 --squash --match-head-commit {SHA}"},
+		{name: "bad COORD_DIR", setup: func(f *fx) { f.cwd = f.root; f.env["COORD_DIR"] = f.root + "/missing" },
+			deny: "is not a folder", cmd: "gh pr merge 1 --squash --match-head-commit {SHA}"},
 		{name: "COORD_DIR", setup: func(f *fx) { accept(f); f.cwd = f.root; f.env["COORD_DIR"] = f.coord },
 			cmd: "gh pr merge 1 --squash --match-head-commit {SHA}"},
 	})
@@ -330,7 +333,9 @@ func TestR3SeatQA(t *testing.T) {
 			f.wt = filepath.Join(f.coord, "wt", "prod-task1-1")
 			gitT(f.t, f.repo, "worktree", "add", "-q", "-b", "task1", f.wt, f.sha)
 		}},
-		{name: "not a worktree", setup: qaPass, deny: "cannot read HEAD", cmd: "codex exec -s read-only -C {coord}/nowhere -"},
+		{name: "not a worktree", setup: qaPass, deny: "cannot read HEAD", cmd: "codex exec -s read-only -C {coord}/wt/nowhere -"},
+		{name: "-C outside wt is not a seat", cmd: "codex exec -s read-only -C {coord}/task1 -o r.md -"},
+		{name: "-C on the repo is not a seat", cmd: "codex exec -s read-only -C . -o r.md -"},
 
 		{name: "nohup sh -c with qa", setup: qaPass, cmd: nohup},
 		{name: "nohup sh -c no qa", deny: "no QA log", cmd: nohup},
@@ -345,8 +350,36 @@ func TestR3SeatQA(t *testing.T) {
 			cmd: `WT={wt}; timeout 3600 codex exec -s read-only -C "$WT" -o r.md - < card.md`},
 		{name: "var worktree in sh -c", setup: qaPass, deny: "not a literal",
 			cmd: `(nohup sh -c "codex exec -s read-only -C $WT -o r.md - < card.md" &)`},
-		{name: "no coord", setup: func(f *fx) { qaPass(f); f.cwd = f.root }, deny: "coord folder",
+		{name: "seat from outside coordination with qa", setup: func(f *fx) { qaPass(f); f.cwd = f.root },
 			cmd: "codex exec -s read-only -C {wt} -o r.md -"},
+		{name: "seat from outside coordination no qa", setup: func(f *fx) { f.cwd = f.root }, deny: "no QA log",
+			cmd: "codex exec -s read-only -C {wt} -o r.md -"},
+	})
+}
+
+// ---------- scope ----------
+
+// Outside coordination work (no COORD_DIR, no coord folder from the cwd) the
+// guard allows everything except R3 on a <coord>/wt/ path.
+func TestScopeOutsideCoordination(t *testing.T) {
+	out := func(f *fx) { f.cwd = f.root }
+	run(t, []tcase{
+		{name: "codex no sandbox", setup: out, cmd: "codex exec -o r.md -"},
+		{name: "codex full-auto", setup: out, cmd: "codex exec --full-auto -"},
+		{name: "var -C on a scratch folder", setup: out, cmd: `codex exec -s read-only -C "$S/review" -o r.md -`},
+		{name: "unquoted var value", setup: out, cmd: `codex exec -s read-only -o $C/report.md -`},
+		{name: "bash -c path with codex", setup: out, cmd: `for s in a b; do bash -c "ls ~/.codex/skills/$s"; done`},
+		{name: "merge with --merge", setup: out, cmd: "gh pr merge 5 --merge"},
+		{name: "parse error with codex", setup: out, cmd: `codex exec 'unterminated`},
+		{name: "plain repo without coord", setup: func(f *fx) {
+			f.cwd = filepath.Join(f.root, "other")
+			if err := os.MkdirAll(f.cwd, 0o755); err != nil {
+				f.t.Fatal(err)
+			}
+			gitT(f.t, f.cwd, "init", "-q")
+		}, cmd: "codex exec -o r.md -"},
+		{name: "COORD_DIR keeps scope", setup: func(f *fx) { out(f); f.env["COORD_DIR"] = f.coord },
+			deny: "-s read-only", cmd: "codex exec -o r.md -"},
 	})
 }
 

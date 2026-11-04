@@ -2,13 +2,19 @@
 
 coord-guard is a Claude Code PreToolUse hook for the Herdr coordinator card (`../claude-herdr-coordination-standard/coordinator.md`). It checks Bash tool calls against three rules of the card and denies a call that breaks one. All other rules stay as text in the card.
 
+## Scope
+
+The guard checks only coordination work. A call is in scope when `COORD_DIR` is set, or when the guard finds `<coord>` from the hook cwd (see "Finding `<coord>`"). Out of scope, the guard allows every call, so it does not get in the way of normal tasks. The one exception is R3: a seat launch with `-C` under `<coord>/wt/` is always checked, because the path itself shows that it is coordination work.
+
+Outside coordination, `codex exec` uses the sandbox in `~/.codex/config.toml`. Keep that default safe (for example `workspace-write`), because the guard does not check it there.
+
 It is a guardrail, not a security boundary. It stops mistakes. It does not stop a person or agent who wants to get around it.
 
 ## What it checks
 
 The guard parses each Bash command with `mvdan.cc/sh/v3/syntax` and checks every simple command in it. This includes commands in lists, pipelines, subshells, command substitutions, and background jobs. It looks through `nohup`, `timeout`, `env`, `nice`, `command`, `exec`, `eval`, and `sh -c` / `bash -c` scripts.
 
-If a word that a rule reads is not literal (a variable or a command substitution), the guard denies the call and asks for a literal command. If the command does not parse, the guard denies it only when the text contains `codex` or `gh pr merge`.
+If a word that a rule reads is not literal (a variable or a command substitution), the guard denies the call and asks for a literal command. A variable in the value of an option that no rule reads (such as `-o` or `-m`) is allowed in double quotes; without quotes the guard asks for them, because `bash` and `sh` split an unquoted expansion into more words. If the command does not parse, the guard denies it only when the text contains `codex` or `gh pr merge`.
 
 **R1, codex sandbox.** For `codex exec`:
 
@@ -24,9 +30,9 @@ If a word that a rule reads is not literal (a variable or a command substitution
 - Some `<coord>/*/decisions.md` must have a line that starts with `ACCEPT <SHA>`.
 - For repos that require an up-to-date branch, the line can be `ACCEPT <H> from <A>`. Then the guard checks, with local git objects only, that H has exactly two parents, A and one other commit B, that `git merge-tree --write-tree A B` has no conflict, and that its tree equals the tree of H. It also requires passing QA for H, with the same rule as R3. The guard never fetches.
 
-**R3, QA before a codex seat.** A seat launch is `codex exec` (not resume or fork) with `-C <worktree>`. The worktree must be detached and clean (`git status --porcelain` is empty). At least one `<coord>/*/qa/<sha7>-*.log` must exist for its HEAD, and every such log must end with the line `exit status: 0`. Evidence logs named `<sha7>-ev-*.log` do not count.
+**R3, QA before a codex seat.** A seat launch is `codex exec` (not resume or fork) with `-C <worktree>`, where the worktree is inside `<X>.coord/wt/`. A `-C` path anywhere else is not a seat, and R3 does not check it. The QA logs are read from that `<X>.coord`. The worktree must be detached and clean (`git status --porcelain` is empty). At least one `<coord>/*/qa/<sha7>-*.log` must exist for its HEAD, and every such log must end with the line `exit status: 0`. Evidence logs named `<sha7>-ev-*.log` do not count.
 
-**Finding `<coord>`.** The guard uses `COORD_DIR` if it is set. Otherwise it uses the nearest `*.coord` folder above the hook cwd. Otherwise it finds the main repo root from `git rev-parse --path-format=absolute --git-common-dir` and uses the sibling `<repo>.coord/`. If a rule needs `<coord>` and the guard cannot find it, the guard denies the call.
+**Finding `<coord>`.** The guard uses `COORD_DIR` if it is set. Otherwise it uses the nearest `*.coord` folder above the hook cwd. Otherwise it finds the main repo root from `git rev-parse --path-format=absolute --git-common-dir` and uses the sibling `<repo>.coord/`. If no `<coord>` is found and `COORD_DIR` is not set, the call is out of scope (see "Scope"). If `COORD_DIR` is set but is not a folder, the guard denies the calls that need `<coord>`.
 
 ## What it does not check
 
