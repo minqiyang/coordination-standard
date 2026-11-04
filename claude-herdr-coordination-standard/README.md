@@ -1,6 +1,6 @@
 # Herdr Coordination Standard
 
-**Version `0.12.3`** (derived from Coordination Standard 0.9.0)
+**Version `0.12.4`** (derived from Coordination Standard 0.9.0)
 
 A standard for running several AI coding agents on one project. One coordinator agent in a Herdr Tab runs the work, and you choose the agent CLI and the model of every role. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check. The earlier Coordination Standard 0.13.0 is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 
@@ -123,6 +123,8 @@ You watch only the coordinator. Workers start, report, and close often, and they
 - a `gh pr merge` that is not a squash bound to an SHA with an `ACCEPT` line in `decisions.md`;
 - a `codex exec` seat launch before every QA log of its SHA ends with `exit status: 0`, or from a dirty worktree.
 
+The guard checks only coordination work: a session that has `COORD_DIR` set, or whose working folder finds a coord folder. In all other work it allows every command, so it does not get in the way of normal tasks. The one exception is a seat launch with `-C` under `<coord>/wt/`, which R3 always checks.
+
 Judgment rules stay in `coordinator.md`. The card applies in full without the guard, also with another coordinator CLI. The guard is a guardrail, not a security boundary. See [`guard/README.md`](../guard/README.md) to build and register it.
 
 ## Getting started
@@ -131,7 +133,7 @@ Open a Herdr Tab, start your coordinator agent CLI there, and send it this promp
 
 ```text
 Read <dir>/coordinator.md and <dir>/model_bindings.json as the coordinator policy,
-within the owner's authorization and project rules. Declared version: 0.12.3.
+within the owner's authorization and project rules. Declared version: 0.12.4.
 Do not load coordination-standard/ or archive/. Follow the card.
 ```
 

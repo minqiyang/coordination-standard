@@ -19,11 +19,12 @@ import (
 	"mvdan.cc/sh/v3/syntax"
 )
 
-const denyTail = " A guard denial is a policy stop. Fix the cause; do not route around it."
+const denyTail = " If this is not coordination work, tell the owner; do not create repos, worktrees or QA logs only to pass the guard. A guard denial is a policy stop. Fix the cause; do not route around it."
 
 // Decision is the result of a check. A nil *Decision means allow.
 type Decision struct {
 	Reason string
+	seat   bool // R3 on a <coord>/wt/ path: applies outside coordination scope too
 }
 
 func deny(format string, a ...any) *Decision {
@@ -51,7 +52,21 @@ func Check(command, cwd string, getenv func(string) string) *Decision {
 		home, _ = os.UserHomeDir()
 	}
 	c := &checker{cwd: cwd, getenv: getenv, home: home}
-	return c.checkScript(command, 0)
+	d := c.checkScript(command, 0)
+	if d == nil || d.seat || c.inScope() {
+		return d
+	}
+	return nil // not coordination work: the guard stays out of the way
+}
+
+// inScope reports whether the hook cwd is coordination work: COORD_DIR is
+// set, or a coord folder is found from the cwd.
+func (c *checker) inScope() bool {
+	if c.getenv("COORD_DIR") != "" {
+		return true
+	}
+	_, d := c.coordDir()
+	return d == nil
 }
 
 func (c *checker) checkScript(src string, depth int) *Decision {
@@ -346,8 +361,11 @@ func (c *checker) scanArgs(ws []*syntax.Word, level int, withVal, matters func(s
 			}
 			i++
 			o.val = c.resolve(ws[i])
-			if !o.val.lit && (matters(name) || !o.val.splitSafe) {
+			if !o.val.lit && matters(name) {
 				return s, i, nonLiteral(o.val, "the value of "+name)
+			}
+			if !o.val.lit && !o.val.splitSafe {
+				return s, i, deny("the value of %s is an unquoted expansion: %s. Put it in double quotes, for example %s \"$VAR\".", name, o.val.src, name)
 			}
 		}
 		s.opts = append(s.opts, o)
@@ -431,7 +449,7 @@ func (c *checker) checkCodex(ws []*syntax.Word) *Decision {
 	}
 	for _, o := range all {
 		if why, bad := codexBad[o.name]; bad {
-			return deny("codex exec with %s %s. Seats run read-only: remove it and use -s read-only (or -c sandbox_mode=\"read-only\" on resume).", o.name, why)
+			return deny("codex exec with %s %s. In coordination work codex exec runs read-only: remove it and use -s read-only (or -c sandbox_mode=\"read-only\" on resume).", o.name, why)
 		}
 		switch o.name {
 		case "-s", "--sandbox":
@@ -481,11 +499,43 @@ func tomlString(v string) string {
 	return v
 }
 
-// checkSeatQA is R3: the seat worktree is clean, detached, and has passing QA.
+// checkSeatQA is R3: a -C path under <X>.coord/wt/ is a seat worktree. It must
+// be clean, detached, and have passing QA in <X>.coord. Other -C paths are not
+// seats, so R3 does not apply to them.
 func (c *checker) checkSeatQA(wt string) *Decision {
 	if !filepath.IsAbs(wt) {
 		wt = filepath.Join(c.cwd, wt)
 	}
+	coord := seatCoord(wt)
+	if coord == "" {
+		return nil
+	}
+	if d := c.seatChecks(wt, coord); d != nil {
+		d.seat = true
+		return d
+	}
+	return nil
+}
+
+// seatCoord returns <X>.coord when p is inside <X>.coord/wt/<name>, else "".
+func seatCoord(p string) string {
+	if r, err := filepath.EvalSymlinks(p); err == nil {
+		p = r
+	}
+	p = filepath.Clean(p)
+	for d := p; filepath.Dir(d) != d; d = filepath.Dir(d) {
+		if strings.HasSuffix(filepath.Base(d), ".coord") {
+			rel, err := filepath.Rel(filepath.Join(d, "wt"), p)
+			if err == nil && rel != "." && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+				return d
+			}
+			return ""
+		}
+	}
+	return ""
+}
+
+func (c *checker) seatChecks(wt, coord string) *Decision {
 	head, err := git(wt, "rev-parse", "HEAD")
 	if err != nil {
 		return deny("cannot read HEAD of the seat worktree %s (%v). Launch the seat with -C set to a detached worktree at the frozen SHA.", wt, err)
@@ -499,10 +549,6 @@ func (c *checker) checkSeatQA(wt string) *Decision {
 	}
 	if st != "" {
 		return deny("the seat worktree %s has uncommitted or untracked files. Seats review a clean frozen SHA: clean the worktree or make a new detached one.", wt)
-	}
-	coord, d := c.coordDir()
-	if d != nil {
-		return d
 	}
 	if d := qaPassed(coord, head, "the seat launch"); d != nil {
 		return d
