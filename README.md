@@ -1,14 +1,14 @@
 # Coordination Standard
 
-The live policy is the Rex Coordinator Card 0.1.0 in [`claude-rex-coordination-standard/`](claude-rex-coordination-standard/). The Herdr Coordinator Card 0.12.4 has the same rules with Herdr commands, and is kept in [`claude-herdr-coordination-standard/`](claude-herdr-coordination-standard/).
+The live policy is the Rex Coordinator Card 0.2.0 in [`claude-rex-coordination-standard/`](claude-rex-coordination-standard/). The Herdr Coordinator Card 0.12.4 is a longer policy with lanes and review seats, and is kept in [`claude-herdr-coordination-standard/`](claude-herdr-coordination-standard/).
 
-A standard for running several AI coding agents on one project. One coordinator agent runs the work. During development, workers edit and test as freely as they need. Before frozen code is first put to real use, QA checks it once, and so do fresh read-only reviewers when the lane requires them. Results come only from code that passed that check.
+A skeleton for running several AI coding agents on one project. One coordinator agent runs the work. During development, producers edit and test as freely as they need. Before code is first put to real use, QA checks one frozen commit, and the coordinator decides whether a fresh read-only reviewer checks it too. Results come only from code that passed that check.
 
-Every role is a slot that you fill with the agent CLI and the model you choose. The coordinator can be any agent CLI that can wait on background tasks, such as Claude Code. Each worker runs on an agent CLI that the coordinator starts in a Rex Tab, such as Claude Code or Codex, with any model that CLI runs. The rules name roles, never models.
+Every role is a slot that you fill with the agent CLI and the model you choose. The coordinator can be any agent CLI that can wait on background tasks, such as Claude Code. A producer runs on an agent CLI that the coordinator starts in a Rex Tab. A reviewer runs headless and read-only. The rules name roles, never models.
 
 ![Agents and models](claude-rex-coordination-standard/assets/agents_and_models.svg)
 
-Workers run in the Rex session `W-<project>`, or headless. The coordinator interrupts you only when all the work is done or when it and its workers are stuck.
+Producers run in the Rex session `W-<project>`. The coordinator interrupts you only when all the work is done, when it and its workers are stuck, or when only you can answer.
 
 ![System architecture](claude-rex-coordination-standard/assets/system_architecture.svg)
 
@@ -16,7 +16,7 @@ Workers run in the Rex session `W-<project>`, or headless. The coordinator inter
 
 - Policy files: [`coordinator.md`](claude-rex-coordination-standard/coordinator.md), [`model_bindings.json`](claude-rex-coordination-standard/model_bindings.json), [`bin/rex_agent.sh`](claude-rex-coordination-standard/bin/rex_agent.sh)
 - Start: [`claude-rex-coordination-standard/README.md`](claude-rex-coordination-standard/README.md)
-- Optional guard: [`guard/`](guard/), a hook for a Claude Code coordinator that blocks three repeated mistakes (seat without read-only sandbox, merge of an unaccepted SHA, seat before QA passes)
+- Guard for the Herdr card: [`guard/`](guard/), a hook for a Claude Code coordinator that blocks three repeated mistakes (seat without read-only sandbox, merge of an unaccepted SHA, seat before QA passes). Do not register it for a coordinator that follows the Rex card
 
 The earlier Coordination Standard 0.13.0 is kept on the [`coordination-standard-0.13`](https://github.com/minqiyang/coordination-standard/tree/coordination-standard-0.13) branch and is no longer maintained.
 

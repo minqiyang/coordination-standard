@@ -1,77 +1,129 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 396" width="940" height="396" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 450" width="940" height="450" role="img" aria-labelledby="t d">
 <title id="t">System overview</title>
-<desc id="d">The owner gives the coordinator goals and approvals, and the coordinator tells the owner only when all the work is done or when it is stuck. The coordinator is any agent CLI in a terminal. It follows the rules (coordinator.md) and the model bindings (model_bindings.json), and it dispatches cards by route to workers in a Rex session. Producers (GENERAL_EXEC, EXPERT) write the code. Model 1 review covers the AUDIT_2 seat and the ADJUDICATOR. Model 2 review covers the REVIEW and AUDIT seats. Workers run in Tabs of the Rex session W-project; a headless seat, such as codex exec, has no Tab. Each worker has its own git worktree, and seats are read-only at the frozen SHA. Every worker writes its report to the coord directory outside the repository, which also holds tasks.md. The coordinator reads and verifies the reports. Subagents are read-only helpers.</desc>
+<desc id="d">The owner (You) sits above the coordinator. The owner gives the coordinator goals and approvals, and the coordinator comes back to the owner only when the work is done, when it is stuck, or when it must ask something that only the owner can answer. On the left, two policy inputs, Rules and Models, feed the coordinator. On the right, the coordinator dispatches work to the Producers and the Reviewer. The workers send their reports to the coordination folder (&lt;coord&gt;/), which also holds tasks.md, and the coordinator reads and verifies them there.</desc>
 <style>
-  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
-  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff;
+    --face-top:#f8f8f6;--face-bot:#e6e5e1;--panel-top:#fafaf8;--panel-bot:#f0efec;
+    --edge-top:#b6b9be;--edge-bot:#7c8188;--hi:#ffffff;
+    --gloss-top:#ffffff;--gloss-mid:#f3f3f1;--gloss-low:#e4e3df;--gloss-bot:#eeede9;
+    --bead-top:#ffffff;--bead-bot:#d6d5d0;--rim-top:#b6b9be;--rim-bot:#7c8188;--bead-ink-top:#646a72;--bead-ink-bot:#1f2328;
+    --etch-dark:rgba(31,35,40,.16);--etch-light:rgba(255,255,255,.95);
+    --shadow-near:rgba(31,35,40,.22);--shadow-far:rgba(31,35,40,.12)}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117;
+    --face-top:#2c323a;--face-bot:#1c2128;--panel-top:#242a31;--panel-bot:#1a1f25;
+    --edge-top:#4e5660;--edge-bot:#080a0d;--hi:rgba(255,255,255,.16);
+    --gloss-top:#3b424b;--gloss-mid:#31373f;--gloss-low:#252a31;--gloss-bot:#2a3037;
+    --bead-top:#4a525c;--bead-bot:#1c2127;--rim-top:#8b939d;--rim-bot:#3d444d;--bead-ink-top:#f4f7fa;--bead-ink-bot:#aab2bb;
+    --etch-dark:rgba(0,0,0,.6);--etch-light:rgba(255,255,255,.07);
+    --shadow-near:rgba(0,0,0,.7);--shadow-far:rgba(0,0,0,.55)}}
   text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
-  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
   .t{font-size:14px;font-weight:700}
-  .s{font-size:12px;fill:var(--mute)}
-  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .e{font-size:14px}
+  .s-ft{stop-color:var(--face-top)} .s-fb{stop-color:var(--face-bot)}
+  .s-pt{stop-color:var(--panel-top)} .s-pb{stop-color:var(--panel-bot)}
+  .s-et{stop-color:var(--edge-top)} .s-eb{stop-color:var(--edge-bot)}
+  .s-hi{stop-color:var(--hi)} .s-hi0{stop-color:var(--hi);stop-opacity:0}
+  .s-g0{stop-color:var(--gloss-top)} .s-g1{stop-color:var(--gloss-mid)} .s-g2{stop-color:var(--gloss-low)} .s-g3{stop-color:var(--gloss-bot)}
+  .s-bt{stop-color:var(--bead-top)} .s-bb{stop-color:var(--bead-bot)}
+  .s-rt{stop-color:var(--rim-top)} .s-rb{stop-color:var(--rim-bot)}
+  .s-it{stop-color:var(--bead-ink-top)} .s-ib{stop-color:var(--bead-ink-bot)}
+  .s-xd{stop-color:var(--etch-dark)} .s-xl{stop-color:var(--etch-light)}
+  .f-near{flood-color:var(--shadow-near)} .f-far{flood-color:var(--shadow-far)}
+  .card{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .panel{fill:url(#g-panel);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .hi{fill:none;stroke:url(#g-hi);stroke-width:1}
+  .etch{fill:url(#g-etch)}
+  .pill{fill:url(#g-gloss);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift-sm)}
+  .pill-dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .disc{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .bead{fill:url(#g-bead);stroke:url(#g-rim);stroke-width:1.25;filter:url(#lift-sm)}
+  .bead-fill{fill:url(#g-bead-ink);filter:url(#lift-sm)}
+  .sheet{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1;filter:url(#lift-sm)}
+  .sheet-ln{fill:none;stroke:var(--mute);stroke-width:1}
   .ln{fill:none;stroke:var(--line);stroke-width:1.25}
-  .ink{fill:none;stroke:var(--ink);stroke-width:1.5}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.25}
   .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
   .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .track{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+  .dashed{stroke-dasharray:4 4}
   .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)}
 </style>
 <defs>
+  <linearGradient id="g-face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-ft"/><stop offset="1" class="s-fb"/></linearGradient>
+  <linearGradient id="g-panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-pt"/><stop offset="1" class="s-pb"/></linearGradient>
+  <linearGradient id="g-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-et"/><stop offset="1" class="s-eb"/></linearGradient>
+  <linearGradient id="g-hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-hi"/><stop offset=".4" class="s-hi0"/></linearGradient>
+  <linearGradient id="g-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-g0"/><stop offset=".46" class="s-g1"/><stop offset=".54" class="s-g2"/><stop offset="1" class="s-g3"/></linearGradient>
+  <radialGradient id="g-bead" cx=".5" cy=".5" r=".55" fx=".5" fy=".28"><stop offset="0" class="s-bt"/><stop offset="1" class="s-bb"/></radialGradient>
+  <linearGradient id="g-rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-rt"/><stop offset="1" class="s-rb"/></linearGradient>
+  <radialGradient id="g-bead-ink" cx=".5" cy=".5" r=".55" fx=".5" fy=".28"><stop offset="0" class="s-it"/><stop offset="1" class="s-ib"/></radialGradient>
+  <linearGradient id="g-etch" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" class="s-xd"/><stop offset=".5" class="s-xl"/></linearGradient>
+  <filter id="lift" x="-20%" y="-40%" width="140%" height="200%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dy="1" result="o1"/>
+    <feFlood class="f-near"/><feComposite in2="o1" operator="in" result="s1"/>
+    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dy="3" result="o2"/>
+    <feFlood class="f-far"/><feComposite in2="o2" operator="in" result="s2"/>
+    <feMerge><feMergeNode in="s2"/><feMergeNode in="s1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="lift-sm" x="-50%" y="-50%" width="200%" height="220%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/><feOffset dy="0.75" result="o1"/>
+    <feFlood class="f-near"/><feComposite in2="o1" operator="in" result="s1"/>
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/><feOffset dy="1.5" result="o2"/>
+    <feFlood class="f-far"/><feComposite in2="o2" operator="in" result="s2"/>
+    <feMerge><feMergeNode in="s2"/><feMergeNode in="s1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
   <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
   <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
   <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
 </defs>
+<g transform="translate(-10,16)">
 
-<!-- Owner and coordinator -->
-<rect x="335" y="14" width="130" height="44" rx="4" class="box"/>
-<text x="400" y="33" text-anchor="middle" class="t">You</text>
-<text x="400" y="50" text-anchor="middle" class="s">owner</text>
-<path d="M392,100 V64" class="acc" marker-end="url(#aa)"/>
-<path d="M408,64 V100" class="ink" marker-end="url(#ai)"/>
-<text x="384" y="78" text-anchor="end" class="s">all done</text>
-<text x="384" y="94" text-anchor="end" class="s">or stuck</text>
-<text x="416" y="78" class="s">goals</text>
-<text x="416" y="94" class="s">approvals</text>
+<!-- Owner -->
+<rect x="400" y="24" width="140" height="48" rx="6" class="card"/>
+<rect x="401.25" y="25.25" width="137.5" height="45.5" rx="4.75" class="hi"/>
+<text x="470" y="53" text-anchor="middle" class="t">You</text>
+<path d="M458,135 V74" class="acc" marker-end="url(#aa)"/>
+<path d="M482,72 V133" class="ink" marker-end="url(#ai)"/>
+<text x="446" y="108" text-anchor="end" class="e">done · stuck · ask</text>
+<text x="494" y="108" class="e">goals · approvals</text>
 
-<circle cx="400" cy="160" r="58" class="box" style="stroke-width:1.5"/>
-<text x="400" y="158" text-anchor="middle" class="t">Coordinator</text>
-<text x="400" y="178" text-anchor="middle" class="s">any agent CLI</text>
+<!-- Coordinator -->
+<circle cx="470" cy="200" r="66" class="disc"/>
+<circle cx="470" cy="200" r="64.75" class="hi"/>
+<text x="470" y="205" text-anchor="middle" class="t">Coordinator</text>
 
 <!-- Policy -->
-<text x="40" y="62" class="k">POLICY</text>
-<rect x="40" y="80" width="180" height="60" rx="4" class="box"/>
-<text x="58" y="106" class="t">Rules</text><text x="58" y="126" class="s">coordinator.md</text>
-<rect x="40" y="160" width="180" height="60" rx="4" class="box"/>
-<text x="58" y="186" class="t">Models</text><text x="58" y="206" class="s">model_bindings.json</text>
-<path d="M220,110 C280,110 290,156 340,156" class="ln"/>
-<path d="M220,190 C280,190 290,164 340,164" class="ln"/>
+<rect x="60" y="140" width="180" height="52" rx="6" class="card"/>
+<rect x="61.25" y="141.25" width="177.5" height="49.5" rx="4.75" class="hi"/>
+<text x="150" y="171" text-anchor="middle" class="t">Rules</text>
+<rect x="60" y="208" width="180" height="52" rx="6" class="card"/>
+<rect x="61.25" y="209.25" width="177.5" height="49.5" rx="4.75" class="hi"/>
+<text x="150" y="239" text-anchor="middle" class="t">Models</text>
+<path d="M240,166 C330,166 330,186 405,186" class="ln"/>
+<path d="M240,234 C330,234 330,214 405,214" class="ln"/>
 
 <!-- Workers -->
-<text x="530" y="96" text-anchor="middle" class="s">dispatch</text>
-<path d="M458,160 C530,160 530,100 574,100" class="acc" marker-end="url(#aa)"/>
-<path d="M458,160 C530,160 530,150 574,150" class="acc" marker-end="url(#aa)"/>
-<path d="M458,160 C530,160 530,200 574,200" class="acc" marker-end="url(#aa)"/>
+<path d="M535,186 C620,186 620,166 698,166" class="acc" marker-end="url(#aa)"/>
+<path d="M535,214 C620,214 620,234 698,234" class="acc" marker-end="url(#aa)"/>
+<text x="617" y="152" text-anchor="middle" class="e">dispatch</text>
+<rect x="700" y="140" width="180" height="52" rx="6" class="card"/>
+<rect x="701.25" y="141.25" width="177.5" height="49.5" rx="4.75" class="hi"/>
+<text x="790" y="171" text-anchor="middle" class="t">Producers</text>
+<rect x="700" y="208" width="180" height="52" rx="6" class="card"/>
+<rect x="701.25" y="209.25" width="177.5" height="49.5" rx="4.75" class="hi"/>
+<text x="790" y="239" text-anchor="middle" class="t">Reviewer</text>
 
-<text x="580" y="62" class="k">WORKERS · REX SESSION W-PROJECT</text>
-<rect x="580" y="80" width="330" height="40" rx="4" class="box"/><circle cx="596" cy="100" r="3.5" class="fa"/><text x="610" y="105" class="t">Producers</text><text x="896" y="104" text-anchor="end" class="s">GENERAL_EXEC · EXPERT</text>
-<rect x="580" y="130" width="330" height="40" rx="4" class="box"/><circle cx="596" cy="150" r="3.5" class="fa"/><text x="610" y="155" class="t">Model 1 review</text><text x="896" y="154" text-anchor="end" class="s">AUDIT_2 · ADJUDICATOR</text>
-<rect x="580" y="180" width="330" height="40" rx="4" class="box"/><circle cx="596" cy="200" r="3.5" class="fa"/><text x="610" y="205" class="t">Model 2 review</text><text x="896" y="204" text-anchor="end" class="s">REVIEW · AUDIT</text>
-
-<!-- Reports -->
-<path d="M910,150 H924 M910,200 H924 M910,100 H924 V250 H642 V264" class="ink" marker-end="url(#ai)"/>
-<text x="780" y="243" text-anchor="middle" class="s">write reports</text>
-<rect x="620" y="272" width="44" height="46" rx="3" class="box" transform="translate(6,-6)" style="stroke:var(--line)"/>
-<rect x="620" y="272" width="44" height="46" rx="3" class="box"/>
-<path d="M629,286 H655 M629,295 H655 M629,304 H646" class="ln"/>
-<text x="684" y="290" class="t">&lt;coord&gt;/</text>
-<text x="684" y="308" class="s">tasks.md · reports</text>
-<path d="M620,295 H400 V224" class="dash" marker-end="url(#am)"/>
-<text x="510" y="286" text-anchor="middle" class="s">read · verify</text>
-
-<!-- Helpers -->
-<rect x="40" y="274" width="210" height="44" rx="4" class="box" style="stroke-dasharray:4 3"/>
-<text x="58" y="294" class="t">Subagents</text><text x="58" y="312" class="s">read-only helpers</text>
-<path d="M250,296 C312,296 332,230 358,204" class="dash" marker-end="url(#am)"/>
-
-<text x="40" y="356" class="s">one worktree per worker · seats read-only at the frozen SHA</text>
-<text x="40" y="376" class="s">workers run in Tabs of the Rex session W-project · a headless seat (such as codex exec) has no Tab</text>
+<!-- Coordination folder -->
+<path d="M880,234 H900 M880,166 H900 V362 H562" class="ink" marker-end="url(#ai)"/>
+<text x="734" y="352" text-anchor="middle" class="e">reports</text>
+<rect x="380" y="330" width="180" height="64" rx="6" class="card"/>
+<rect x="381.25" y="331.25" width="177.5" height="61.5" rx="4.75" class="hi"/>
+<rect x="421" y="346" width="20" height="26" rx="2" class="sheet"/>
+<rect x="417" y="350" width="20" height="26" rx="2" class="sheet"/>
+<path d="M421,358 H433 M421,364 H433 M421,370 H429" class="sheet-ln"/>
+<text x="451" y="357" class="t">&lt;coord&gt;/</text>
+<text x="451" y="379" class="e">tasks.md</text>
+<path d="M470,330 V268" class="dash" marker-end="url(#am)"/>
+<text x="482" y="305" class="e">read · verify</text>
+</g>
 </svg>
