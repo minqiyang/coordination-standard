@@ -36,7 +36,7 @@ The coordinator is the agent session you talk to directly. It writes cards, star
 3. **Freeze.** When work is first put to real use, the coordinator freezes it as a commit SHA so every check targets that exact state. Real use means a merge or PR, a deploy or publication, a run whose numbers the project reports, an irreversible action, or input that other work builds on.
 4. **QA.** The project's tests and checks run on that SHA in a clean detached worktree, isolated from the producer's working files.
 5. **Review.** The coordinator decides how to review based on what an error would cost. For a small change that is easy to undo, its own check of the diff and the QA output is enough. For a change whose error could spoil results, corrupt state, or be hard to undo, it starts a fresh read-only reviewer session that receives the SHA, the acceptance criteria, and the MATERIAL rule, without being told how the author built or tested the work.
-6. **Findings.** A finding blocks only when it is MATERIAL, meaning it shows both a concrete scenario in this project by which the failure would occur in practice and a significant effect on a result or a decision. Other findings are recorded so work can move on.
+6. **Findings.** A finding blocks only when it is MATERIAL, meaning it shows both a concrete scenario in this project by which the failure would occur in practice and a significant effect on a result or a decision. Other findings are recorded so work can move on. A report that is empty, or that holds only a plan or a request for approval, does not count as a review, even when the reviewer exits 0. The coordinator runs the reviewer once more, and if that report does not count either, it asks you and does not accept the SHA.
 7. **Accept and use.** Once QA passes and no MATERIAL finding is open, the coordinator accepts that exact SHA and writes it in `tasks.md`. Any repair creates a new SHA, which goes through QA again and has its review decided the same way.
 
 ## What the owner sees
@@ -145,5 +145,5 @@ Open points:
 - A Codex task from `working` to `done` did not run in a Tab.
 - The exit codes 5, 6, and 7 of `rex_agent.sh` did not occur in a test.
 - No full start ran under the update rule. The coordinator's check for another running process of the same CLI is untested.
-- A headless `agy` run in `--mode plan` once returned no output and exit status 0, because `agy` auto-denied a command that the agent wanted to run. A fallback review on `agy` can therefore come back empty with exit 0.
+- A headless `agy` run in `--mode plan` once returned no output and exit status 0, because `agy` auto-denied a command that the agent wanted to run. A fallback review on `agy` can therefore come back empty with exit 0. The card does not count such a report as a review, but that rule has not run in a real review.
 - The permission dialogs of Claude Code did not run. The test covered a Claude Code question and the folder-trust dialog of Antigravity CLI instead.
