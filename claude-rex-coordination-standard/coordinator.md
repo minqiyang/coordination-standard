@@ -1,4 +1,4 @@
-# Rex Coordinator Card 0.2.0
+# Rex Coordinator Card 0.3.0
 
 The policy for a coordinator agent is this card, `model_bindings.json`, and the script `bin/rex_agent.sh`. All three are in one folder, and `<std>` is that folder. Do not load the original `coordination-standard/` or `archive/`.
 
@@ -47,6 +47,7 @@ This card is a skeleton. Owner authorization and project rules govern, and a pro
 - Then decide the review by what an error would cost. For a small change that is easy to undo, your own check of the diff and the QA output is enough. For a change whose error could spoil results, corrupt state, or be hard to undo, start a reviewer.
 - Choose the reviewer's effort by the same cost, from `effort_min` to `effort_max` of the reviewer binding. If the reviewer binding cannot run (quota, outage), use its `fallback` and continue.
 - A reviewer is a new session, read-only, in a detached worktree at the SHA. Its card holds the SHA and the base, the acceptance criteria, and the MATERIAL rule. Never tell the reviewer how the author built or tested the work. After its report, verify that HEAD equals the SHA and that `git status --porcelain` is empty. Otherwise the review does not count.
+- A report that is empty, or that holds only a plan or a request for approval, does not count as a review, even when the reviewer exits 0. Run the reviewer once more. If the second report does not count either, tell the owner, and do not accept the SHA.
 - A finding is MATERIAL only when it shows both of these: a concrete scenario in this project (inputs, state, and path) by which the failure would occur in practice, and a significant effect on a result or a decision. Only a MATERIAL finding blocks. Record the others and move on.
 - Judge each finding yourself. A finding that comes with a reproduction or a failing test goes back to the producer for repair. If you and the reviewer disagree about a finding that could change project results, ask the owner.
 - A review covers only the SHA that it names. After a repair, run QA on the new SHA, and decide its review the same way.
@@ -90,6 +91,13 @@ Use the Rex skill only for CLI syntax. Where it differs from this card, this car
 - Every `rex` command carries `--autostart=false`. Before any Rex command, check the server. If the check fails, tell the owner to open the Rex app, and stop. Never start a Rex server: a server that an agent shell starts gets the file permissions of that agent.
 - Producers run in the project's Rex session `W-<project>`, which `rex_agent.sh start` creates if it does not exist. They keep running if your session or the Rex app ends.
 - Never kill a Rex session or close a Tab or block that you did not create, and never stop the Rex server. Other projects' workers run on it.
+
+**Update the agent CLI**
+
+- Before you start a producer or a reviewer, run its harness's `update_cmd` from `model_bindings.json`, and wait for it to exit. Run one update of a harness at a time. Note `<harness> --version` before and after.
+- Skip the update while another process of that CLI runs, a worker or your own session. Start on the installed version, and update when no process of that CLI runs.
+- Exit 0 means that the latest version is installed. If the update fails, run it once more. If it fails again, the harness cannot run: for a reviewer, use its `fallback`, and update that harness first. For a producer, tell the owner. Never start a worker on a version that failed to update.
+- If the version changed, check that every flag in the harness's binding still appears in `<harness> --help` (`codex exec --help` for codex). If a flag is missing, do not start the worker, and tell the owner.
 
 **Start a producer**
 
