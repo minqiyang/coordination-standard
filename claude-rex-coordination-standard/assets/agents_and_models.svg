@@ -1,124 +1,133 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 556" width="940" height="556" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 392" width="940" height="392" role="img" aria-labelledby="t d">
 <title id="t">Agents and models</title>
-<desc id="d">Every role is a slot that you fill. The coordinator is any agent CLI that you start with the model you pick, and it starts each role. model_bindings.json gives each role a model and effort: GENERAL_EXEC writes the code (model 1, high); EXPERT takes over after 2 failures (model 1, xhigh); REVIEW reviews an important change (model 2, xhigh); AUDIT is the first review of high-risk work (model 2, xhigh); AUDIT_2 is the second review of high-risk work (model 1, xhigh); ADJUDICATOR settles a disputed finding (model 1, xhigh). Model 1 is the main model and model 2 gives a second opinion. Any of these agent CLIs can fill the coordinator or a role: Claude Code, Codex, Kimi Code, Droid, Devin, Gemini CLI, Cursor, OpenCode, Copilot CLI, Qwen Code, Amp, Kiro, Cline, or any other agent CLI that reports its status to the Rex terminal. Any model that its CLI runs can fill model 1 or model 2: Claude, GPT, Gemini, Kimi, Qwen, DeepSeek, GLM, Grok, and others.</desc>
+<desc id="d">Every role is a slot that you fill. The coordinator starts each role, shown by an arrow to each row of the roles table. Each row gives a role, its model, and its effort range: Producer, model 1, high to xhigh; Reviewer, model 2, medium to xhigh; Fallback, model 3, medium. The arrow to the Fallback row is dashed, and a dashed line joins model 2 to the dashed model 3 pill, because the fallback runs only if model 2 cannot run. Below the table, one row lists the agent CLIs: Claude Code, Codex, Antigravity CLI, Devin, DeepSeek Harness, Zcode. The next row lists the models: Claude, GPT, Gemini, Kimi, Qwen, DeepSeek, GLM, Grok.</desc>
 <style>
-  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff}
-  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117}}
+  svg{--ink:#1f2328;--mute:#656d76;--line:#d0d7de;--accent:#D97757;--paper:#ffffff;
+    --face-top:#f8f8f6;--face-bot:#e6e5e1;--panel-top:#fafaf8;--panel-bot:#f0efec;
+    --edge-top:#b6b9be;--edge-bot:#7c8188;--hi:#ffffff;
+    --gloss-top:#ffffff;--gloss-mid:#f3f3f1;--gloss-low:#e4e3df;--gloss-bot:#eeede9;
+    --bead-top:#ffffff;--bead-bot:#d6d5d0;--rim-top:#b6b9be;--rim-bot:#7c8188;--bead-ink-top:#646a72;--bead-ink-bot:#1f2328;
+    --etch-dark:rgba(31,35,40,.16);--etch-light:rgba(255,255,255,.95);
+    --shadow-near:rgba(31,35,40,.22);--shadow-far:rgba(31,35,40,.12)}
+  @media (prefers-color-scheme: dark){svg{--ink:#e6edf3;--mute:#8d96a0;--line:#3d444d;--accent:#D97757;--paper:#0d1117;
+    --face-top:#2c323a;--face-bot:#1c2128;--panel-top:#242a31;--panel-bot:#1a1f25;
+    --edge-top:#4e5660;--edge-bot:#080a0d;--hi:rgba(255,255,255,.16);
+    --gloss-top:#3b424b;--gloss-mid:#31373f;--gloss-low:#252a31;--gloss-bot:#2a3037;
+    --bead-top:#4a525c;--bead-bot:#1c2127;--rim-top:#8b939d;--rim-bot:#3d444d;--bead-ink-top:#f4f7fa;--bead-ink-bot:#aab2bb;
+    --etch-dark:rgba(0,0,0,.6);--etch-light:rgba(255,255,255,.07);
+    --shadow-near:rgba(0,0,0,.7);--shadow-far:rgba(0,0,0,.55)}}
   text{font-family:"Berkeley Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;fill:var(--ink)}
-  .k{font-size:11px;letter-spacing:.08em;fill:var(--mute)}
   .t{font-size:14px;font-weight:700}
-  .s{font-size:12px;fill:var(--mute)}
-  .m{font-size:13px;font-weight:700}
-  .c{font-size:12px}
-  .cb{font-size:12px;font-weight:700}
-  .box{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
+  .e{font-size:14px}
+  .s-ft{stop-color:var(--face-top)} .s-fb{stop-color:var(--face-bot)}
+  .s-pt{stop-color:var(--panel-top)} .s-pb{stop-color:var(--panel-bot)}
+  .s-et{stop-color:var(--edge-top)} .s-eb{stop-color:var(--edge-bot)}
+  .s-hi{stop-color:var(--hi)} .s-hi0{stop-color:var(--hi);stop-opacity:0}
+  .s-g0{stop-color:var(--gloss-top)} .s-g1{stop-color:var(--gloss-mid)} .s-g2{stop-color:var(--gloss-low)} .s-g3{stop-color:var(--gloss-bot)}
+  .s-bt{stop-color:var(--bead-top)} .s-bb{stop-color:var(--bead-bot)}
+  .s-rt{stop-color:var(--rim-top)} .s-rb{stop-color:var(--rim-bot)}
+  .s-it{stop-color:var(--bead-ink-top)} .s-ib{stop-color:var(--bead-ink-bot)}
+  .s-xd{stop-color:var(--etch-dark)} .s-xl{stop-color:var(--etch-light)}
+  .f-near{flood-color:var(--shadow-near)} .f-far{flood-color:var(--shadow-far)}
+  .card{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .panel{fill:url(#g-panel);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .hi{fill:none;stroke:url(#g-hi);stroke-width:1}
+  .etch{fill:url(#g-etch)}
+  .pill{fill:url(#g-gloss);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift-sm)}
+  .pill-dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .disc{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1.25;filter:url(#lift)}
+  .bead{fill:url(#g-bead);stroke:url(#g-rim);stroke-width:1.25;filter:url(#lift-sm)}
+  .bead-fill{fill:url(#g-bead-ink);filter:url(#lift-sm)}
+  .sheet{fill:url(#g-face);stroke:url(#g-edge);stroke-width:1;filter:url(#lift-sm)}
+  .sheet-ln{fill:none;stroke:var(--mute);stroke-width:1}
   .ln{fill:none;stroke:var(--line);stroke-width:1.25}
+  .ink{fill:none;stroke:var(--ink);stroke-width:1.25}
   .acc{fill:none;stroke:var(--accent);stroke-width:1.5}
-  .m1{fill:var(--paper);stroke:var(--ink);stroke-width:1.25}
-  .m2{fill:var(--accent);fill-opacity:.2;stroke:var(--accent);stroke-width:1.5}
-  .pill{fill:var(--paper);stroke:var(--line);stroke-width:1.25}
-  .fa{fill:var(--accent)}
+  .dash{fill:none;stroke:var(--mute);stroke-width:1.25;stroke-dasharray:4 4}
+  .track{fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+  .dashed{stroke-dasharray:4 4}
+  .fa{fill:var(--accent)} .fi{fill:var(--ink)} .fm{fill:var(--mute)}
 </style>
 <defs>
+  <linearGradient id="g-face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-ft"/><stop offset="1" class="s-fb"/></linearGradient>
+  <linearGradient id="g-panel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-pt"/><stop offset="1" class="s-pb"/></linearGradient>
+  <linearGradient id="g-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-et"/><stop offset="1" class="s-eb"/></linearGradient>
+  <linearGradient id="g-hi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-hi"/><stop offset=".4" class="s-hi0"/></linearGradient>
+  <linearGradient id="g-gloss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-g0"/><stop offset=".46" class="s-g1"/><stop offset=".54" class="s-g2"/><stop offset="1" class="s-g3"/></linearGradient>
+  <radialGradient id="g-bead" cx=".5" cy=".5" r=".55" fx=".5" fy=".28"><stop offset="0" class="s-bt"/><stop offset="1" class="s-bb"/></radialGradient>
+  <linearGradient id="g-rim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="s-rt"/><stop offset="1" class="s-rb"/></linearGradient>
+  <radialGradient id="g-bead-ink" cx=".5" cy=".5" r=".55" fx=".5" fy=".28"><stop offset="0" class="s-it"/><stop offset="1" class="s-ib"/></radialGradient>
+  <linearGradient id="g-etch" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" class="s-xd"/><stop offset=".5" class="s-xl"/></linearGradient>
+  <filter id="lift" x="-20%" y="-40%" width="140%" height="200%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="0.7"/><feOffset dy="1" result="o1"/>
+    <feFlood class="f-near"/><feComposite in2="o1" operator="in" result="s1"/>
+    <feGaussianBlur in="SourceAlpha" stdDeviation="3"/><feOffset dy="3" result="o2"/>
+    <feFlood class="f-far"/><feComposite in2="o2" operator="in" result="s2"/>
+    <feMerge><feMergeNode in="s2"/><feMergeNode in="s1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="lift-sm" x="-50%" y="-50%" width="200%" height="220%" color-interpolation-filters="sRGB">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="0.5"/><feOffset dy="0.75" result="o1"/>
+    <feFlood class="f-near"/><feComposite in2="o1" operator="in" result="s1"/>
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/><feOffset dy="1.5" result="o2"/>
+    <feFlood class="f-far"/><feComposite in2="o2" operator="in" result="s2"/>
+    <feMerge><feMergeNode in="s2"/><feMergeNode in="s1"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
   <marker id="aa" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fa"/></marker>
+  <marker id="am" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fm"/></marker>
+  <marker id="ai" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0.5 L7,4 L0,7.5z" class="fi"/></marker>
 </defs>
-<circle cx="150" cy="170" r="60" class="box" style="stroke-width:1.5"/>
-<text x="150" y="166" text-anchor="middle" class="t">Coordinator</text>
-<text x="150" y="186" text-anchor="middle" class="s">any agent CLI</text>
-<text x="150" y="258" text-anchor="middle" class="s">you start it in</text>
-<text x="150" y="276" text-anchor="middle" class="s">any terminal, with</text>
-<text x="150" y="294" text-anchor="middle" class="s">the model you pick</text>
-<path d="M211,170 H342" class="acc" marker-end="url(#aa)"/>
-<text x="277" y="160" text-anchor="middle" class="s">starts</text>
-<text x="277" y="190" text-anchor="middle" class="s">each role</text>
-<text x="350" y="40" class="k">ROLES</text>
-<text x="408" y="40" class="s">model_bindings.json</text>
-<rect x="350" y="52" width="560" height="270" rx="6" class="box"/>
-<text x="366" y="72" class="k">ROLE</text>
-<text x="500" y="72" class="k">WHAT IT DOES</text>
-<text x="758" y="72" class="k">MODEL · EFFORT</text>
-<path d="M350,82 H910" class="ln"/>
-<text x="366" y="106.5" class="m">GENERAL_EXEC</text>
-<text x="500" y="106.0" class="s">writes the code</text>
-<rect x="758" y="90.0" width="136" height="24" rx="12" class="m1"/>
-<text x="826" y="106.0" text-anchor="middle" class="cb">model 1 · high</text>
-<path d="M350,122 H910" class="ln"/>
-<text x="366" y="146.5" class="m">EXPERT</text>
-<text x="500" y="146.0" class="s">takes over after 2 failures</text>
-<rect x="758" y="130.0" width="136" height="24" rx="12" class="m1"/>
-<text x="826" y="146.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
-<path d="M350,162 H910" class="ln"/>
-<text x="366" y="186.5" class="m">REVIEW</text>
-<text x="500" y="186.0" class="s">reviews an important change</text>
-<rect x="758" y="170.0" width="136" height="24" rx="12" class="m2"/>
-<text x="826" y="186.0" text-anchor="middle" class="cb">model 2 · xhigh</text>
-<path d="M350,202 H910" class="ln"/>
-<text x="366" y="226.5" class="m">AUDIT</text>
-<text x="500" y="226.0" class="s">1st review of high-risk work</text>
-<rect x="758" y="210.0" width="136" height="24" rx="12" class="m2"/>
-<text x="826" y="226.0" text-anchor="middle" class="cb">model 2 · xhigh</text>
-<path d="M350,242 H910" class="ln"/>
-<text x="366" y="266.5" class="m">AUDIT_2</text>
-<text x="500" y="266.0" class="s">2nd review of high-risk work</text>
-<rect x="758" y="250.0" width="136" height="24" rx="12" class="m1"/>
-<text x="826" y="266.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
-<path d="M350,282 H910" class="ln"/>
-<text x="366" y="306.5" class="m">ADJUDICATOR</text>
-<text x="500" y="306.0" class="s">settles a disputed finding</text>
-<rect x="758" y="290.0" width="136" height="24" rx="12" class="m1"/>
-<text x="826" y="306.0" text-anchor="middle" class="cb">model 1 · xhigh</text>
-<rect x="350" y="336" width="40" height="16" rx="8" class="m1"/>
-<text x="400" y="348" class="s">model 1, the main model</text>
-<rect x="598" y="336" width="40" height="16" rx="8" class="m2"/>
-<text x="648" y="348" class="s">model 2, a second opinion</text>
-<path d="M40,378 H910" class="ln"/>
-<text x="40" y="408" class="k">ANY OF THESE CAN FILL THE COORDINATOR OR A ROLE</text>
-<text x="40" y="443" class="k">AGENT CLI</text>
-<rect x="170" y="426" width="102" height="26" rx="13" class="pill"/>
-<text x="221" y="443" text-anchor="middle" class="c">Claude Code</text>
-<rect x="280" y="426" width="58" height="26" rx="13" class="pill"/>
-<text x="309" y="443" text-anchor="middle" class="c">Codex</text>
-<rect x="346" y="426" width="87" height="26" rx="13" class="pill"/>
-<text x="390" y="443" text-anchor="middle" class="c">Kimi Code</text>
-<rect x="441" y="426" width="58" height="26" rx="13" class="pill"/>
-<text x="470" y="443" text-anchor="middle" class="c">Droid</text>
-<rect x="508" y="426" width="58" height="26" rx="13" class="pill"/>
-<text x="537" y="443" text-anchor="middle" class="c">Devin</text>
-<rect x="574" y="426" width="94" height="26" rx="13" class="pill"/>
-<text x="621" y="443" text-anchor="middle" class="c">Gemini CLI</text>
-<rect x="676" y="426" width="66" height="26" rx="13" class="pill"/>
-<text x="709" y="443" text-anchor="middle" class="c">Cursor</text>
-<rect x="750" y="426" width="80" height="26" rx="13" class="pill"/>
-<text x="790" y="443" text-anchor="middle" class="c">OpenCode</text>
-<rect x="170" y="460" width="102" height="26" rx="13" class="pill"/>
-<text x="221" y="477" text-anchor="middle" class="c">Copilot CLI</text>
-<rect x="280" y="460" width="87" height="26" rx="13" class="pill"/>
-<text x="323" y="477" text-anchor="middle" class="c">Qwen Code</text>
-<rect x="375" y="460" width="44" height="26" rx="13" class="pill"/>
-<text x="397" y="477" text-anchor="middle" class="c">Amp</text>
-<rect x="427" y="460" width="51" height="26" rx="13" class="pill"/>
-<text x="452" y="477" text-anchor="middle" class="c">Kiro</text>
-<rect x="486" y="460" width="58" height="26" rx="13" class="pill"/>
-<text x="515" y="477" text-anchor="middle" class="c">Cline</text>
-<rect x="552" y="460" width="145" height="26" rx="13" class="pill" style="stroke-dasharray:4 3"/>
-<text x="625" y="477" text-anchor="middle" class="s">+ other agent CLIs</text>
-<text x="40" y="519" class="k">MODEL</text>
-<rect x="170" y="502" width="66" height="26" rx="13" class="pill"/>
-<text x="203" y="519" text-anchor="middle" class="c">Claude</text>
-<rect x="244" y="502" width="44" height="26" rx="13" class="pill"/>
-<text x="265" y="519" text-anchor="middle" class="c">GPT</text>
-<rect x="295" y="502" width="66" height="26" rx="13" class="pill"/>
-<text x="328" y="519" text-anchor="middle" class="c">Gemini</text>
-<rect x="369" y="502" width="51" height="26" rx="13" class="pill"/>
-<text x="394" y="519" text-anchor="middle" class="c">Kimi</text>
-<rect x="428" y="502" width="51" height="26" rx="13" class="pill"/>
-<text x="453" y="519" text-anchor="middle" class="c">Qwen</text>
-<rect x="487" y="502" width="80" height="26" rx="13" class="pill"/>
-<text x="527" y="519" text-anchor="middle" class="c">DeepSeek</text>
-<rect x="575" y="502" width="44" height="26" rx="13" class="pill"/>
-<text x="597" y="519" text-anchor="middle" class="c">GLM</text>
-<rect x="626" y="502" width="51" height="26" rx="13" class="pill"/>
-<text x="652" y="519" text-anchor="middle" class="c">Grok</text>
-<rect x="686" y="502" width="196" height="26" rx="13" class="pill" style="stroke-dasharray:4 3"/>
-<text x="784" y="519" text-anchor="middle" class="s">+ any model its CLI runs</text>
+<circle cx="106" cy="124" r="66" class="disc"/>
+<circle cx="106" cy="124" r="64.75" class="hi"/>
+<text x="106" y="129" text-anchor="middle" class="t">Coordinator</text>
+<path d="M163.16,91 C240,66 284,68 338,68" class="acc" marker-end="url(#aa)"/>
+<path d="M172,124 H338" class="acc" marker-end="url(#aa)"/>
+<path d="M163.16,157 C240,182 284,180 338,180" class="acc dashed" marker-end="url(#aa)"/>
+<rect x="340" y="40" width="560" height="168" rx="6" class="panel"/>
+<rect x="341.25" y="41.25" width="557.5" height="165.5" rx="4.75" class="hi"/>
+<rect x="341" y="95" width="558" height="2" class="etch"/>
+<rect x="341" y="151" width="558" height="2" class="etch"/>
+<text x="372" y="73" class="t">Producer</text>
+<rect x="548" y="52" width="104" height="32" rx="16" class="pill"/>
+<text x="600" y="73" text-anchor="middle" class="t">model 1</text>
+<text x="748" y="73" class="e">high – xhigh</text>
+<text x="372" y="129" class="t">Reviewer</text>
+<rect x="548" y="108" width="104" height="32" rx="16" class="pill"/>
+<text x="600" y="129" text-anchor="middle" class="t">model 2</text>
+<text x="748" y="129" class="e">medium – xhigh</text>
+<path d="M600,140 V164" class="dash"/>
+<text x="372" y="185" class="t">Fallback</text>
+<rect x="548" y="164" width="104" height="32" rx="16" class="pill-dash"/>
+<text x="600" y="185" text-anchor="middle" class="t">model 3</text>
+<text x="748" y="185" class="e">medium</text>
+<path d="M40,240 H900" class="ln"/>
+<text x="40" y="293" class="t">Agent CLI</text>
+<rect x="164" y="272" width="124" height="32" rx="16" class="pill"/>
+<text x="226" y="293" text-anchor="middle" class="e">Claude Code</text>
+<rect x="302" y="272" width="72" height="32" rx="16" class="pill"/>
+<text x="338" y="293" text-anchor="middle" class="e">Codex</text>
+<rect x="388" y="272" width="158" height="32" rx="16" class="pill"/>
+<text x="467" y="293" text-anchor="middle" class="e">Antigravity CLI</text>
+<rect x="560" y="272" width="72" height="32" rx="16" class="pill"/>
+<text x="596" y="293" text-anchor="middle" class="e">Devin</text>
+<rect x="646" y="272" width="168" height="32" rx="16" class="pill"/>
+<text x="730" y="293" text-anchor="middle" class="e">DeepSeek Harness</text>
+<rect x="828" y="272" width="72" height="32" rx="16" class="pill"/>
+<text x="864" y="293" text-anchor="middle" class="e">Zcode</text>
+<text x="40" y="341" class="t">Model</text>
+<rect x="164" y="320" width="80" height="32" rx="16" class="pill"/>
+<text x="204" y="341" text-anchor="middle" class="e">Claude</text>
+<rect x="258" y="320" width="56" height="32" rx="16" class="pill"/>
+<text x="286" y="341" text-anchor="middle" class="e">GPT</text>
+<rect x="328" y="320" width="80" height="32" rx="16" class="pill"/>
+<text x="368" y="341" text-anchor="middle" class="e">Gemini</text>
+<rect x="422" y="320" width="64" height="32" rx="16" class="pill"/>
+<text x="454" y="341" text-anchor="middle" class="e">Kimi</text>
+<rect x="500" y="320" width="64" height="32" rx="16" class="pill"/>
+<text x="532" y="341" text-anchor="middle" class="e">Qwen</text>
+<rect x="578" y="320" width="98" height="32" rx="16" class="pill"/>
+<text x="627" y="341" text-anchor="middle" class="e">DeepSeek</text>
+<rect x="690" y="320" width="56" height="32" rx="16" class="pill"/>
+<text x="718" y="341" text-anchor="middle" class="e">GLM</text>
+<rect x="760" y="320" width="64" height="32" rx="16" class="pill"/>
+<text x="792" y="341" text-anchor="middle" class="e">Grok</text>
 </svg>

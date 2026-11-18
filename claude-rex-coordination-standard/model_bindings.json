@@ -1,38 +1,36 @@
 {
-  "bindings_version": "0.1.0",
+  "bindings_version": "0.2.0",
   "updated": "2026-11-17",
-  "note": "Only file to edit when models change; rules live in coordinator.md. Each harness key is the command name of an agent CLI. Placeholders: {id} {effort} {attempt_dir} (absolute <coord>/<task>/<agent>/, the launched session's own folder; all its attempts write inside it) {worktree} (a headless seat's detached worktree) {report} (a headless seat's report or reply file). Recheck flags with `claude --help` / `codex --help` after CLI updates.",
+  "note": "Only file to edit when models change; rules live in coordinator.md. Each harness key is the command name of an agent CLI. Placeholders: {id} {effort} {attempt_dir} (the absolute path of the task's folder in <coord>) {worktree} (a reviewer's detached worktree) {report} (a reviewer's report or reply file). An agy model id carries its effort, so the agy harness has no effort_arg. Recheck flags with `claude --help`, `codex exec --help`, and `agy --help` after CLI updates.",
   "harnesses": {
     "claude": {
       "model_arg": ["--model", "{id}"],
       "effort_arg": ["--effort", "{effort}"],
-      "effort_overrides": {
-        "ultracode": ["--effort", "xhigh", "--settings", "{\"ultracode\":true}"]
-      },
       "permission_args": ["--permission-mode", "auto", "--add-dir", "{attempt_dir}"]
     },
     "codex": {
       "model_arg": ["-m", "{id}"],
       "effort_arg": ["-c", "model_reasoning_effort=\"{effort}\""],
-      "permission_args": ["-a", "never", "-s", "workspace-write", "--add-dir", "{attempt_dir}"],
-      "seat_args": ["-s", "read-only", "-C", "{worktree}", "-o", "{report}"],
-      "seat_resume_args": ["-c", "sandbox_mode=\"read-only\"", "-o", "{report}"]
+      "review_args": ["-s", "read-only", "-C", "{worktree}", "-o", "{report}"],
+      "review_resume_args": ["-c", "sandbox_mode=\"read-only\"", "-o", "{report}"]
+    },
+    "agy": {
+      "model_arg": ["--model", "{id}"],
+      "review_args": ["--mode", "plan"]
     }
   },
   "models": {
     "opus": { "harness": "claude", "id": "opus" },
-    "sonnet": { "harness": "claude", "id": "sonnet" },
-    "haiku": { "harness": "claude", "id": "haiku" },
-    "fable": { "harness": "claude", "id": "fable" },
-    "gpt": { "harness": "codex", "id": "gpt-6.1-sol" }
+    "gpt": { "harness": "codex", "id": "gpt-6.1-sol" },
+    "gemini-carbon-medium": { "harness": "agy", "id": "gemini-4-carbon-medium" }
   },
-  "adjustments": { "harnesses": ["claude"], "min_effort": "high", "max_effort": "xhigh" },
-  "routes": {
-    "GENERAL_EXEC": { "model": "opus", "effort": "high" },
-    "EXPERT": { "model": "opus", "effort": "ultracode" },
-    "REVIEW": { "model": "gpt", "effort": "xhigh", "replacement": { "model": "opus", "effort": "xhigh" } },
-    "AUDIT": { "model": "gpt", "effort": "xhigh", "replacement": { "model": "opus", "effort": "xhigh" } },
-    "AUDIT_2": { "model": "opus", "effort": "xhigh" },
-    "ADJUDICATOR": { "model": "opus", "effort": "xhigh" }
+  "roles": {
+    "producer": { "model": "opus", "effort_min": "high", "effort_max": "xhigh" },
+    "reviewer": {
+      "model": "gpt",
+      "effort_min": "medium",
+      "effort_max": "xhigh",
+      "fallback": { "model": "gemini-carbon-medium" }
+    }
   }
 }
