@@ -1,36 +1,39 @@
 {
-  "bindings_version": "0.2.0",
-  "updated": "2026-11-17",
-  "note": "Only file to edit when models change; rules live in coordinator.md. Each harness key is the command name of an agent CLI. Placeholders: {id} {effort} {attempt_dir} (the absolute path of the task's folder in <coord>) {worktree} (a reviewer's detached worktree) {report} (a reviewer's report or reply file). An agy model id carries its effort, so the agy harness has no effort_arg. Recheck flags with `claude --help`, `codex exec --help`, and `agy --help` after CLI updates.",
+  "bindings_version": "0.3.0",
+  "updated": "2026-11-18",
+  "note": "Only file to edit when models change; rules live in coordinator.md. Each harness key is the command name of an agent CLI. Placeholders: {id} {effort} {attempt_dir} (the absolute path of the task's folder in <coord>) {worktree} (a reviewer's detached worktree) {report} (a reviewer's report or reply file). An agy model id carries its effort, so the agy harness has no effort_arg. update_cmd installs the latest version of the CLI and exits 0. It depends on how the CLI is installed on this machine: Claude Code here is a Homebrew cask, and `claude update` on a Homebrew install only prints a hint, so its update_cmd calls brew. HOMEBREW_AUTO_UPDATE_SECS=0 makes brew refresh its version data first; by default it refreshes only once a day.",
   "harnesses": {
     "claude": {
       "model_arg": ["--model", "{id}"],
       "effort_arg": ["--effort", "{effort}"],
-      "permission_args": ["--permission-mode", "auto", "--add-dir", "{attempt_dir}"]
+      "permission_args": ["--permission-mode", "auto", "--add-dir", "{attempt_dir}"],
+      "update_cmd": ["env", "HOMEBREW_AUTO_UPDATE_SECS=0", "brew", "upgrade", "claude-code@latest"]
     },
     "codex": {
       "model_arg": ["-m", "{id}"],
       "effort_arg": ["-c", "model_reasoning_effort=\"{effort}\""],
       "review_args": ["-s", "read-only", "-C", "{worktree}", "-o", "{report}"],
-      "review_resume_args": ["-c", "sandbox_mode=\"read-only\"", "-o", "{report}"]
+      "review_resume_args": ["-c", "sandbox_mode=\"read-only\"", "-o", "{report}"],
+      "update_cmd": ["codex", "update"]
     },
     "agy": {
       "model_arg": ["--model", "{id}"],
-      "review_args": ["--mode", "plan"]
+      "review_args": ["--mode", "plan"],
+      "update_cmd": ["agy", "update"]
     }
   },
   "models": {
     "opus": { "harness": "claude", "id": "opus" },
-    "gpt": { "harness": "codex", "id": "gpt-6.1-sol" },
-    "gemini-carbon-medium": { "harness": "agy", "id": "gemini-4-carbon-medium" }
+    "gpt": { "harness": "codex", "id": "gpt-6.2-sol" },
+    "gemini-hydrogen-high": { "harness": "agy", "id": "gemini-4-hydrogen-high" }
   },
   "roles": {
     "producer": { "model": "opus", "effort_min": "high", "effort_max": "xhigh" },
     "reviewer": {
       "model": "gpt",
       "effort_min": "medium",
-      "effort_max": "xhigh",
-      "fallback": { "model": "gemini-carbon-medium" }
+      "effort_max": "medium",
+      "fallback": { "model": "gemini-hydrogen-high" }
     }
   }
 }

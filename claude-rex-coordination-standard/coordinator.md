@@ -1,4 +1,4 @@
-# Rex Coordinator Card 0.2.0
+# Rex Coordinator Card 0.3.0
 
 The policy for a coordinator agent is this card, `model_bindings.json`, and the script `bin/rex_agent.sh`. All three are in one folder, and `<std>` is that folder. Do not load the original `coordination-standard/` or `archive/`.
 
@@ -90,6 +90,13 @@ Use the Rex skill only for CLI syntax. Where it differs from this card, this car
 - Every `rex` command carries `--autostart=false`. Before any Rex command, check the server. If the check fails, tell the owner to open the Rex app, and stop. Never start a Rex server: a server that an agent shell starts gets the file permissions of that agent.
 - Producers run in the project's Rex session `W-<project>`, which `rex_agent.sh start` creates if it does not exist. They keep running if your session or the Rex app ends.
 - Never kill a Rex session or close a Tab or block that you did not create, and never stop the Rex server. Other projects' workers run on it.
+
+**Update the agent CLI**
+
+- Before you start a producer or a reviewer, run its harness's `update_cmd` from `model_bindings.json`, and wait for it to exit. Run one update of a harness at a time. Note `<harness> --version` before and after.
+- Skip the update while another process of that CLI runs, a worker or your own session. Start on the installed version, and update when no process of that CLI runs.
+- Exit 0 means that the latest version is installed. If the update fails, run it once more. If it fails again, the harness cannot run: for a reviewer, use its `fallback`, and update that harness first. For a producer, tell the owner. Never start a worker on a version that failed to update.
+- If the version changed, check that every flag in the harness's binding still appears in `<harness> --help` (`codex exec --help` for codex). If a flag is missing, do not start the worker, and tell the owner.
 
 **Start a producer**
 
